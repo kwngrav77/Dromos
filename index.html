@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#EAF3FA">
+<title>ΛογοΠαιχνίδι — Ψηφιακός βοηθός λογοθεραπείας</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EAF3FA; --ink:#17324F; --muted:#5B7590;
+  --coral:#E85D4A; --coral-soft:#FDEAE6;
+  --sun:#F6C445; --sun-soft:#FDF3D7;
+  --mint:#2FA57C; --mint-soft:#E2F4EC;
+  --blue:#3975D7; --blue-soft:#E8F0FF;
+  --purple:#7957C8; --purple-soft:#F0EBFD;
+  --card:#FFFFFF; --line:#D5E3EF; --danger:#C84545;
+  --shadow:0 10px 30px rgba(23,50,79,.07);
+  --radius:20px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{
+  font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink);
+  max-width:620px;margin:0 auto;min-height:100dvh;padding:14px 14px 96px;
+}
+button,input,textarea,select{font:inherit}
+button{touch-action:manipulation}
+h1,h2,h3,.brand{font-family:'Comfortaa',sans-serif}
+.screen{display:none;animation:fade .18s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}
+
+/* Header */
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px;position:sticky;top:0;z-index:20;background:linear-gradient(var(--bg) 82%,transparent);padding:5px 0 10px}
+.brand{font-size:20px;font-weight:700;letter-spacing:.4px;white-space:nowrap}
+.brand .r{color:var(--coral)}
+.child-pill{max-width:190px;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:7px 12px;font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 5px 16px rgba(23,50,79,.04)}
+
+/* Base cards and typography */
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 2px 9px}
+.section-title h2{font-size:16px}
+.section-title span{font-size:12px;color:var(--muted);font-weight:700}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.empty{padding:24px 16px;text-align:center;color:var(--muted);line-height:1.55}
+.notice{padding:11px 13px;border-radius:14px;background:var(--sun-soft);color:#685114;font-size:12px;line-height:1.45;border:1px solid #F2D982}
+
+/* Buttons */
+.btn{display:block;width:100%;border:none;border-radius:15px;padding:14px 15px;font-weight:800;font-size:15px;cursor:pointer;background:var(--ink);color:#fff;transition:transform .08s ease,opacity .15s ease}
+.btn:active,.icon-btn:active,.level-btn:active,.chip:active{transform:scale(.97)}
+.btn.secondary{background:var(--mint)}
+.btn.blue{background:var(--blue)}
+.btn.ghost{background:var(--card);color:var(--muted);border:1.5px solid var(--line)}
+.btn.danger{background:#FFF1F1;color:var(--danger);border:1.5px solid #F0CACA}
+.btn.small-btn{width:auto;padding:9px 12px;font-size:12px;border-radius:12px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.action-row{display:flex;gap:9px;margin-top:12px}
+.action-row .btn{flex:1}
+.icon-btn{border:none;background:transparent;color:var(--muted);font-size:19px;padding:8px;cursor:pointer}
+
+/* Inputs */
+.field{margin-bottom:13px}
+label,.label{font-size:12px;font-weight:800;color:var(--muted);display:block;margin:0 0 6px;text-transform:uppercase;letter-spacing:.045em}
+input[type=text],input[type=number],input[type=date],textarea,select{
+  width:100%;border:1.5px solid var(--line);border-radius:13px;background:#F8FBFE;color:var(--ink);outline:none;padding:12px 13px;font-weight:700
+}
+textarea{min-height:88px;resize:vertical;line-height:1.45;font-weight:600}
+input:focus,textarea:focus,select:focus{border-color:var(--coral);background:#fff}
+
+/* Home */
+.hero{padding:19px;margin-bottom:14px;overflow:hidden;position:relative}
+.hero:after{content:'ρ';position:absolute;right:-7px;bottom:-34px;font-family:'Comfortaa';font-size:128px;font-weight:700;color:var(--coral-soft);z-index:0}
+.hero>*{position:relative;z-index:1}
+.hero-kicker{display:inline-flex;align-items:center;gap:6px;background:var(--mint-soft);color:var(--mint);font-size:11px;font-weight:800;border-radius:999px;padding:5px 9px;margin-bottom:9px}
+.hero h1{font-size:22px;line-height:1.35;margin-bottom:6px}
+.hero h1 .r{color:var(--coral)}
+.hero p{font-size:13px;color:var(--muted);line-height:1.55;max-width:440px}
+.quick-select{display:flex;gap:9px;margin-top:14px;align-items:center}
+.quick-select select{flex:1;background:#fff}
+
+.dashboard{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.metric{padding:13px 9px;text-align:center}
+.metric b{font-size:21px;display:block;line-height:1.15}
+.metric span{font-size:10px;color:var(--muted);font-weight:800}
+.metric:nth-child(1) b{color:var(--blue)}
+.metric:nth-child(2) b{color:var(--mint)}
+.metric:nth-child(3) b{color:var(--purple)}
+
+.levels{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.level-btn{background:var(--card);border:1.5px solid var(--line);border-radius:17px;padding:15px 12px;text-align:left;cursor:pointer;color:var(--ink);box-shadow:0 6px 18px rgba(23,50,79,.045);transition:.1s ease}
+.level-btn .lv-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.level-btn .lv-emoji{font-size:28px;display:block;margin-bottom:7px}
+.level-btn .lv-name{font-weight:800;font-size:14px;display:block}
+.level-btn .lv-desc{font-size:11px;color:var(--muted);display:block;margin-top:2px;line-height:1.35}
+.lv-rate{display:inline-block;margin-top:9px;font-size:10px;font-weight:800;border-radius:999px;padding:3px 7px;background:var(--mint-soft);color:var(--mint)}
+.lv-rate.empty{background:#F0F4F8;color:var(--muted)}
+
+/* Children */
+.child-form{padding:17px;margin-bottom:14px}
+.child-form h2{font-size:16px;margin-bottom:13px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-grid .wide{grid-column:1/-1}
+.child-list{display:grid;gap:10px}
+.child-card{padding:15px;position:relative}
+.child-card.selected{border-color:var(--mint);box-shadow:0 0 0 3px var(--mint-soft)}
+.child-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.child-avatar{width:43px;height:43px;border-radius:14px;background:var(--blue-soft);display:grid;place-items:center;font-size:21px;flex-shrink:0}
+.child-main{display:flex;gap:11px;min-width:0}
+.child-name{font-family:'Comfortaa';font-weight:700;font-size:15px}
+.child-meta{font-size:11px;color:var(--muted);margin-top:3px}
+.child-goals{font-size:12px;color:var(--ink);margin-top:10px;padding-top:9px;border-top:1px solid var(--line);line-height:1.4}
+.card-actions{display:flex;gap:6px}
+.card-actions button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:6px 8px;font-size:11px;font-weight:800;color:var(--muted);cursor:pointer}
+
+/* Session */
+.session-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.session-header h2{font-size:15px}
+.progressbar{height:10px;background:#DDE9F3;border-radius:999px;overflow:hidden;margin-bottom:12px}
+.progressbar>div{height:100%;background:var(--sun);border-radius:999px;width:0%;transition:width .25s ease}
+.flashcard{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:390px;padding:27px 19px;text-align:center;position:relative}
+.fc-emoji{font-size:86px;line-height:1;margin-bottom:19px}
+.fc-word{font-family:'Comfortaa';font-size:33px;font-weight:700;letter-spacing:.01em;line-height:1.3}
+.fc-word .r{color:var(--coral)}
+.fc-hint{margin-top:14px;font-size:14px;color:var(--muted);max-width:350px;line-height:1.5}
+.fc-count{position:absolute;top:14px;right:17px;font-size:12px;font-weight:800;color:var(--muted)}
+.score-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:12px}
+.score-btn{border:none;border-radius:17px;padding:13px 6px;font-weight:800;font-size:13px;cursor:pointer;color:#fff}
+.score-btn small{display:block;font-size:23px;margin-bottom:4px;font-weight:400}
+.sb-ok{background:var(--mint)}
+.sb-mid{background:var(--sun);color:#6B5200}
+.sb-no{background:var(--coral)}
+
+
+/* Therapeutic games */
+.game-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.game-card{position:relative;overflow:hidden;text-align:left;padding:16px;border:1.5px solid var(--line);border-radius:18px;background:var(--card);color:var(--ink);cursor:pointer;box-shadow:0 7px 20px rgba(23,50,79,.05)}
+.game-card:active{transform:scale(.98)}
+.game-card .game-ico{font-size:34px;display:block;margin-bottom:8px}
+.game-card b{font-family:'Comfortaa';font-size:14px;display:block;margin-bottom:4px}
+.game-card p{font-size:11px;color:var(--muted);line-height:1.4;padding-right:6px}
+.game-card .game-tag{display:inline-block;margin-top:9px;border-radius:999px;padding:3px 8px;font-size:9px;font-weight:800;background:var(--blue-soft);color:var(--blue)}
+.game-card.featured{grid-column:1/-1;background:linear-gradient(135deg,#fff 0%,var(--purple-soft) 100%);border-color:#D9CDF6}
+.game-card.featured .game-tag{background:var(--purple);color:#fff}
+.game-card.preferred{box-shadow:0 0 0 3px rgba(246,196,69,.45);border-color:var(--sun)}
+.speak-btn{position:absolute;top:9px;left:11px;font-size:22px}
+.prompt-speak{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:800;color:var(--muted);cursor:pointer;margin-top:9px}
+.phoneme-seg{margin:0;max-width:210px;flex:1}
+.phoneme-seg button{font-family:'Comfortaa';font-size:13px}
+.games-intro{padding:17px;margin-bottom:12px}
+.games-intro h2{font-size:17px;margin-bottom:5px}
+.games-intro p{font-size:12px;color:var(--muted);line-height:1.5}
+.game-picker{padding:15px;margin-bottom:13px}
+.game-picker-row{display:grid;grid-template-columns:1fr auto;gap:9px;align-items:end}
+.game-picker .btn{min-width:115px}
+.reward-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.reward-item{background:#F8FBFE;border:1px solid var(--line);border-radius:12px;text-align:center;padding:9px 5px}
+.reward-item b{display:block;font-size:17px}.reward-item span{font-size:9px;font-weight:800;color:var(--muted)}
+
+.game-session-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.game-session-title{display:flex;align-items:center;gap:10px;min-width:0}
+.game-session-title .big-ico{width:44px;height:44px;border-radius:14px;background:var(--sun-soft);display:grid;place-items:center;font-size:24px;flex-shrink:0}
+.game-session-title h2{font-size:15px}.game-session-title p{font-size:10px;color:var(--muted);margin-top:2px}
+.game-stage{min-height:430px;padding:15px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden}
+.game-status{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;font-weight:800;color:var(--muted)}
+.game-status .stars{color:#B98200;font-size:13px}
+.game-prompt{background:#F8FBFE;border:1.5px solid var(--line);border-radius:16px;padding:14px;text-align:center}
+.game-prompt .prompt-emoji{font-size:45px;line-height:1;margin-bottom:8px}
+.game-prompt .prompt-word{font-family:'Comfortaa';font-size:25px;font-weight:700;line-height:1.25}
+.game-prompt .prompt-word .r{color:var(--coral)}
+.game-prompt .prompt-hint{font-size:11px;color:var(--muted);line-height:1.4;margin-top:7px}
+.game-score-panel .score-row{margin-top:0}
+.game-instruction{text-align:center;font-size:11px;color:var(--muted);line-height:1.4}
+
+/* Puzzle reveal */
+.puzzle-scene{position:relative;flex:1;min-height:235px;border-radius:20px;overflow:hidden;background:linear-gradient(145deg,#CDEBFF,#FFF1C8);display:grid;place-items:center;border:1.5px solid #C6DDEA}
+.puzzle-picture{font-size:110px;filter:drop-shadow(0 12px 12px rgba(23,50,79,.12));transform:translateY(5px)}
+.puzzle-celebrate{position:absolute;left:0;right:0;bottom:15px;text-align:center;font-family:'Comfortaa';font-weight:700;font-size:16px;color:var(--ink);opacity:0;transform:translateY(8px);transition:.25s}
+.puzzle-celebrate.show{opacity:1;transform:none}
+.puzzle-cover{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:3px;padding:3px}
+.puzzle-tile{border-radius:8px;background:linear-gradient(145deg,var(--blue),#69A0F4);display:grid;place-items:center;color:rgba(255,255,255,.7);font-family:'Comfortaa';font-size:18px;font-weight:700;transition:opacity .35s,transform .35s}
+.puzzle-tile.revealed{opacity:0;transform:scale(.75) rotate(7deg);pointer-events:none}
+
+/* Treasure map */
+.treasure-map{position:relative;flex:1;min-height:245px;border-radius:20px;background:linear-gradient(#CFEFFF 0 48%,#F6D798 49% 100%);border:1.5px solid #C9DCE8;overflow:hidden;padding:22px 16px}
+.treasure-map:before{content:'☁️     ☁️';position:absolute;top:14px;left:18px;right:18px;font-size:25px;letter-spacing:40px;opacity:.8}
+.map-path{position:absolute;left:10%;right:10%;bottom:25px;top:54px;display:flex;align-items:flex-end;justify-content:space-between}
+.map-node{width:31px;height:31px;border-radius:50%;background:#fff;border:3px solid #B9A77B;display:grid;place-items:center;font-size:14px;font-weight:800;position:relative;z-index:2;transition:.25s}
+.map-node:nth-child(even){transform:translateY(-74px)}
+.map-node.done{background:var(--mint);border-color:#16765A;color:#fff}
+.map-node.current{box-shadow:0 0 0 5px rgba(246,196,69,.45);border-color:#B98200}
+.map-line{position:absolute;left:10%;right:10%;bottom:47%;height:5px;background:repeating-linear-gradient(90deg,#9D8151 0 10px,transparent 10px 18px);transform:rotate(-3deg);opacity:.75}
+.map-player{position:absolute;font-size:34px;z-index:4;transition:left .35s,bottom .35s;filter:drop-shadow(0 5px 5px rgba(0,0,0,.18))}
+.treasure-chest{position:absolute;right:13px;bottom:15px;font-size:52px;filter:drop-shadow(0 8px 7px rgba(0,0,0,.16))}
+
+/* Memory */
+.memory-board{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex:1;align-content:center}
+.memory-card{aspect-ratio:1/1.08;border:none;background:transparent;perspective:700px;cursor:pointer;padding:0}
+.memory-inner{position:relative;width:100%;height:100%;transition:transform .35s;transform-style:preserve-3d}
+.memory-card.flipped .memory-inner,.memory-card.matched .memory-inner{transform:rotateY(180deg)}
+.memory-face{position:absolute;inset:0;border-radius:14px;display:grid;place-items:center;backface-visibility:hidden;border:1.5px solid var(--line);box-shadow:0 5px 13px rgba(23,50,79,.05)}
+.memory-back{background:linear-gradient(145deg,var(--purple),#A180E6);color:#fff;font-family:'Comfortaa';font-size:23px;font-weight:700}
+.memory-front{background:#fff;transform:rotateY(180deg);font-size:32px;padding:4px;text-align:center}
+.memory-card.matched .memory-front{background:var(--mint-soft);border-color:var(--mint)}
+.memory-card:disabled{cursor:default}
+.memory-evaluate{position:absolute;inset:0;background:rgba(234,243,250,.96);display:none;z-index:8;padding:16px;align-items:center;justify-content:center;flex-direction:column}
+.memory-evaluate.show{display:flex}
+.memory-evaluate .game-prompt{width:100%;max-width:360px;background:#fff}
+.memory-evaluate .game-score-panel{width:100%;max-width:360px;margin-top:10px}
+
+@media(max-width:380px){
+  .game-stage{min-height:395px}.memory-board{gap:6px}.memory-face{border-radius:11px}.memory-front{font-size:27px}
+  .game-picker-row{grid-template-columns:1fr}.game-picker .btn{width:100%}
+}
+
+/* Post session notes */
+.note-summary{padding:16px;margin-bottom:12px}
+.note-summary-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.note-summary h2{font-size:16px}
+.score-badge{font-family:'Comfortaa';font-size:23px;font-weight:700;color:var(--mint)}
+.mini-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:12px}
+.mini-stat{background:#F7FBFE;border:1px solid var(--line);border-radius:12px;padding:9px 5px;text-align:center}
+.mini-stat b{display:block;font-size:17px}
+.mini-stat span{font-size:9px;font-weight:800;color:var(--muted)}
+.notes-card{padding:17px;margin-bottom:12px}
+.notes-card h3{font-size:14px;margin-bottom:11px}
+.choice-group{margin-bottom:15px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border:1.5px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:8px 10px;font-size:11px;font-weight:800;cursor:pointer}
+.chip.selected{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
+
+/* Summary */
+.summary-card{padding:26px 20px;text-align:center;margin-bottom:13px}
+.big-score{font-family:'Comfortaa';font-size:54px;font-weight:700;color:var(--mint);line-height:1}
+.big-score.low{color:var(--sun)}
+.summary-card h2{font-size:18px;margin:10px 0 5px}
+.summary-card p{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* Reports */
+.report-controls{padding:16px;margin-bottom:12px}
+.report-toolbar{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.report-toolbar .wide{grid-column:1/-1}
+.segmented{display:flex;background:#EDF3F8;border-radius:12px;padding:4px;margin-top:7px}
+.segmented button{flex:1;border:none;background:transparent;border-radius:9px;padding:9px 7px;font-weight:800;font-size:11px;color:var(--muted);cursor:pointer}
+.segmented button.active{background:#fff;color:var(--ink);box-shadow:0 3px 10px rgba(23,50,79,.08)}
+.report-card{padding:17px;margin-bottom:12px}
+.report-head{display:flex;align-items:flex-start;justify-content:space-between;gap:9px;margin-bottom:10px}
+.report-head h2{font-size:15px}
+.report-period{font-size:11px;color:var(--muted);font-weight:700;margin-top:3px}
+.report-preview{width:100%;min-height:420px;background:#FCFDFE;border:1.5px solid var(--line);border-radius:14px;padding:14px;font-size:13px;line-height:1.65;color:var(--ink);white-space:pre-wrap}
+.report-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.report-actions .btn:last-child{grid-column:1/-1}
+.report-empty{padding:42px 18px;text-align:center;color:var(--muted);line-height:1.55}
+.report-empty .ico{font-size:40px;margin-bottom:8px}
+
+/* Progress */
+.prog-section{padding:17px;margin-bottom:12px}
+.prog-section h3{font-size:14px;margin-bottom:12px}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.bar-label{width:108px;font-size:10.5px;font-weight:800;flex-shrink:0}
+.bar-track{flex:1;height:13px;background:#EDF3F8;border-radius:999px;overflow:hidden}
+.bar-fill{height:100%;background:var(--mint);border-radius:999px}
+.bar-pct{width:38px;text-align:right;font-size:11px;font-weight:800;color:var(--muted);flex-shrink:0}
+.trend-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:13px}
+.trend-box{background:#F7FBFE;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.trend-box b{font-size:18px;display:block}
+.trend-box span{font-size:9px;color:var(--muted);font-weight:800}
+.hist-item{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px}
+.hist-item:last-child{border-bottom:none}
+.hist-item .h-level{font-weight:800}
+.hist-item .h-date{font-size:10px;color:var(--muted)}
+.hist-item .h-note{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.35}
+.hist-item .h-score{font-weight:800;color:var(--mint);white-space:nowrap}
+
+/* Nav */
+.tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:620px;background:rgba(255,255,255,.97);border-top:1.5px solid var(--line);display:flex;padding:7px 0 max(8px,env(safe-area-inset-bottom));z-index:30;backdrop-filter:blur(12px)}
+.tab{flex:1;text-align:center;background:none;border:none;font-size:10px;font-weight:800;color:var(--muted);cursor:pointer;padding:5px 0}
+.tab .t-ico{display:block;font-size:19px;margin-bottom:2px}
+.tab.active{color:var(--coral)}
+body.focus-mode{padding-bottom:14px}
+body.focus-mode .tabbar{display:none}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:92px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:10px 14px;border-radius:999px;font-size:12px;font-weight:800;opacity:0;pointer-events:none;transition:.2s;z-index:100;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+#printArea{display:none}
+@media(max-width:380px){
+  .fc-emoji{font-size:74px}.fc-word{font-size:29px}.flashcard{min-height:350px}
+  .form-grid{grid-template-columns:1fr}.form-grid .wide{grid-column:auto}
+  .dashboard{gap:6px}.metric{padding:11px 5px}.metric b{font-size:18px}
+}
+@media print{
+  body>*{display:none!important}
+  #printArea{display:block!important;padding:30px;color:#111;font-family:Arial,sans-serif;max-width:800px;margin:auto}
+  #printArea h1{font-size:22px;margin-bottom:4px}
+  #printArea .print-meta{font-size:12px;color:#555;margin-bottom:22px}
+  #printArea pre{white-space:pre-wrap;font-family:Arial,sans-serif;font-size:13px;line-height:1.65}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header id="appHeader">
+  <div class="brand">Λογο<span class="r">Π</span>αιχνίδι</div>
+  <div class="child-pill" id="childPill">Χωρίς επιλογή παιδιού</div>
+</header>
+
+<!-- HOME -->
+<section class="screen active" id="scr-home">
+  <div class="hero card">
+    <span class="hero-kicker">✨ Ψηφιακός βοηθός συνεδρίας</span>
+    <h1>Ασκήσεις, καταγραφή και <span class="r">αναφορές</span> σε ένα σημείο.</h1>
+    <p>Κατέγραψε γρήγορα την επίδοση και τις παρατηρήσεις κάθε συνεδρίας. Το ΛογοΠαιχνίδι οργανώνει αυτόματα την εβδομαδιαία πρόοδο.</p>
+    <div class="quick-select">
+      <select id="homeChildSelect" onchange="selectChild(this.value)"></select>
+      <button class="btn small-btn" onclick="show('children')">+ Παιδί</button>
+    </div>
+  </div>
+
+  <div class="dashboard" id="dashboardMetrics"></div>
+
+  <div class="section-title">
+    <h2>Νέα συνεδρία</h2><div class="segmented phoneme-seg" id="phonemeSeg"></div>
+  </div>
+  <div class="levels" id="levelGrid"></div>
+
+
+  <div class="section-title">
+    <h2>Θεραπευτικά παιχνίδια</h2><span>Χωρίς ηχογράφηση</span>
+  </div>
+  <div class="game-grid">
+    <button class="game-card" onclick="openGames('puzzle')"><span class="game-ico">🧩</span><b>Παζλ αποκάλυψης</b><p>Κάθε προσπάθεια αποκαλύπτει ένα κομμάτι της εικόνας.</p><span class="game-tag">9 προσπάθειες</span></button>
+    <button class="game-card" onclick="openGames('memory')"><span class="game-ico">🧠</span><b>Memory λέξεων</b><p>Βρες τα ζευγάρια, πες τη λέξη και κέρδισε το ταίριασμα.</p><span class="game-tag">6 ζευγάρια</span></button>
+    <button class="game-card featured" onclick="openGames('treasure')"><span class="game-ico">🗺️</span><b>Κυνήγι θησαυρού</b><p>Το παιδί προχωρά στον χάρτη με κάθε αξιολογημένη προσπάθεια και ανοίγει το σεντούκι.</p><span class="game-tag">Προτεινόμενο</span></button>
+  </div>
+
+  <div class="notice" style="margin-top:14px">🔒 Demo MVP: τα δεδομένα παραμένουν μόνο σε αυτή τη συσκευή. Δεν γίνεται αποστολή σε διακομιστή.</div>
+</section>
+
+<!-- CHILDREN -->
+<section class="screen" id="scr-children">
+  <div class="child-form card">
+    <h2 id="childFormTitle">Νέος φάκελος παιδιού</h2>
+    <input type="hidden" id="editChildId">
+    <div class="form-grid">
+      <div class="field">
+        <label for="childNameInput">Όνομα / κωδικός *</label>
+        <input type="text" id="childNameInput" maxlength="30" placeholder="π.χ. Γ.Κ. (προτείνονται αρχικά)">
+      </div>
+      <div class="field">
+        <label for="childBirthYear">Έτος γέννησης</label>
+        <input type="number" id="childBirthYear" min="2005" max="2026" placeholder="π.χ. 2019">
+      </div>
+      <div class="field wide">
+        <label for="childGoals">Κύριοι θεραπευτικοί στόχοι</label>
+        <textarea id="childGoals" placeholder="π.χ. Σταθεροποίηση /ρ/ σε αρχική θέση και συμπλέγματα /τρ/, /γρ/."></textarea>
+      </div>
+    </div>
+    <div class="action-row">
+      <button class="btn" onclick="saveChild()" id="saveChildBtn">Αποθήκευση φακέλου</button>
+      <button class="btn ghost" onclick="resetChildForm()" id="cancelEditBtn" style="display:none">Ακύρωση</button>
+    </div>
+  </div>
+
+  <div class="section-title"><h2>Παιδιά</h2><span id="childrenCount">0 φάκελοι</span></div>
+  <div class="child-list" id="childList"></div>
+
+  <div class="child-form card" style="margin-top:14px">
+    <h2>Αντίγραφο ασφαλείας 💾</h2>
+    <p class="small muted" style="margin-bottom:11px;line-height:1.5">Τα δεδομένα αποθηκεύονται μόνο σε αυτή τη συσκευή. Κράτα τακτικά αντίγραφο για να μη χαθούν φάκελοι και συνεδρίες αν καθαριστεί ο browser.</p>
+    <div class="action-row" style="margin:0">
+      <button class="btn ghost" onclick="exportBackup()">⬇️ Λήψη αντιγράφου</button>
+      <button class="btn ghost" onclick="document.getElementById('importFile').click()">⬆️ Επαναφορά</button>
+    </div>
+    <input type="file" id="importFile" accept="application/json,.json" style="display:none" onchange="importBackup(this)">
+  </div>
+</section>
+
+
+<!-- GAMES LIBRARY -->
+<section class="screen" id="scr-games">
+  <div class="games-intro card">
+    <h2>Παιχνίδια συνεδρίας 🎮</h2>
+    <p>Επίλεξε επίπεδο και δραστηριότητα. Η εφαρμογή κρατά τα αποτελέσματα, αλλά η λογοθεραπευτική αξιολόγηση γίνεται πάντα από τον επαγγελματία.</p>
+    <div class="reward-strip" id="gameRewards"></div>
+  </div>
+  <div class="game-picker card">
+    <div class="game-picker-row">
+      <div class="field" style="margin:0"><label for="gameLevelSelect">Υλικό εξάσκησης</label><select id="gameLevelSelect"></select></div>
+      <button class="btn blue" onclick="startAdaptivePractice()">✨ Έξυπνη επανάληψη</button>
+    </div>
+  </div>
+  <div class="game-grid">
+    <button class="game-card" data-game="puzzle" onclick="startGame('puzzle')"><span class="game-ico">🧩</span><b>Παζλ αποκάλυψης</b><p>Ένα κομμάτι φεύγει μετά από κάθε προσπάθεια.</p><span class="game-tag">Ήρεμος ρυθμός</span></button>
+    <button class="game-card" data-game="memory" onclick="startGame('memory')"><span class="game-ico">🧠</span><b>Memory λέξεων</b><p>Ανάπτυξη μνήμης και παραγωγή της λέξης όταν βρεθεί ζευγάρι.</p><span class="game-tag">2 παίκτες</span></button>
+    <button class="game-card featured" data-game="treasure" onclick="startGame('treasure')"><span class="game-ico">🗺️</span><b>Κυνήγι θησαυρού</b><p>Ο ήρωας προχωρά σε οκτώ στάσεις μέχρι το τελικό σεντούκι.</p><span class="game-tag">Μεγάλη επιβράβευση</span></button>
+  </div>
+  <div class="notice" style="margin-top:13px">💡 Η «Έξυπνη επανάληψη» επιλέγει στοιχεία στα οποία το παιδί είχε χαμηλότερη επίδοση σε προηγούμενες συνεδρίες.</div>
+</section>
+
+<!-- ACTIVE GAME -->
+<section class="screen" id="scr-game">
+  <div class="game-session-header">
+    <div class="game-session-title"><div class="big-ico" id="activeGameIcon">🧩</div><div><h2 id="activeGameTitle">Παζλ</h2><p id="activeGameMeta"></p></div></div>
+    <button class="icon-btn" onclick="quitGame()" aria-label="Κλείσιμο">✕</button>
+  </div>
+  <div class="progressbar"><div id="gameProgress"></div></div>
+  <div class="game-stage card" id="gameStage"></div>
+</section>
+
+<!-- SESSION -->
+<section class="screen" id="scr-session">
+  <div class="session-header">
+    <div><span class="small muted" id="sessChild"></span><h2 id="sessLevel"></h2></div>
+    <button class="icon-btn" onclick="quitSession()" aria-label="Κλείσιμο">✕</button>
+  </div>
+  <div class="progressbar"><div id="sessProg"></div></div>
+  <div class="flashcard card">
+    <span class="fc-count" id="fcCount">1 / 10</span>
+    <button class="icon-btn speak-btn" onclick="speakCurrent()" aria-label="Εκφώνηση λέξης">🔊</button>
+    <div class="fc-emoji" id="fcEmoji">🦁</div>
+    <div class="fc-word" id="fcWord"></div>
+    <p class="fc-hint" id="fcHint"></p>
+  </div>
+  <div class="score-row">
+    <button class="score-btn sb-ok" onclick="scoreItem(2)"><small>😀</small>Σωστό</button>
+    <button class="score-btn sb-mid" onclick="scoreItem(1)"><small>🙂</small>Σχεδόν</button>
+    <button class="score-btn sb-no" onclick="scoreItem(0)"><small>💪</small>Ξανά</button>
+  </div>
+</section>
+
+<!-- SESSION NOTES -->
+<section class="screen" id="scr-notes">
+  <div class="note-summary card">
+    <div class="note-summary-top">
+      <div><span class="small muted">Ολοκλήρωση συνεδρίας</span><h2 id="notesTitle">Σημειώσεις</h2></div>
+      <div class="score-badge" id="notesScore">0%</div>
+    </div>
+    <div class="mini-stats">
+      <div class="mini-stat"><b id="noteOk">0</b><span>Σωστά</span></div>
+      <div class="mini-stat"><b id="noteMid">0</b><span>Σχεδόν</span></div>
+      <div class="mini-stat"><b id="noteNo">0</b><span>Ξανά</span></div>
+      <div class="mini-stat"><b id="noteDuration">0′</b><span>Διάρκεια</span></div>
+    </div>
+  </div>
+
+  <div class="notes-card card">
+    <h3>Γρήγορη κλινική καταγραφή</h3>
+    <div class="choice-group">
+      <span class="label">Συνεργασία</span>
+      <div class="chips" data-field="collaboration">
+        <button class="chip">Πολύ καλή</button><button class="chip">Καλή</button><button class="chip">Μέτρια</button><button class="chip">Δύσκολη</button>
+      </div>
+    </div>
+    <div class="choice-group">
+      <span class="label">Συγκέντρωση</span>
+      <div class="chips" data-field="attention">
+        <button class="chip">Σταθερή</button><button class="chip">Με διακυμάνσεις</button><button class="chip">Περιορισμένη</button>
+      </div>
+    </div>
+    <div class="choice-group">
+      <span class="label">Επίπεδο υποστήριξης</span>
+      <div class="chips" data-field="support">
+        <button class="chip">Αυτόνομα</button><button class="chip">Λεκτική βοήθεια</button><button class="chip">Οπτικό πρότυπο</button><button class="chip">Με μίμηση</button>
+      </div>
+    </div>
+    <div class="choice-group">
+      <span class="label">Εικόνα προόδου</span>
+      <div class="chips" data-field="progress">
+        <button class="chip">Σημαντική βελτίωση</button><button class="chip">Σταδιακή βελτίωση</button><button class="chip">Σταθερή εικόνα</button><button class="chip">Χρειάζεται επανάληψη</button>
+      </div>
+    </div>
+    <div class="field"><label for="noteStrengths">Τι πήγε καλά</label><textarea id="noteStrengths" placeholder="π.χ. Παρήγαγε καθαρά το /ρ/ στις συλλαβές ρα, ρο."></textarea></div>
+    <div class="field"><label for="noteDifficulties">Δυσκολίες</label><textarea id="noteDifficulties" placeholder="π.χ. Δυσκολεύτηκε στα συμπλέγματα /τρ/ και /γρ/."></textarea></div>
+    <div class="field"><label for="noteHomework">Εργασία για το σπίτι</label><textarea id="noteHomework" placeholder="π.χ. Επανάληψη 5 λέξεων, 2 φορές την ημέρα."></textarea></div>
+    <div class="field"><label for="noteFree">Πρόσθετη παρατήρηση</label><textarea id="noteFree" placeholder="Οτιδήποτε χρειάζεται να θυμάσαι για την επόμενη συνεδρία."></textarea></div>
+    <button class="btn secondary" onclick="saveSessionWithNotes()">Αποθήκευση συνεδρίας</button>
+  </div>
+</section>
+
+<!-- SUMMARY -->
+<section class="screen" id="scr-summary">
+  <div class="summary-card card">
+    <div class="big-score" id="sumScore">80%</div>
+    <h2 id="sumTitle">Η συνεδρία αποθηκεύτηκε</h2>
+    <p id="sumSub"></p>
+  </div>
+  <button class="btn blue" onclick="openCurrentWeekReport()">Δημιουργία εβδομαδιαίας αναφοράς</button>
+  <button class="btn ghost" style="margin-top:9px" onclick="show('home')">Επιστροφή στην αρχική</button>
+</section>
+
+<!-- REPORTS -->
+<section class="screen" id="scr-reports">
+  <div class="report-controls card">
+    <div class="report-toolbar">
+      <div class="field"><label>Παιδί</label><select id="reportChildSelect" onchange="renderReportsScreen()"></select></div>
+      <div class="field"><label>Ημερομηνία μέσα στην εβδομάδα</label><input type="date" id="reportDate" onchange="renderReportsScreen()"></div>
+      <div class="wide">
+        <span class="label">Τύπος αναφοράς</span>
+        <div class="segmented">
+          <button id="segClinical" class="active" onclick="setReportType('clinical')">Κλινική</button>
+          <button id="segParent" onclick="setReportType('parent')">Προς γονείς</button>
+        </div>
+      </div>
+    </div>
+    <button class="btn blue" style="margin-top:12px" onclick="generateReport(true)">↻ Δημιουργία αναφοράς</button>
+  </div>
+
+  <div class="report-card card" id="reportContainer">
+    <div class="report-head">
+      <div><h2 id="reportHeading">Εβδομαδιαία αναφορά</h2><div class="report-period" id="reportPeriod"></div></div>
+      <span class="lv-rate" id="reportSessionCount">0 συνεδρίες</span>
+    </div>
+    <div class="report-empty" id="reportEmpty"><div class="ico">📝</div>Επίλεξε παιδί και εβδομάδα για να δημιουργηθεί η αναφορά.</div>
+    <textarea class="report-preview" id="reportText" style="display:none" aria-label="Κείμενο αναφοράς"></textarea>
+    <div class="report-actions" id="reportActions" style="display:none">
+      <button class="btn ghost" onclick="copyReport()">📋 Αντιγραφή</button>
+      <button class="btn ghost" onclick="downloadReport()">⬇️ Αρχείο .txt</button>
+      <button class="btn" onclick="printReport()">🖨️ Εκτύπωση / PDF</button>
+    </div>
+  </div>
+  <div class="notice">Η αναφορά είναι προσχέδιο υποβοήθησης. Ο/η λογοθεραπευτής/τρια πρέπει πάντα να την ελέγχει και να την εγκρίνει πριν χρησιμοποιηθεί.</div>
+</section>
+
+<!-- PROGRESS -->
+<section class="screen" id="scr-progress">
+  <div class="quick-select" style="margin:0 0 12px"><select id="progressChildSelect" onchange="selectChild(this.value);renderProgress()"></select></div>
+  <div class="prog-section card">
+    <h3 id="progTitle">Συνολική εικόνα</h3>
+    <div class="trend-row" id="trendStats"></div>
+    <div id="progBars"></div>
+  </div>
+  <div class="prog-section card">
+    <h3>Ιστορικό συνεδριών</h3>
+    <div id="histList"></div>
+  </div>
+</section>
+
+<nav class="tabbar">
+  <button class="tab active" data-tab="home" onclick="show('home')"><span class="t-ico">🏠</span>Αρχική</button>
+  <button class="tab" data-tab="games" onclick="show('games')"><span class="t-ico">🎮</span>Παιχνίδια</button>
+  <button class="tab" data-tab="children" onclick="show('children')"><span class="t-ico">👧</span>Παιδιά</button>
+  <button class="tab" data-tab="reports" onclick="show('reports')"><span class="t-ico">📝</span>Αναφορές</button>
+  <button class="tab" data-tab="progress" onclick="show('progress')"><span class="t-ico">📈</span>Πρόοδος</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+<div id="printArea"><h1 id="printTitle"></h1><div class="print-meta" id="printMeta"></div><pre id="printText"></pre></div>
+
+<script>
+'use strict';
+const DB_KEY = 'logopaixnidi_mvp_v2';
+const OLD_KEY = 'logo_demo_v1';
+
+const PHONEMES = {
+ r:{ id:'r', symbol:'ρ', label:'/ρ/', pattern:/(ρ|Ρ)/g, levels:[
+  { id:'r_sound', kind:'sound', emoji:'🦁', name:'Ο ήχος', desc:'Μεμονωμένο /ρ/', items:[
+    {e:'🦁', w:'ρρρ…', h:'Το λιοντάρι γρυλίζει δυνατά. Κάνε κι εσύ ρρρ!'},
+    {e:'🏍️', w:'ρρρ ρρρ', h:'Η μηχανή ξεκινάει. Πώς κάνει η μηχανή;'},
+    {e:'🐯', w:'ρρρ!', h:'Η τίγρη βρυχάται. Δείξε πόσο δυνατά!'},
+    {e:'🚁', w:'ρρρρρ', h:'Το ελικόπτερο πετάει ψηλά με μακρύ ρρρ.'},
+    {e:'🤖', w:'ρ… ρ… ρ…', h:'Το ρομπότ μιλάει κοφτά. Ένα ρ τη φορά.'},
+    {e:'😼', w:'ρρρ (σιγά)', h:'Η γάτα γουργουρίζει σιγανά. Ψιθύρισε το ρ.'},
+    {e:'🏎️', w:'ρρρ (γρήγορα)', h:'Το αγωνιστικό τρέχει! Γρήγορο και δυνατό ρ.'},
+    {e:'🐻', w:'ρρρ (αργά)', h:'Η αρκούδα ξυπνάει νυσταγμένη. Αργό, βαθύ ρ.'},
+    {e:'🌊', w:'ρρρ…ρρρ…', h:'Τα κύματα έρχονται και φεύγουν. Ρ με κύμα.'},
+    {e:'🎺', w:'ρρρ (μακρύ)', h:'Η τρομπέτα παίζει. Κράτα το ρ όσο πιο πολύ μπορείς!'}
+  ]},
+  { id:'r_syll', kind:'syll', emoji:'🎵', name:'Συλλαβές', desc:'ρα, ρε, ρι, ρο, ρου', items:[
+    {e:'☀️', w:'ρα', h:'Καθαρό και δυνατό: ρα.'},{e:'🌊', w:'ρε', h:'Σαν κυματάκι: ρε.'},
+    {e:'🎈', w:'ρι', h:'Λεπτό και ψηλό: ρι.'},{e:'🍑', w:'ρο', h:'Στρογγυλό στόμα: ρο.'},
+    {e:'🚀', w:'ρου', h:'Σαν πύραυλος: ρου!'},{e:'🥁', w:'ρα-ρα-ρα', h:'Σαν τύμπανο, τρεις φορές.'},
+    {e:'🐸', w:'ρε-ρι', h:'Ο βάτραχος πηδάει: ρε-ρι.'},{e:'🎪', w:'ρο-ρου', h:'Δύο μαζί: ρο-ρου.'},
+    {e:'🌟', w:'ρι-ρα-ρο', h:'Τρεις διαφορετικές στη σειρά.'},{e:'🎶', w:'ρα-ρε-ρι-ρο-ρου', h:'Όλες μαζί σαν τραγουδάκι!'}
+  ]},
+  { id:'r_words', kind:'words', emoji:'🍎', name:'Λέξεις', desc:'Το /ρ/ μέσα σε λέξεις', items:[
+    {e:'⏰', w:'ρολόι', h:'Το ρ στην αρχή: ρο-λό-ι.'},{e:'👕', w:'ρούχα', h:'Το ρ στην αρχή: ρού-χα.'},
+    {e:'🍚', w:'ρύζι', h:'Το ρ στην αρχή: ρύ-ζι.'},{e:'🤖', w:'ρομπότ', h:'Το ρ στην αρχή: ρο-μπότ.'},
+    {e:'🥕', w:'καρότο', h:'Το ρ στη μέση: κα-ρό-το.'},{e:'🐟', w:'ψάρι', h:'Το ρ στη μέση: ψά-ρι.'},
+    {e:'🎁', w:'δώρο', h:'Το ρ στη μέση: δώ-ρο.'},{e:'🚪', w:'πόρτα', h:'Το ρ πριν από σύμφωνο: πόρ-τα.'},
+    {e:'🚂', w:'τρένο', h:'Σύμπλεγμα τρ: τρέ-νο.'},{e:'🌳', w:'δέντρο', h:'Σύμπλεγμα ντρ: δέν-τρο.'}
+  ]},
+  { id:'r_sent', kind:'sent', emoji:'💬', name:'Προτάσεις', desc:'Μικρές φράσεις με /ρ/', items:[
+    {e:'⏰', w:'Το ρολόι χτυπάει.', h:'Αργά και καθαρά, λέξη-λέξη.'},
+    {e:'🥕', w:'Τρώω ένα καρότο.', h:'Πρόσεξε το τρ και το ρ.'},
+    {e:'🌧️', w:'Βρέχει έξω.', h:'Το βρ στην αρχή.'},
+    {e:'🚂', w:'Το τρένο τρέχει.', h:'Δύο τρ στη σειρά!'},
+    {e:'🎁', w:'Πήρα ένα δώρο.', h:'Δύο ρ: πήρα, δώρο.'},
+    {e:'🐟', w:'Το ψάρι κολυμπάει γρήγορα.', h:'Πρόσεξε το γρ στο γρήγορα.'},
+    {e:'🌳', w:'Το δέντρο έχει ρίζες.', h:'Ντρ και ρ στην αρχή.'},
+    {e:'🍇', w:'Αγοράζω φρέσκα φρούτα.', h:'Ρ, φρ, φρ — τρία μαζί.'},
+    {e:'🚪', w:'Άνοιξε την πόρτα, Ρένα!', h:'Ρ πριν από σύμφωνο και στην αρχή.'},
+    {e:'🦁', w:'Το λιοντάρι γρυλίζει δυνατά.', h:'Η μεγάλη πρόκληση: ρι και γρ.'}
+  ]}
+ ]},
+ s:{ id:'s', symbol:'σ', label:'/σ/', pattern:/(σ|Σ|ς)/g, levels:[
+  { id:'s_sound', kind:'sound', emoji:'🐍', name:'Ο ήχος', desc:'Μεμονωμένο /σ/', items:[
+    {e:'🐍', w:'σσσ…', h:'Το φίδι σφυρίζει. Κάνε κι εσύ σσσ!'},
+    {e:'🎈', w:'σσσ', h:'Το μπαλόνι ξεφουσκώνει σιγά σιγά.'},
+    {e:'🌬️', w:'σσσ (μακρύ)', h:'Ο αέρας φυσάει. Κράτα το σ πολλή ώρα.'},
+    {e:'🚿', w:'σσσ', h:'Το ντους τρέχει: σσσ.'},
+    {e:'🦗', w:'σ… σ… σ…', h:'Κοφτά, ένα σ τη φορά.'},
+    {e:'🤫', w:'σσσ (σιγά)', h:'Ψιθύρισε: σσσ, ησυχία!'},
+    {e:'🍳', w:'σσσ', h:'Το τηγάνι τσιτσιρίζει: σσσ.'},
+    {e:'🌊', w:'σσσ…σσσ…', h:'Τα κύματα σκάνε στην άμμο.'},
+    {e:'🚂', w:'σσσ (δυνατά)', h:'Η ατμομηχανή βγάζει ατμό.'},
+    {e:'🏎️', w:'σσσ (γρήγορα)', h:'Πέρασε σαν σφαίρα: γρήγορο σ!'}
+  ]},
+  { id:'s_syll', kind:'syll', emoji:'🎵', name:'Συλλαβές', desc:'σα, σε, σι, σο, σου', items:[
+    {e:'☀️', w:'σα', h:'Καθαρό και δυνατό: σα.'},{e:'🌊', w:'σε', h:'Απαλό σαν κύμα: σε.'},
+    {e:'🎈', w:'σι', h:'Λεπτό και ψηλό: σι.'},{e:'🍩', w:'σο', h:'Στρογγυλό στόμα: σο.'},
+    {e:'🚀', w:'σου', h:'Σαν πύραυλος: σου!'},{e:'🥁', w:'σα-σα-σα', h:'Σαν τύμπανο, τρεις φορές.'},
+    {e:'🐸', w:'σε-σι', h:'Ο βάτραχος πηδάει: σε-σι.'},{e:'🎪', w:'σο-σου', h:'Δύο μαζί: σο-σου.'},
+    {e:'🌟', w:'σι-σα-σο', h:'Τρεις διαφορετικές στη σειρά.'},{e:'🎶', w:'σα-σε-σι-σο-σου', h:'Όλες μαζί σαν τραγουδάκι!'}
+  ]},
+  { id:'s_words', kind:'words', emoji:'🧼', name:'Λέξεις', desc:'Το /σ/ μέσα σε λέξεις', items:[
+    {e:'🧼', w:'σαπούνι', h:'Το σ στην αρχή: σα-πού-νι.'},{e:'🥗', w:'σαλάτα', h:'Το σ στην αρχή: σα-λά-τα.'},
+    {e:'☁️', w:'σύννεφο', h:'Το σ στην αρχή: σύν-νε-φο.'},{e:'🎵', w:'μουσική', h:'Το σ στη μέση: μου-σι-κή.'},
+    {e:'🌊', w:'θάλασσα', h:'Το σ στη μέση: θά-λασ-σα.'},{e:'🐝', w:'μέλισσα', h:'Το σ στη μέση: μέ-λισ-σα.'},
+    {e:'☀️', w:'ήλιος', h:'Το ς στο τέλος: ή-λι-ος.'},{e:'🏠', w:'σπίτι', h:'Σύμπλεγμα σπ: σπί-τι.'},
+    {e:'🐕', w:'σκύλος', h:'Σύμπλεγμα σκ στην αρχή και ς στο τέλος.'},{e:'⭐', w:'αστέρι', h:'Σύμπλεγμα στ στη μέση: α-στέ-ρι.'}
+  ]},
+  { id:'s_sent', kind:'sent', emoji:'💬', name:'Προτάσεις', desc:'Μικρές φράσεις με /σ/', items:[
+    {e:'🐕', w:'Ο σκύλος τρέχει στο δάσος.', h:'Σκ στην αρχή και σ στη μέση.'},
+    {e:'🌊', w:'Η θάλασσα έχει κύματα.', h:'Διπλό σ στη μέση, αργά και καθαρά.'},
+    {e:'🧼', w:'Το σαπούνι μυρίζει ωραία.', h:'Το σ στην αρχή της λέξης.'},
+    {e:'☀️', w:'Ο ήλιος λάμπει στον ουρανό.', h:'Τελικό ς και στ μαζί.'},
+    {e:'🐝', w:'Η μέλισσα πετάει στα άνθη.', h:'Σ στη μέση και στ στη συνέχεια.'},
+    {e:'🎵', w:'Στο σπίτι ακούμε μουσική.', h:'Στ, σπ και σ — τρία μαζί!'},
+    {e:'⭐', w:'Το αστέρι φωτίζει τη νύχτα.', h:'Το στ καθαρό στη μέση.'},
+    {e:'🥗', w:'Η Σοφία τρώει σαλάτα.', h:'Δύο σ στην αρχή λέξεων.'},
+    {e:'☁️', w:'Το σύννεφο σκεπάζει τον ήλιο.', h:'Σ και σκ στη σειρά.'},
+    {e:'🍲', w:'Ο Στέλιος φυσάει τη σούπα.', h:'Η μεγάλη πρόκληση: στ, σ και σ.'}
+  ]}
+ ]}
+};
+function allLevels(){return Object.values(PHONEMES).flatMap(p=>p.levels)}
+function phonemeOfLevel(levelId){return Object.values(PHONEMES).find(p=>p.levels.some(l=>l.id===levelId))||PHONEMES.r}
+
+
+const GAMES={
+  puzzle:{id:'puzzle',name:'Παζλ αποκάλυψης',icon:'🧩',attempts:9},
+  treasure:{id:'treasure',name:'Κυνήγι θησαυρού',icon:'🗺️',attempts:8},
+  memory:{id:'memory',name:'Memory λέξεων',icon:'🧠',attempts:6},
+  adaptive:{id:'adaptive',name:'Έξυπνη επανάληψη',icon:'✨',attempts:9}
+};
+
+let state = {level:null,idx:0,results:[],itemResults:[],startedAt:null,pendingSession:null,reportType:'clinical',mode:'cards',game:null,gameItems:[],gameIndex:0,gameMeta:{}};
+
+
+function uid(prefix='id'){return prefix+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7)}
+function loadDb(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(DB_KEY));
+    if(saved && Array.isArray(saved.children) && Array.isArray(saved.sessions)){
+      if((saved.version||2)<3){
+        const map={sound:'r_sound',syll:'r_syll',words:'r_words',sent:'r_sent'};
+        saved.sessions.forEach(s=>{if(map[s.level])s.level=map[s.level]});
+        saved.version=3;
+      }
+      if(!saved.currentPhoneme||!PHONEMES[saved.currentPhoneme])saved.currentPhoneme='r';
+      localStorage.setItem(DB_KEY,JSON.stringify(saved));
+      return saved;
+    }
+  }catch(e){}
+  const fresh={version:3,children:[],sessions:[],currentChildId:null,currentPhoneme:'r'};
+  try{
+    const old=JSON.parse(localStorage.getItem(OLD_KEY));
+    if(old && Array.isArray(old.sessions)){
+      const names=[...new Set(old.sessions.map(s=>s.child).filter(Boolean))];
+      names.forEach(name=>fresh.children.push({id:uid('child'),name,birthYear:'',goals:'',createdAt:new Date().toISOString()}));
+      old.sessions.forEach(s=>{
+        const child=fresh.children.find(c=>c.name===s.child);
+        const lvMap={sound:'r_sound',syll:'r_syll',words:'r_words',sent:'r_sent'};
+        if(child) fresh.sessions.push({...s,id:uid('sess'),childId:child.id,level:lvMap[s.level]||s.level,notes:{},durationMins:0,itemResults:[]});
+      });
+      fresh.currentChildId=fresh.children[0]?.id||null;
+    }
+  }catch(e){}
+  saveDb(fresh);return fresh;
+}
+let cachedDb=null;
+function saveDb(d){cachedDb=d;localStorage.setItem(DB_KEY,JSON.stringify(d))}
+function db(){if(!cachedDb)cachedDb=loadDb();return cachedDb}
+function currentChild(){const d=db();return d.children.find(c=>c.id===d.currentChildId)||null}
+function fmtDate(date){return new Date(date).toLocaleDateString('el-GR',{day:'2-digit',month:'2-digit',year:'numeric'})}
+function fmtTime(date){return new Date(date).toLocaleTimeString('el-GR',{hour:'2-digit',minute:'2-digit'})}
+function escapeHtml(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove('show'),2100)}
+function highlightR(text,levelId){const p=phonemeOfLevel(levelId||state.level);return escapeHtml(text).replace(p.pattern,'<span class="r">$1</span>')}
+function getLevel(id){return allLevels().find(l=>l.id===id)}
+
+/* Speech synthesis (Web Speech API) */
+let ttsVoices=[];
+function loadTtsVoices(){try{ttsVoices=speechSynthesis.getVoices()}catch(e){}}
+if('speechSynthesis' in window){loadTtsVoices();speechSynthesis.onvoiceschanged=loadTtsVoices}
+function speak(text){
+  if(!('speechSynthesis' in window)){toast('Η συσκευή δεν υποστηρίζει εκφώνηση');return}
+  const clean=String(text||'').replace(/[….()]/g,' ').replace(/\s+/g,' ').trim();if(!clean)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(clean);u.lang='el-GR';u.rate=.85;
+  const v=ttsVoices.find(v=>(v.lang||'').toLowerCase().startsWith('el'));if(v)u.voice=v;
+  speechSynthesis.speak(u);
+}
+function speakCurrent(){
+  let item=null;
+  if(state.mode==='game')item=state.game==='memory'?state.gameMeta.pendingItem:currentGameItem();
+  else{const lv=getLevel(state.level);item=lv?lv.items[state.idx]:null}
+  if(item)speak(item.w);
+}
+
+function setFocusMode(on){document.body.classList.toggle('focus-mode',on)}
+function show(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('scr-'+name).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  setFocusMode(name==='session'||name==='game'||name==='notes'||name==='summary');
+  document.getElementById('appHeader').style.display=(name==='session'||name==='game')?'none':'flex';
+  if(name==='home') renderHome();
+  if(name==='children') renderChildren();
+  if(name==='games') renderGames();
+  if(name==='reports') renderReportsScreen();
+  if(name==='progress') renderProgress();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function populateChildSelects(){
+  const d=db();
+  const selects=['homeChildSelect','reportChildSelect','progressChildSelect'];
+  selects.forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const previous=id==='reportChildSelect'?el.value:d.currentChildId;
+    el.innerHTML=d.children.length?d.children.map(c=>`<option value="${c.id}">${escapeHtml(c.name)}</option>`).join(''):'<option value="">Δεν υπάρχει παιδί</option>';
+    if(d.children.some(c=>c.id===previous)) el.value=previous;
+    else if(d.currentChildId) el.value=d.currentChildId;
+  });
+  const c=currentChild();document.getElementById('childPill').textContent=c?c.name:'Χωρίς επιλογή παιδιού';
+}
+function selectChild(id){
+  const d=db();if(!d.children.some(c=>c.id===id))return;
+  d.currentChildId=id;saveDb(d);populateChildSelects();renderHome();
+}
+
+function currentPhonemeId(){const d=db();return PHONEMES[d.currentPhoneme]?d.currentPhoneme:'r'}
+function selectPhoneme(id){if(!PHONEMES[id])return;const d=db();d.currentPhoneme=id;saveDb(d);renderHome()}
+function renderPhonemeSeg(){
+  const seg=document.getElementById('phonemeSeg');if(!seg)return;
+  const cur=currentPhonemeId();
+  seg.innerHTML=Object.values(PHONEMES).map(p=>`<button class="${p.id===cur?'active':''}" onclick="selectPhoneme('${p.id}')">${p.label}</button>`).join('');
+}
+function levelStats(childId,levelId){
+  const sessions=db().sessions.filter(s=>s.childId===childId&&s.level===levelId);
+  if(!sessions.length)return null;
+  return Math.round(sessions[sessions.length-1].score||0);
+}
+function renderHome(){
+  populateChildSelects();
+  const c=currentChild(),d=db();
+  const sessions=c?d.sessions.filter(s=>s.childId===c.id):[];
+  const avg=sessions.length?Math.round(sessions.reduce((a,s)=>a+(s.score||0),0)/sessions.length):0;
+  const week=getWeekRange(new Date());
+  const weekSessions=sessions.filter(s=>{const dt=new Date(s.date);return dt>=week.start&&dt<=week.end});
+  document.getElementById('dashboardMetrics').innerHTML=`
+    <div class="metric card"><b>${sessions.length}</b><span>ΣΥΝΕΔΡΙΕΣ</span></div>
+    <div class="metric card"><b>${avg}%</b><span>ΜΕΣΗ ΕΠΙΤΥΧΙΑ</span></div>
+    <div class="metric card"><b>${weekSessions.length}</b><span>ΑΥΤΗ ΤΗΝ ΕΒΔ.</span></div>`;
+  renderPhonemeSeg();
+  const grid=document.getElementById('levelGrid');grid.innerHTML='';
+  PHONEMES[currentPhonemeId()].levels.forEach(lv=>{
+    const rate=c?levelStats(c.id,lv.id):null;
+    const btn=document.createElement('button');btn.className='level-btn';
+    btn.innerHTML=`<div class="lv-top"><span class="lv-emoji">${lv.emoji}</span><span class="lv-rate ${rate===null?'empty':''}">${rate===null?'Νέο':'Τελευταίο '+rate+'%'}</span></div><span class="lv-name">${lv.name}</span><span class="lv-desc">${lv.desc}</span>`;
+    btn.onclick=()=>startSession(lv.id);grid.appendChild(btn);
+  });
+}
+
+function resetChildForm(){
+  document.getElementById('editChildId').value='';document.getElementById('childNameInput').value='';document.getElementById('childBirthYear').value='';document.getElementById('childGoals').value='';
+  document.getElementById('childFormTitle').textContent='Νέος φάκελος παιδιού';document.getElementById('saveChildBtn').textContent='Αποθήκευση φακέλου';document.getElementById('cancelEditBtn').style.display='none';
+}
+function saveChild(){
+  const name=document.getElementById('childNameInput').value.trim();if(!name){toast('Συμπλήρωσε όνομα ή κωδικό παιδιού');return}
+  const birthYear=document.getElementById('childBirthYear').value.trim();const goals=document.getElementById('childGoals').value.trim();const editId=document.getElementById('editChildId').value;
+  const d=db();
+  if(editId){const c=d.children.find(c=>c.id===editId);if(c){c.name=name;c.birthYear=birthYear;c.goals=goals}}
+  else{const c={id:uid('child'),name,birthYear,goals,createdAt:new Date().toISOString()};d.children.push(c);d.currentChildId=c.id}
+  saveDb(d);resetChildForm();renderChildren();populateChildSelects();toast(editId?'Ο φάκελος ενημερώθηκε':'Ο φάκελος δημιουργήθηκε');
+}
+function editChild(id){
+  const c=db().children.find(c=>c.id===id);if(!c)return;
+  document.getElementById('editChildId').value=c.id;document.getElementById('childNameInput').value=c.name;document.getElementById('childBirthYear').value=c.birthYear||'';document.getElementById('childGoals').value=c.goals||'';
+  document.getElementById('childFormTitle').textContent='Επεξεργασία φακέλου';document.getElementById('saveChildBtn').textContent='Αποθήκευση αλλαγών';document.getElementById('cancelEditBtn').style.display='block';window.scrollTo({top:0,behavior:'smooth'});
+}
+function deleteChild(id){
+  const d=db(),c=d.children.find(c=>c.id===id);if(!c)return;
+  if(!confirm(`Να διαγραφεί ο φάκελος «${c.name}» και όλες οι συνεδρίες του;`))return;
+  d.children=d.children.filter(x=>x.id!==id);d.sessions=d.sessions.filter(s=>s.childId!==id);if(d.currentChildId===id)d.currentChildId=d.children[0]?.id||null;saveDb(d);renderChildren();populateChildSelects();toast('Ο φάκελος διαγράφηκε');
+}
+function renderChildren(){
+  populateChildSelects();const d=db(),list=document.getElementById('childList');document.getElementById('childrenCount').textContent=d.children.length+' '+(d.children.length===1?'φάκελος':'φάκελοι');
+  if(!d.children.length){list.innerHTML='<div class="card empty">Δεν έχεις δημιουργήσει ακόμη φάκελο παιδιού.<br>Συμπλήρωσε τη φόρμα παραπάνω.</div>';return}
+  list.innerHTML=d.children.map(c=>{
+    const sessions=d.sessions.filter(s=>s.childId===c.id);const last=sessions[sessions.length-1];
+    return `<div class="child-card card ${d.currentChildId===c.id?'selected':''}">
+      <div class="child-head"><div class="child-main"><div class="child-avatar">${d.currentChildId===c.id?'⭐':'👤'}</div><div><div class="child-name">${escapeHtml(c.name)}</div><div class="child-meta">${c.birthYear?'Γέννηση '+escapeHtml(c.birthYear)+' · ':''}${sessions.length} ${sessions.length===1?'συνεδρία':'συνεδρίες'}${last?' · τελευταία '+fmtDate(last.date):''}</div></div></div>
+      <div class="card-actions"><button onclick="selectChild('${c.id}');renderChildren()">Επιλογή</button><button onclick="editChild('${c.id}')">✎</button><button onclick="deleteChild('${c.id}')">🗑</button></div></div>
+      ${c.goals?`<div class="child-goals"><b>Στόχοι:</b> ${escapeHtml(c.goals)}</div>`:''}
+    </div>`}).join('');
+}
+
+
+function shuffled(arr){
+  const copy=arr.slice();for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy;
+}
+function gameStarsForChild(childId){
+  return db().sessions.filter(s=>s.childId===childId).reduce((sum,s)=>sum+(s.ok||0)*2+(s.mid||0),0);
+}
+function gameCountForChild(childId){return db().sessions.filter(s=>s.childId===childId&&s.activity&&s.activity!=='cards').length}
+function openGames(preferred){
+  const c=currentChild();if(!c){toast('Δημιούργησε πρώτα έναν φάκελο παιδιού');show('children');return}
+  show('games');
+  if(preferred){document.querySelectorAll('[data-game]').forEach(x=>x.classList.toggle('preferred',x.dataset.game===preferred));setTimeout(()=>document.querySelector(`[data-game="${preferred}"]`)?.scrollIntoView({behavior:'smooth',block:'center'}),80)}
+}
+function renderGames(){
+  populateChildSelects();const c=currentChild(),sel=document.getElementById('gameLevelSelect');
+  const prev=sel.value;
+  sel.innerHTML=allLevels().map(l=>`<option value="${l.id}">${l.emoji} ${phonemeOfLevel(l.id).label} ${l.name}</option>`).join('');
+  if(allLevels().some(l=>l.id===prev))sel.value=prev;
+  else{const def=PHONEMES[currentPhonemeId()].levels.find(l=>l.kind==='words');if(def)sel.value=def.id}
+  const sessions=c?db().sessions.filter(s=>s.childId===c.id):[],stars=c?gameStarsForChild(c.id):0,games=c?gameCountForChild(c.id):0;
+  const difficult=c?getAdaptiveItems(c.id).length:0;
+  document.getElementById('gameRewards').innerHTML=`<div class="reward-item"><b>${stars} ⭐</b><span>ΑΣΤΕΡΙΑ</span></div><div class="reward-item"><b>${games}</b><span>ΠΑΙΧΝΙΔΙΑ</span></div><div class="reward-item"><b>${difficult}</b><span>ΓΙΑ ΕΠΑΝΑΛΗΨΗ</span></div>`;
+}
+function getAdaptiveItems(childId){
+  const map=new Map();
+  db().sessions.filter(s=>s.childId===childId).forEach(s=>(s.itemResults||[]).forEach(i=>{
+    const key=i.word;if(!map.has(key))map.set(key,{word:i.word,sum:0,n:0});const v=map.get(key);v.sum+=Number(i.score)||0;v.n++;
+  }));
+  const library=allLevels().flatMap(l=>l.items.map(i=>({...i,sourceLevel:l.id})));
+  return [...map.values()].map(v=>({...v,avg:v.sum/v.n})).filter(v=>v.avg<1.5).sort((a,b)=>a.avg-b.avg).map(v=>library.find(i=>i.w===v.word)).filter(Boolean);
+}
+function startAdaptivePractice(){
+  const c=currentChild();if(!c)return;let items=getAdaptiveItems(c.id);
+  if(!items.length){toast('Δεν υπάρχουν ακόμη δύσκολες λέξεις. Ολοκλήρωσε πρώτα μία συνεδρία.');return}
+  const wordsLevel=PHONEMES[currentPhonemeId()].levels.find(l=>l.kind==='words');
+  items=items.slice(0,9);while(items.length<6){const extra=shuffled(wordsLevel.items).find(i=>!items.some(x=>x.w===i.w));if(!extra)break;items.push({...extra,sourceLevel:wordsLevel.id})}
+  beginGame('adaptive',wordsLevel.id,items);
+}
+function startGame(gameId){
+  const c=currentChild();if(!c){toast('Δημιούργησε πρώτα έναν φάκελο παιδιού');show('children');return}
+  const fallback=PHONEMES[currentPhonemeId()].levels.find(l=>l.kind==='words').id;
+  const levelId=document.getElementById('gameLevelSelect')?.value||fallback,lv=getLevel(levelId),game=GAMES[gameId];if(!lv||!game)return;
+  const count=Math.min(game.attempts,lv.items.length),items=shuffled(lv.items).slice(0,count).map(i=>({...i,sourceLevel:levelId}));beginGame(gameId,levelId,items);
+}
+function beginGame(gameId,levelId,items){
+  state.mode='game';state.game=gameId;state.level=levelId;state.gameItems=items;state.gameIndex=0;state.results=[];state.itemResults=[];state.startedAt=Date.now();state.pendingSession=null;state.gameMeta={};
+  const game=GAMES[gameId];document.getElementById('activeGameIcon').textContent=game.icon;document.getElementById('activeGameTitle').textContent=game.name;document.getElementById('activeGameMeta').textContent=`${currentChild().name} · ${phonemeOfLevel(levelId).label} ${getLevel(levelId)?.name||'Εξατομικευμένο υλικό'}`;
+  if(gameId==='memory')setupMemoryDeck();show('game');renderGame();
+}
+function currentGameItem(){return state.gameItems[Math.min(state.gameIndex,state.gameItems.length-1)]}
+function gameScoreButtons(){return `<div class="game-score-panel"><div class="score-row"><button class="score-btn sb-ok" onclick="scoreGameItem(2)"><small>😀</small>Σωστό</button><button class="score-btn sb-mid" onclick="scoreGameItem(1)"><small>🙂</small>Σχεδόν</button><button class="score-btn sb-no" onclick="scoreGameItem(0)"><small>💪</small>Ξανά</button></div></div>`}
+function promptHtml(item){return `<div class="game-prompt"><div class="prompt-emoji">${item?.e||'⭐'}</div><div class="prompt-word">${highlightR(item?.w||'')}</div><div class="prompt-hint">${escapeHtml(item?.h||'Πες τη λέξη καθαρά και αξιολόγησε την προσπάθεια.')}</div><button class="prompt-speak" onclick="speakCurrent()">🔊 Άκουσε</button></div>`}
+function renderGame(){
+  const total=state.gameItems.length,done=state.results.length;document.getElementById('gameProgress').style.width=(total?done/total*100:0)+'%';
+  if(state.game==='memory')renderMemory();else if(state.game==='treasure')renderTreasure();else renderPuzzle();
+}
+function renderPuzzle(){
+  const stage=document.getElementById('gameStage'),item=currentGameItem(),total=state.gameItems.length,done=state.results.length,tiles=9;
+  stage.innerHTML=`<div class="game-status"><span>${done+1>total?total:done+1} / ${total}</span><span class="stars">${state.results.filter(x=>x===2).length*2+state.results.filter(x=>x===1).length} ⭐</span></div><div class="puzzle-scene"><div class="puzzle-picture">🏆</div><div class="puzzle-celebrate ${done>=total?'show':''}">Το παζλ ολοκληρώθηκε!</div><div class="puzzle-cover">${Array.from({length:tiles},(_,i)=>`<div class="puzzle-tile ${i<done?'revealed':''}">${i+1}</div>`).join('')}</div></div>${promptHtml(item)}${gameScoreButtons()}<p class="game-instruction">Η λογοθεραπεύτρια ακούει την παραγωγή και επιλέγει την αξιολόγηση.</p>`;
+}
+function renderTreasure(){
+  const stage=document.getElementById('gameStage'),item=currentGameItem(),total=state.gameItems.length,done=state.results.length;
+  const nodes=Array.from({length:total},(_,i)=>`<div class="map-node ${i<done?'done':i===done?'current':''}">${i<done?'✓':i+1}</div>`).join('');
+  const pct=total<=1?0:Math.min(done,total-1)/(total-1),left=10+pct*73,bottom=done%2===1?98:31;
+  stage.innerHTML=`<div class="game-status"><span>Στάση ${Math.min(done+1,total)} από ${total}</span><span class="stars">${state.results.filter(x=>x===2).length*2+state.results.filter(x=>x===1).length} ⭐</span></div><div class="treasure-map"><div class="map-line"></div><div class="map-path">${nodes}</div><div class="map-player" style="left:${left}%;bottom:${bottom}px">🧭</div><div class="treasure-chest">${done>=total?'🎊':'🧰'}</div></div>${promptHtml(item)}${gameScoreButtons()}<p class="game-instruction">Κάθε προσπάθεια μετακινεί τον ήρωα. Η ακρίβεια καταγράφεται ξεχωριστά.</p>`;
+}
+function setupMemoryDeck(){
+  const pairs=state.gameItems.map((item,i)=>[{pair:i,item,uid:i+'a'},{pair:i,item,uid:i+'b'}]).flat();
+  state.gameMeta={deck:shuffled(pairs),flipped:[],matched:[],locked:false,pendingItem:null};
+}
+function renderMemory(){
+  const stage=document.getElementById('gameStage'),m=state.gameMeta,total=state.gameItems.length,done=state.results.length;
+  const cards=m.deck.map((card,i)=>{const flipped=m.flipped.includes(i),matched=m.matched.includes(card.pair);return `<button class="memory-card ${flipped?'flipped':''} ${matched?'matched':''}" onclick="flipMemoryCard(${i})" ${matched||m.locked?'disabled':''}><span class="memory-inner"><span class="memory-face memory-back">${phonemeOfLevel(state.level).symbol}</span><span class="memory-face memory-front">${card.item.e}</span></span></button>`}).join('');
+  stage.innerHTML=`<div class="game-status"><span>${done} / ${total} ζευγάρια</span><span class="stars">${state.results.filter(x=>x===2).length*2+state.results.filter(x=>x===1).length} ⭐</span></div><div class="memory-board">${cards}</div><p class="game-instruction">Άνοιξε δύο κάρτες. Όταν βρεθεί ζευγάρι, το παιδί λέει τη λέξη.</p><div class="memory-evaluate ${m.pendingItem?'show':''}" id="memoryEvaluate">${m.pendingItem?promptHtml(m.pendingItem)+gameScoreButtons():''}</div>`;
+}
+function flipMemoryCard(index){
+  const m=state.gameMeta;if(m.locked||m.flipped.includes(index)||m.matched.includes(m.deck[index].pair))return;
+  m.flipped.push(index);renderMemory();if(m.flipped.length<2)return;
+  m.locked=true;const [a,b]=m.flipped.map(i=>m.deck[i]);
+  if(a.pair===b.pair){setTimeout(()=>{m.matched.push(a.pair);m.flipped=[];m.locked=false;m.pendingItem=a.item;renderMemory()},320)}
+  else setTimeout(()=>{m.flipped=[];m.locked=false;renderMemory()},750);
+}
+function scoreGameItem(val){
+  let item;
+  if(state.game==='memory'){
+    item=state.gameMeta.pendingItem;if(!item)return;state.gameMeta.pendingItem=null;
+  }else item=currentGameItem();
+  state.results.push(val);state.itemResults.push({word:item.w,score:val,activity:state.game});state.gameIndex=state.results.length;
+  if(state.results.length>=state.gameItems.length){setTimeout(()=>prepareSessionNotes(),180)}else renderGame();
+}
+function quitGame(){
+  if(!state.results.length){show('games');return}
+  if(confirm('Να ολοκληρωθεί το παιχνίδι με τις προσπάθειες που έχουν καταγραφεί;'))prepareSessionNotes();
+}
+
+function startSession(levelId){
+  const c=currentChild();if(!c){toast('Δημιούργησε πρώτα έναν φάκελο παιδιού');show('children');return}
+  state.mode='cards';state.game=null;state.level=levelId;state.idx=0;state.results=[];state.itemResults=[];state.startedAt=Date.now();state.pendingSession=null;
+  document.getElementById('sessChild').textContent=c.name;document.getElementById('sessLevel').textContent=phonemeOfLevel(levelId).label+' · '+getLevel(levelId).name;show('session');renderCard();
+}
+function renderCard(){
+  const lv=getLevel(state.level),item=lv.items[state.idx];
+  document.getElementById('fcEmoji').textContent=item.e;document.getElementById('fcWord').innerHTML=highlightR(item.w);document.getElementById('fcHint').textContent=item.h;
+  document.getElementById('fcCount').textContent=(state.idx+1)+' / '+lv.items.length;document.getElementById('sessProg').style.width=(state.idx/lv.items.length*100)+'%';
+}
+function scoreItem(val){
+  const lv=getLevel(state.level),item=lv.items[state.idx];state.results.push(val);state.itemResults.push({word:item.w,score:val});state.idx++;
+  if(state.idx>=lv.items.length)prepareSessionNotes();else renderCard();
+}
+function quitSession(){
+  if(!state.results.length){show('home');return}
+  if(confirm('Να ολοκληρωθεί η συνεδρία με τις προσπάθειες που έχουν καταγραφεί;'))prepareSessionNotes();
+}
+function calculatePending(){
+  const ok=state.results.filter(r=>r===2).length,mid=state.results.filter(r=>r===1).length,no=state.results.filter(r=>r===0).length,total=state.results.length;
+  const score=total?((ok+mid*.5)/total*100):0;const durationMins=Math.max(1,Math.round((Date.now()-state.startedAt)/60000));
+  const activity=state.mode==='game'?(state.game||'game'):'cards';
+  return {id:uid('sess'),childId:currentChild().id,level:state.level,activity,activityName:activity==='cards'?'Κάρτες εξάσκησης':(GAMES[activity]?.name||'Θεραπευτικό παιχνίδι'),date:new Date().toISOString(),ok,mid,no,total,score,durationMins,itemResults:state.itemResults.slice(),notes:{}};
+}
+function prepareSessionNotes(){
+  state.pendingSession=calculatePending();const s=state.pendingSession,lv=getLevel(s.level);
+  const activityLabel=s.activity&&s.activity!=='cards'?(s.activityName+' · '):'';document.getElementById('notesTitle').textContent=activityLabel+(lv?.name||'Εξατομικευμένη άσκηση')+' · '+currentChild().name;document.getElementById('notesScore').textContent=Math.round(s.score)+'%';
+  document.getElementById('noteOk').textContent=s.ok;document.getElementById('noteMid').textContent=s.mid;document.getElementById('noteNo').textContent=s.no;document.getElementById('noteDuration').textContent=s.durationMins+'′';
+  document.querySelectorAll('.chips .chip').forEach(ch=>ch.classList.remove('selected'));['noteStrengths','noteDifficulties','noteHomework','noteFree'].forEach(id=>document.getElementById(id).value='');
+  show('notes');
+}
+function setupChips(){
+  document.querySelectorAll('.chips').forEach(group=>group.addEventListener('click',e=>{if(!e.target.classList.contains('chip'))return;group.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));e.target.classList.add('selected')}));
+}
+function selectedChip(field){const group=document.querySelector(`.chips[data-field="${field}"]`);return group?.querySelector('.chip.selected')?.textContent||''}
+function saveSessionWithNotes(){
+  if(!state.pendingSession)return;
+  const s=state.pendingSession;s.notes={collaboration:selectedChip('collaboration'),attention:selectedChip('attention'),support:selectedChip('support'),progress:selectedChip('progress'),strengths:document.getElementById('noteStrengths').value.trim(),difficulties:document.getElementById('noteDifficulties').value.trim(),homework:document.getElementById('noteHomework').value.trim(),free:document.getElementById('noteFree').value.trim()};
+  const d=db();d.sessions.push(s);saveDb(d);showSavedSummary(s);state.pendingSession=null;
+}
+function showSavedSummary(s){
+  const el=document.getElementById('sumScore');el.textContent=Math.round(s.score)+'%';el.classList.toggle('low',s.score<60);
+  document.getElementById('sumTitle').textContent=s.score>=80?'Εξαιρετική δουλειά! 🌟':s.score>=60?'Πολύ καλή συνεδρία!':'Η συνεδρία καταγράφηκε';
+  document.getElementById('sumSub').textContent=`Αποθηκεύτηκαν ${s.total} προσπάθειες από ${s.activityName||'τη συνεδρία'} και οι σημειώσεις για τον φάκελο «${currentChild().name}».`;
+  show('summary');toast('Η συνεδρία αποθηκεύτηκε');
+}
+
+function getWeekRange(input){
+  const d=new Date(input);d.setHours(0,0,0,0);const day=(d.getDay()+6)%7;const start=new Date(d);start.setDate(d.getDate()-day);const end=new Date(start);end.setDate(start.getDate()+6);end.setHours(23,59,59,999);return{start,end};
+}
+function initReportDate(){const el=document.getElementById('reportDate');if(!el.value)el.value=new Date().toISOString().slice(0,10)}
+function setReportType(type){state.reportType=type;document.getElementById('segClinical').classList.toggle('active',type==='clinical');document.getElementById('segParent').classList.toggle('active',type==='parent');generateReport(false)}
+function renderReportsScreen(){
+  populateChildSelects();initReportDate();const d=db(),sel=document.getElementById('reportChildSelect');if(!sel.value&&d.currentChildId)sel.value=d.currentChildId;generateReport(false);
+}
+function sessionsForReport(){
+  const childId=document.getElementById('reportChildSelect').value,date=document.getElementById('reportDate').value;if(!childId||!date)return{sessions:[],range:null,child:null};
+  const range=getWeekRange(date),d=db();const sessions=d.sessions.filter(s=>s.childId===childId&&new Date(s.date)>=range.start&&new Date(s.date)<=range.end).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  return{sessions,range,child:d.children.find(c=>c.id===childId)};
+}
+function joinUnique(values){return [...new Set(values.map(v=>(v||'').trim()).filter(Boolean))]}
+function listNatural(items){if(!items.length)return'';if(items.length===1)return items[0];return items.slice(0,-1).join(', ')+' και '+items[items.length-1]}
+function hardestWords(sessions){
+  const map={};sessions.flatMap(s=>s.itemResults||[]).forEach(i=>{if(!map[i.word])map[i.word]={sum:0,n:0};map[i.word].sum+=i.score;map[i.word].n++});
+  return Object.entries(map).map(([word,v])=>({word,avg:v.sum/v.n})).filter(x=>x.avg<1.5).sort((a,b)=>a.avg-b.avg).slice(0,5).map(x=>x.word);
+}
+function levelSummary(sessions){
+  return allLevels().map(l=>{const ss=sessions.filter(s=>s.level===l.id);if(!ss.length)return null;return `${phonemeOfLevel(l.id).label} ${l.name}: ${Math.round(ss.reduce((a,s)=>a+s.score,0)/ss.length)}%`}).filter(Boolean);
+}
+function generateClinicalReport(child,sessions,range){
+  const avg=Math.round(sessions.reduce((a,s)=>a+s.score,0)/sessions.length),minutes=sessions.reduce((a,s)=>a+(s.durationMins||0),0);
+  const first=Math.round(sessions[0].score),last=Math.round(sessions[sessions.length-1].score),delta=last-first;
+  const levels=levelSummary(sessions),activities=joinUnique(sessions.map(s=>s.activityName||'Κάρτες εξάσκησης')),collab=joinUnique(sessions.map(s=>s.notes?.collaboration)),attention=joinUnique(sessions.map(s=>s.notes?.attention)),support=joinUnique(sessions.map(s=>s.notes?.support)),progress=joinUnique(sessions.map(s=>s.notes?.progress));
+  const strengths=joinUnique(sessions.map(s=>s.notes?.strengths)),difficulties=joinUnique(sessions.map(s=>s.notes?.difficulties)),homework=joinUnique(sessions.map(s=>s.notes?.homework)),free=joinUnique(sessions.map(s=>s.notes?.free)),hard=hardestWords(sessions);
+  const trend=delta>5?`Παρατηρήθηκε βελτίωση ${delta} ποσοστιαίων μονάδων από την πρώτη έως την τελευταία συνεδρία.`:delta<-5?`Παρατηρήθηκε διακύμανση με μείωση ${Math.abs(delta)} ποσοστιαίων μονάδων, η οποία χρειάζεται επανεκτίμηση στην επόμενη συνεδρία.`:'Η επίδοση παρέμεινε σχετικά σταθερή μέσα στην εβδομάδα.';
+  const targets=joinUnique(sessions.map(s=>phonemeOfLevel(s.level).label));
+  const targetPhrase=targets.length===1?'του '+targets[0]:targets.length?'των '+listNatural(targets):'των ήχων-στόχων';
+  return `ΕΒΔΟΜΑΔΙΑΙΑ ΚΛΙΝΙΚΗ ΑΝΑΦΟΡΑ\n\nΠαιδί: ${child.name}\nΠερίοδος: ${fmtDate(range.start)} – ${fmtDate(range.end)}\nΣυνεδρίες: ${sessions.length} | Συνολική καταγεγραμμένη διάρκεια: ${minutes} λεπτά\n\nΘΕΡΑΠΕΥΤΙΚΟΙ ΣΤΟΧΟΙ\n${child.goals||'Δεν έχουν καταχωριστεί σταθεροί θεραπευτικοί στόχοι στον φάκελο.'}\n\nΠΟΣΟΤΙΚΗ ΕΙΚΟΝΑ\nΗ μέση σταθμισμένη επιτυχία της εβδομάδας ήταν ${avg}%. ${trend}\n${levels.length?'Απόδοση ανά επίπεδο: '+levels.join(' · ')+'.':''}${activities.length?'\nΔραστηριότητες που χρησιμοποιήθηκαν: '+listNatural(activities)+'.':''}\n\nΣΥΜΜΕΤΟΧΗ ΚΑΙ ΥΠΟΣΤΗΡΙΞΗ\n${collab.length?'Συνεργασία: '+listNatural(collab)+'. ':''}${attention.length?'Συγκέντρωση: '+listNatural(attention)+'. ':''}${support.length?'Επίπεδο υποστήριξης: '+listNatural(support)+'.':''}\n${progress.length?'Συνολική εικόνα προόδου που καταγράφηκε: '+listNatural(progress)+'.':''}\n\nΔΥΝΑΤΑ ΣΗΜΕΙΑ\n${strengths.length?strengths.map(x=>'• '+x).join('\n'):'• Δεν καταχωρίστηκε ειδική παρατήρηση.'}\n\nΣΗΜΕΙΑ ΔΥΣΚΟΛΙΑΣ\n${difficulties.length?difficulties.map(x=>'• '+x).join('\n'):'• Δεν καταχωρίστηκε ειδική δυσκολία.'}${hard.length?'\n• Χαμηλότερη απόδοση καταγράφηκε στα στοιχεία: '+hard.join(', ')+'.':''}\n\nΚΑΤΕΥΘΥΝΣΗ ΕΠΟΜΕΝΩΝ ΣΥΝΕΔΡΙΩΝ\nΠροτείνεται συνέχιση της εξάσκησης με έμφαση στα σημεία χαμηλότερης επίδοσης, σταδιακή μείωση της υποστήριξης όπου είναι εφικτό και επανέλεγχος της γενίκευσης ${targetPhrase} σε πιο σύνθετο γλωσσικό υλικό.${homework.length?'\n\nΕΡΓΑΣΙΑ ΓΙΑ ΤΟ ΣΠΙΤΙ\n'+homework.map(x=>'• '+x).join('\n'):''}${free.length?'\n\nΠΡΟΣΘΕΤΕΣ ΠΑΡΑΤΗΡΗΣΕΙΣ\n'+free.map(x=>'• '+x).join('\n'):''}\n\nΤο παρόν κείμενο αποτελεί προσχέδιο και απαιτεί κλινικό έλεγχο και έγκριση από τον/τη λογοθεραπευτή/τρια.`;
+}
+function generateParentReport(child,sessions,range){
+  const avg=Math.round(sessions.reduce((a,s)=>a+s.score,0)/sessions.length),first=sessions[0].score,last=sessions[sessions.length-1].score;
+  const activities=joinUnique(sessions.map(s=>s.activityName||'Κάρτες εξάσκησης')),strengths=joinUnique(sessions.map(s=>s.notes?.strengths)),difficulties=joinUnique(sessions.map(s=>s.notes?.difficulties)),homework=joinUnique(sessions.map(s=>s.notes?.homework)),collab=joinUnique(sessions.map(s=>s.notes?.collaboration));
+  const trend=last>first+5?'Μέσα στην εβδομάδα παρατηρήθηκε θετική εξέλιξη στην επίδοση.':last<first-5?'Η επίδοση παρουσίασε διακυμάνσεις, κάτι που είναι φυσιολογικό κατά την εκμάθηση μιας νέας δεξιότητας.':'Η εικόνα παρέμεινε σταθερή, με συνέχιση της εξάσκησης στους ίδιους στόχους.';
+  const targets=joinUnique(sessions.map(s=>phonemeOfLevel(s.level).label));
+  const targetPhrase=targets.length===1?'του ήχου '+targets[0]:targets.length?'των ήχων '+listNatural(targets):'των ήχων-στόχων';
+  return `ΕΝΗΜΕΡΩΣΗ ΕΒΔΟΜΑΔΙΑΙΑΣ ΠΡΟΟΔΟΥ\n\nΠαιδί: ${child.name}\nΠερίοδος: ${fmtDate(range.start)} – ${fmtDate(range.end)}\n\nΑυτή την εβδομάδα πραγματοποιήθηκαν ${sessions.length} ${sessions.length===1?'συνεδρία':'συνεδρίες'}. Η συνολική επίδοση στις δραστηριότητες ήταν περίπου ${avg}%. ${trend}${activities.length?'\nΧρησιμοποιήσαμε: '+listNatural(activities)+'.':''}\n\nΤΙ ΔΟΥΛΕΨΑΜΕ\n${child.goals||`Εξάσκηση της σωστής παραγωγής ${targetPhrase} μέσα από διαβαθμισμένες δραστηριότητες.`}\n\nΤΙ ΠΗΓΕ ΚΑΛΑ\n${strengths.length?strengths.map(x=>'• '+x).join('\n'):'• Το παιδί συμμετείχε στις δραστηριότητες και ολοκλήρωσε τις προγραμματισμένες προσπάθειες.'}\n${collab.length?'\nΣυνεργασία: '+listNatural(collab)+'.':''}\n\nΤΙ ΘΑ ΣΥΝΕΧΙΣΟΥΜΕ ΝΑ ΔΟΥΛΕΥΟΥΜΕ\n${difficulties.length?difficulties.map(x=>'• '+x).join('\n'):'• Θα συνεχίσουμε τη σταδιακή εξάσκηση για μεγαλύτερη σταθερότητα και γενίκευση.'}\n\nΜΙΚΡΗ ΕΞΑΣΚΗΣΗ ΣΤΟ ΣΠΙΤΙ\n${homework.length?homework.map(x=>'• '+x).join('\n'):'• Σύντομη, ευχάριστη επανάληψη 5 λεπτών χωρίς πίεση, σύμφωνα με τις οδηγίες του/της λογοθεραπευτή/τριας.'}\n\nΓια οποιαδήποτε απορία, η ενημέρωση μπορεί να συζητηθεί στην επόμενη συνάντηση.`;
+}
+function generateReport(showToast){
+  const {sessions,range,child}=sessionsForReport(),empty=document.getElementById('reportEmpty'),text=document.getElementById('reportText'),actions=document.getElementById('reportActions');
+  if(!child||!range){empty.style.display='block';text.style.display='none';actions.style.display='none';return}
+  document.getElementById('reportPeriod').textContent=fmtDate(range.start)+' – '+fmtDate(range.end);document.getElementById('reportSessionCount').textContent=sessions.length+' '+(sessions.length===1?'συνεδρία':'συνεδρίες');document.getElementById('reportHeading').textContent=state.reportType==='clinical'?'Εβδομαδιαία κλινική αναφορά':'Ενημέρωση προς γονείς';
+  if(!sessions.length){empty.innerHTML='<div class="ico">📭</div>Δεν υπάρχουν αποθηκευμένες συνεδρίες για αυτή την εβδομάδα.';empty.style.display='block';text.style.display='none';actions.style.display='none';return}
+  text.value=state.reportType==='clinical'?generateClinicalReport(child,sessions,range):generateParentReport(child,sessions,range);empty.style.display='none';text.style.display='block';actions.style.display='grid';if(showToast)toast('Η αναφορά δημιουργήθηκε');
+}
+function openCurrentWeekReport(){show('reports');const c=currentChild();if(c)document.getElementById('reportChildSelect').value=c.id;document.getElementById('reportDate').value=new Date().toISOString().slice(0,10);generateReport(true)}
+async function copyReport(){const text=document.getElementById('reportText').value;try{await navigator.clipboard.writeText(text);toast('Η αναφορά αντιγράφηκε')}catch(e){const el=document.getElementById('reportText');el.select();document.execCommand('copy');toast('Η αναφορά αντιγράφηκε')}}
+function safeFilename(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9α-ωΑ-Ω_-]+/g,'_')}
+function downloadReport(){const {child,range}=sessionsForReport();if(!child||!range)return;const blob=new Blob([document.getElementById('reportText').value],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`Αναφορά_${safeFilename(child.name)}_${range.start.toISOString().slice(0,10)}.txt`;a.click();URL.revokeObjectURL(a.href);toast('Το αρχείο δημιουργήθηκε')}
+function printReport(){const {child,range}=sessionsForReport();if(!child||!range)return;document.getElementById('printTitle').textContent=document.getElementById('reportHeading').textContent;document.getElementById('printMeta').textContent=`${child.name} · ${fmtDate(range.start)} – ${fmtDate(range.end)}`;document.getElementById('printText').textContent=document.getElementById('reportText').value;window.print()}
+
+function renderProgress(){
+  populateChildSelects();const c=currentChild(),bars=document.getElementById('progBars'),hist=document.getElementById('histList'),trends=document.getElementById('trendStats');
+  if(!c){document.getElementById('progTitle').textContent='Συνολική εικόνα';trends.innerHTML='';bars.innerHTML='<div class="empty">Δημιούργησε πρώτα έναν φάκελο παιδιού.</div>';hist.innerHTML='';return}
+  const sessions=db().sessions.filter(s=>s.childId===c.id);document.getElementById('progTitle').textContent='Συνολική εικόνα — '+c.name;
+  if(!sessions.length){trends.innerHTML='';bars.innerHTML='<div class="empty">Δεν υπάρχουν ακόμη συνεδρίες για αυτό το παιδί.</div>';hist.innerHTML='<div class="empty">Το ιστορικό θα εμφανιστεί εδώ.</div>';return}
+  const avg=Math.round(sessions.reduce((a,s)=>a+s.score,0)/sessions.length),last=Math.round(sessions[sessions.length-1].score),first=Math.round(sessions[0].score),delta=last-first;
+  trends.innerHTML=`<div class="trend-box"><b>${avg}%</b><span>ΜΕΣΟΣ ΟΡΟΣ</span></div><div class="trend-box"><b>${last}%</b><span>ΤΕΛΕΥΤΑΙΑ</span></div><div class="trend-box"><b>${delta>0?'+':''}${delta}</b><span>ΜΕΤΑΒΟΛΗ</span></div>`;
+  bars.innerHTML='';allLevels().forEach(lv=>{const ss=sessions.filter(s=>s.level===lv.id);if(!ss.length)return;const levelAvg=Math.round(ss.reduce((a,s)=>a+s.score,0)/ss.length);bars.innerHTML+=`<div class="bar-row"><span class="bar-label">${lv.emoji} ${phonemeOfLevel(lv.id).label} ${lv.name}</span><div class="bar-track"><div class="bar-fill" style="width:${levelAvg}%"></div></div><span class="bar-pct">${levelAvg}%</span></div>`});
+  hist.innerHTML=sessions.slice().reverse().slice(0,20).map(s=>{const lv=getLevel(s.level),summary=s.notes?.strengths||s.notes?.difficulties||s.notes?.free||'',activity=s.activity&&s.activity!=='cards'?(GAMES[s.activity]?.icon||'🎮')+' '+(s.activityName||'Παιχνίδι')+' · ':'';return `<div class="hist-item"><div><span class="h-level">${activity}${lv?.emoji||'📝'} ${lv?phonemeOfLevel(lv.id).label+' ':''}${lv?.name||'Συνεδρία'}</span><br><span class="h-date">${fmtDate(s.date)} · ${fmtTime(s.date)} · ${s.durationMins||0}′</span>${summary?`<div class="h-note">${escapeHtml(summary)}</div>`:''}</div><span class="h-score">${Math.round(s.score)}%</span></div>`}).join('');
+}
+
+function exportBackup(){
+  const data=db(),blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='logopaixnidi_backup_'+new Date().toISOString().slice(0,10)+'.json';a.click();URL.revokeObjectURL(a.href);
+  toast('Το αντίγραφο κατέβηκε');
+}
+function importBackup(input){
+  const file=input.files&&input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const data=JSON.parse(reader.result);
+      if(!data||!Array.isArray(data.children)||!Array.isArray(data.sessions))throw new Error('bad');
+      if(!confirm('Η επαναφορά θα αντικαταστήσει ΟΛΑ τα τρέχοντα δεδομένα με το αντίγραφο. Συνέχεια;')){input.value='';return}
+      localStorage.setItem(DB_KEY,JSON.stringify(data));cachedDb=null;
+      bootstrap();show('children');toast('Η επαναφορά ολοκληρώθηκε');
+    }catch(e){toast('Μη έγκυρο αρχείο αντιγράφου')}
+    finally{input.value=''}
+  };
+  reader.readAsText(file);
+}
+
+function bootstrap(){
+  const d=db();if(!d.currentChildId&&d.children.length){d.currentChildId=d.children[0].id;saveDb(d)}
+  setupChips();populateChildSelects();initReportDate();renderHome();
+}
+bootstrap();
+</script>
+</body>
+</html>
