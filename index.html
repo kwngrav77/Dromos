@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>ΛογοΠαιχνίδι — Εξάσκηση /ρ/</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Nunito:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EAF3FA; --ink:#17324F; --muted:#5B7590;
+  --coral:#E85D4A; --coral-soft:#FDEAE6;
+  --sun:#F6C445; --sun-soft:#FDF3D7;
+  --mint:#2FA57C; --mint-soft:#E2F4EC;
+  --card:#FFFFFF; --line:#D5E3EF;
+  --radius:20px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink);
+  display:flex;flex-direction:column;max-width:560px;margin:0 auto;
+  min-height:100dvh;padding:16px 16px 90px;
+}
+h1,h2,h3,.brand{font-family:'Comfortaa',sans-serif}
+.screen{display:none;flex:1;flex-direction:column}
+.screen.active{display:flex}
+
+/* ---------- Header ---------- */
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.brand{font-size:20px;font-weight:700;letter-spacing:.5px}
+.brand .r{color:var(--coral)}
+.pill{background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:6px 14px;font-size:13px;font-weight:700;color:var(--muted)}
+
+/* ---------- Home ---------- */
+.hero{background:var(--card);border-radius:var(--radius);padding:22px;border:1.5px solid var(--line);margin-bottom:16px}
+.hero h1{font-size:22px;line-height:1.35;margin-bottom:6px}
+.hero h1 .r{color:var(--coral)}
+.hero p{font-size:14px;color:var(--muted);line-height:1.55}
+label{font-size:13px;font-weight:800;color:var(--muted);display:block;margin:14px 0 6px;text-transform:uppercase;letter-spacing:.06em}
+input[type=text]{
+  width:100%;font:inherit;font-size:17px;font-weight:700;color:var(--ink);
+  padding:13px 16px;border:1.5px solid var(--line);border-radius:14px;background:#F7FBFE;outline:none;
+}
+input[type=text]:focus{border-color:var(--coral)}
+.levels{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.level-btn{
+  background:var(--card);border:1.5px solid var(--line);border-radius:16px;
+  padding:16px 12px;text-align:left;cursor:pointer;font:inherit;color:var(--ink);
+  transition:transform .08s ease;
+}
+.level-btn:active{transform:scale(.97)}
+.level-btn .lv-emoji{font-size:26px;display:block;margin-bottom:6px}
+.level-btn .lv-name{font-weight:800;font-size:15px;display:block}
+.level-btn .lv-desc{font-size:12px;color:var(--muted);display:block;margin-top:2px}
+.level-btn .lv-rate{display:inline-block;margin-top:8px;font-size:11px;font-weight:800;border-radius:999px;padding:2px 8px;background:var(--mint-soft);color:var(--mint)}
+.level-btn .lv-rate.empty{background:#F0F4F8;color:var(--muted)}
+
+/* ---------- Session ---------- */
+.progressbar{height:10px;background:#DDE9F3;border-radius:999px;overflow:hidden;margin-bottom:18px}
+.progressbar>div{height:100%;background:var(--sun);border-radius:999px;width:0%;transition:width .3s ease}
+.flashcard{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--card);border:1.5px solid var(--line);border-radius:24px;
+  padding:28px 20px;text-align:center;min-height:300px;position:relative;
+}
+.fc-emoji{font-size:84px;line-height:1;margin-bottom:18px}
+.fc-word{font-family:'Comfortaa',sans-serif;font-size:34px;font-weight:700;letter-spacing:.02em;line-height:1.3}
+.fc-word .r{color:var(--coral)}
+.fc-hint{margin-top:14px;font-size:14px;color:var(--muted);max-width:320px;line-height:1.5}
+.fc-count{position:absolute;top:14px;right:18px;font-size:13px;font-weight:800;color:var(--muted)}
+.score-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:16px}
+.score-btn{
+  border:none;border-radius:18px;padding:16px 8px;font:inherit;font-weight:800;font-size:15px;
+  cursor:pointer;color:#fff;transition:transform .08s ease;
+}
+.score-btn:active{transform:scale(.95)}
+.score-btn small{display:block;font-size:22px;margin-bottom:4px;font-weight:400}
+.sb-ok{background:var(--mint)}
+.sb-mid{background:var(--sun);color:#6B5200}
+.sb-no{background:var(--coral)}
+
+/* ---------- Summary ---------- */
+.summary-card{background:var(--card);border:1.5px solid var(--line);border-radius:24px;padding:28px 22px;text-align:center;margin-bottom:16px}
+.big-score{font-family:'Comfortaa',sans-serif;font-size:56px;font-weight:700;color:var(--mint);line-height:1}
+.big-score.low{color:var(--sun)}
+.summary-card h2{font-size:18px;margin:10px 0 4px}
+.summary-card p{font-size:14px;color:var(--muted);line-height:1.5}
+.mini-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:18px}
+.mini-stat{background:#F7FBFE;border:1.5px solid var(--line);border-radius:14px;padding:12px 6px}
+.mini-stat b{display:block;font-size:20px}
+.mini-stat span{font-size:11px;font-weight:700;color:var(--muted)}
+
+/* ---------- Progress ---------- */
+.prog-section{background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+.prog-section h3{font-size:15px;margin-bottom:12px}
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bar-label{width:96px;font-size:13px;font-weight:700;flex-shrink:0}
+.bar-track{flex:1;height:14px;background:#EDF3F8;border-radius:999px;overflow:hidden}
+.bar-fill{height:100%;background:var(--mint);border-radius:999px}
+.bar-pct{width:42px;text-align:right;font-size:12px;font-weight:800;color:var(--muted);flex-shrink:0}
+.hist-item{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.hist-item:last-child{border-bottom:none}
+.hist-item .h-level{font-weight:800}
+.hist-item .h-date{font-size:12px;color:var(--muted)}
+.hist-item .h-score{font-weight:800;color:var(--mint)}
+.empty-msg{font-size:14px;color:var(--muted);text-align:center;padding:14px 0;line-height:1.5}
+
+/* ---------- Buttons / nav ---------- */
+.btn{
+  display:block;width:100%;border:none;border-radius:16px;padding:16px;
+  font:inherit;font-weight:800;font-size:16px;cursor:pointer;text-align:center;
+  background:var(--ink);color:#fff;margin-top:12px;transition:transform .08s ease;
+}
+.btn:active{transform:scale(.98)}
+.btn.ghost{background:transparent;color:var(--muted);border:1.5px solid var(--line)}
+.tabbar{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:560px;background:var(--card);border-top:1.5px solid var(--line);
+  display:flex;padding:8px 0 max(8px, env(safe-area-inset-bottom));
+}
+.tab{flex:1;text-align:center;background:none;border:none;font:inherit;font-size:12px;font-weight:800;color:var(--muted);cursor:pointer;padding:6px 0}
+.tab .t-ico{display:block;font-size:20px;margin-bottom:2px}
+.tab.active{color:var(--coral)}
+.demo-note{font-size:11px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">Λογο<span class="r">Π</span>αιχνίδι</div>
+  <div class="pill" id="childPill">—</div>
+</header>
+
+<!-- HOME -->
+<section class="screen active" id="scr-home">
+  <div class="hero">
+    <h1>Εξάσκηση του ήχου <span class="r">/ρ/</span></h1>
+    <p>Εργαλείο συνεδρίας για λογοθεραπευτές. Διάλεξε επίπεδο, δείξε τις κάρτες στο παιδί και κατέγραψε κάθε προσπάθεια με ένα άγγιγμα.</p>
+    <label for="childName">Όνομα παιδιού</label>
+    <input type="text" id="childName" placeholder="π.χ. Γιώργος" maxlength="20" autocomplete="off">
+  </div>
+
+  <label>Επίπεδο εξάσκησης</label>
+  <div class="levels" id="levelGrid"></div>
+
+  <p class="demo-note">Demo MVP · Τα δεδομένα αποθηκεύονται μόνο σε αυτή τη συσκευή</p>
+</section>
+
+<!-- SESSION -->
+<section class="screen" id="scr-session">
+  <div class="progressbar"><div id="sessProg"></div></div>
+  <div class="flashcard">
+    <span class="fc-count" id="fcCount">1 / 10</span>
+    <div class="fc-emoji" id="fcEmoji">🦁</div>
+    <div class="fc-word" id="fcWord"></div>
+    <p class="fc-hint" id="fcHint"></p>
+  </div>
+  <div class="score-row">
+    <button class="score-btn sb-ok" onclick="scoreItem(2)"><small>😀</small>Σωστό</button>
+    <button class="score-btn sb-mid" onclick="scoreItem(1)"><small>🙂</small>Σχεδόν</button>
+    <button class="score-btn sb-no" onclick="scoreItem(0)"><small>💪</small>Ξανά</button>
+  </div>
+  <button class="btn ghost" onclick="quitSession()">Διακοπή συνεδρίας</button>
+</section>
+
+<!-- SUMMARY -->
+<section class="screen" id="scr-summary">
+  <div class="summary-card">
+    <div class="big-score" id="sumScore">80%</div>
+    <h2 id="sumTitle">Μπράβο!</h2>
+    <p id="sumSub"></p>
+    <div class="mini-stats">
+      <div class="mini-stat"><b id="stOk">0</b><span>Σωστά</span></div>
+      <div class="mini-stat"><b id="stMid">0</b><span>Σχεδόν</span></div>
+      <div class="mini-stat"><b id="stNo">0</b><span>Για ξανά</span></div>
+    </div>
+  </div>
+  <button class="btn" onclick="repeatLevel()">Ξανά το ίδιο επίπεδο</button>
+  <button class="btn ghost" onclick="show('home')">Αρχική</button>
+</section>
+
+<!-- PROGRESS -->
+<section class="screen" id="scr-progress">
+  <div class="prog-section">
+    <h3 id="progTitle">Επιτυχία ανά επίπεδο</h3>
+    <div id="progBars"></div>
+  </div>
+  <div class="prog-section">
+    <h3>Ιστορικό συνεδριών</h3>
+    <div id="histList"></div>
+  </div>
+</section>
+
+<nav class="tabbar">
+  <button class="tab active" data-tab="home" onclick="show('home')"><span class="t-ico">🏠</span>Αρχική</button>
+  <button class="tab" data-tab="progress" onclick="show('progress')"><span class="t-ico">📈</span>Πρόοδος</button>
+</nav>
+
+<script>
+const LS_KEY = 'logo_demo_v1';
+
+const LEVELS = [
+  { id:'sound', emoji:'🦁', name:'Ο ήχος', desc:'Μεμονωμένο /ρ/', items:[
+    {e:'🦁', w:'ρρρ…', h:'Το λιοντάρι γρυλίζει δυνατά. Κάνε κι εσύ ρρρ!'},
+    {e:'🏍️', w:'ρρρ ρρρ', h:'Η μηχανή ξεκινάει. Πώς κάνει η μηχανή;'},
+    {e:'🐯', w:'ρρρ!', h:'Η τίγρη βρυχάται. Δείξε πόσο δυνατά!'},
+    {e:'🚁', w:'ρρρρρ', h:'Το ελικόπτερο πετάει ψηλά με μακρύ ρρρ.'},
+    {e:'🤖', w:'ρ… ρ… ρ…', h:'Το ρομπότ μιλάει κοφτά. Ένα ρ τη φορά.'},
+    {e:'😼', w:'ρρρ (σιγά)', h:'Η γάτα γουργουρίζει σιγανά. Ψιθύρισε το ρ.'},
+    {e:'🏎️', w:'ρρρ (γρήγορα)', h:'Το αγωνιστικό τρέχει! Γρήγορο και δυνατό ρ.'},
+    {e:'🐻', w:'ρρρ (αργά)', h:'Η αρκούδα ξυπνάει νυσταγμένη. Αργό, βαθύ ρ.'},
+    {e:'🌊', w:'ρρρ…ρρρ…', h:'Τα κύματα έρχονται και φεύγουν. Ρ με κύμα.'},
+    {e:'🎺', w:'ρρρ (μακρύ)', h:'Η τρομπέτα παίζει. Κράτα το ρ όσο πιο πολύ μπορείς!'}
+  ]},
+  { id:'syll', emoji:'🎵', name:'Συλλαβές', desc:'ρα ρε ρι ρο ρου', items:[
+    {e:'☀️', w:'ρα', h:'Καθαρό και δυνατό: ρα.'},
+    {e:'🌊', w:'ρε', h:'Σαν κυματάκι: ρε.'},
+    {e:'🎈', w:'ρι', h:'Λεπτό και ψηλό: ρι.'},
+    {e:'🍑', w:'ρο', h:'Στρογγυλό στόμα: ρο.'},
+    {e:'🚀', w:'ρου', h:'Σαν πύραυλος: ρου!'},
+    {e:'🥁', w:'ρα-ρα-ρα', h:'Σαν τύμπανο, τρεις φορές.'},
+    {e:'🐸', w:'ρε-ρι', h:'Ο βάτραχος πηδάει: ρε-ρι.'},
+    {e:'🎪', w:'ρο-ρου', h:'Δύο μαζί: ρο-ρου.'},
+    {e:'🌟', w:'ρι-ρα-ρο', h:'Τρεις διαφορετικές στη σειρά.'},
+    {e:'🎶', w:'ρα-ρε-ρι-ρο-ρου', h:'Όλες μαζί σαν τραγουδάκι!'}
+  ]},
+  { id:'words', emoji:'🍎', name:'Λέξεις', desc:'Το /ρ/ μέσα σε λέξεις', items:[
+    {e:'⏰', w:'ρολόι', h:'Το ρ στην αρχή: ρο-λό-ι.'},
+    {e:'👕', w:'ρούχα', h:'Το ρ στην αρχή: ρού-χα.'},
+    {e:'🍚', w:'ρύζι', h:'Το ρ στην αρχή: ρύ-ζι.'},
+    {e:'🤖', w:'ρομπότ', h:'Το ρ στην αρχή: ρο-μπότ.'},
+    {e:'🥕', w:'καρότο', h:'Το ρ στη μέση: κα-ρό-το.'},
+    {e:'🐟', w:'ψάρι', h:'Το ρ στη μέση: ψά-ρι.'},
+    {e:'🎁', w:'δώρο', h:'Το ρ στη μέση: δώ-ρο.'},
+    {e:'🚪', w:'πόρτα', h:'Το ρ πριν από σύμφωνο: πόρ-τα.'},
+    {e:'🚂', w:'τρένο', h:'Σύμπλεγμα τρ: τρέ-νο.'},
+    {e:'🌳', w:'δέντρο', h:'Σύμπλεγμα ντρ: δέν-τρο.'}
+  ]},
+  { id:'sent', emoji:'💬', name:'Προτάσεις', desc:'Μικρές φράσεις με /ρ/', items:[
+    {e:'⏰', w:'Το ρολόι χτυπάει.', h:'Αργά και καθαρά, λέξη-λέξη.'},
+    {e:'🥕', w:'Τρώω ένα καρότο.', h:'Πρόσεξε το τρ και το ρ.'},
+    {e:'🌧️', w:'Βρέχει έξω.', h:'Το βρ στην αρχή.'},
+    {e:'🚂', w:'Το τρένο τρέχει.', h:'Δύο τρ στη σειρά!'},
+    {e:'🎁', w:'Πήρα ένα δώρο.', h:'Δύο ρ: πήρα, δώρο.'},
+    {e:'🐟', w:'Το ψάρι κολυμπάει γρήγορα.', h:'Πρόσεξε το γρ στο γρήγορα.'},
+    {e:'🌳', w:'Το δέντρο έχει ρίζες.', h:'Ντρ και ρ στην αρχή.'},
+    {e:'🍇', w:'Αγοράζω φρέσκα φρούτα.', h:'Ρ, φρ, φρ — τρία μαζί.'},
+    {e:'🚪', w:'Άνοιξε την πόρτα, Ρένα!', h:'Ρ πριν από σύμφωνο και στην αρχή.'},
+    {e:'🦁', w:'Το λιοντάρι γρυλίζει δυνατά.', h:'Η μεγάλη πρόκληση: ρι και γρ.'}
+  ]}
+];
+
+let state = { level:null, idx:0, results:[] };
+
+function db(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)) || {sessions:[]}; }catch(e){ return {sessions:[]}; } }
+function saveDb(d){ localStorage.setItem(LS_KEY, JSON.stringify(d)); }
+function childName(){ return document.getElementById('childName').value.trim() || 'Παιδί'; }
+
+function highlightR(text){
+  return text.replace(/(ρ|Ρ)/g, '<span class="r">$1</span>');
+}
+
+function show(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('scr-'+name).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===name));
+  if(name==='home') renderHome();
+  if(name==='progress') renderProgress();
+}
+
+function levelStats(levelId){
+  const sessions = db().sessions.filter(s=>s.level===levelId && s.child===childName());
+  if(!sessions.length) return null;
+  const last = sessions[sessions.length-1];
+  return Math.round(last.score);
+}
+
+function renderHome(){
+  document.getElementById('childPill').textContent = childName();
+  const grid = document.getElementById('levelGrid');
+  grid.innerHTML = '';
+  LEVELS.forEach(lv=>{
+    const rate = levelStats(lv.id);
+    const btn = document.createElement('button');
+    btn.className = 'level-btn';
+    btn.innerHTML = `<span class="lv-emoji">${lv.emoji}</span>
+      <span class="lv-name">${lv.name}</span>
+      <span class="lv-desc">${lv.desc}</span>
+      <span class="lv-rate ${rate===null?'empty':''}">${rate===null?'Νέο':'Τελευταίο: '+rate+'%'}</span>`;
+    btn.onclick = ()=>startSession(lv.id);
+    grid.appendChild(btn);
+  });
+}
+
+function startSession(levelId){
+  state = { level:levelId, idx:0, results:[] };
+  show('session');
+  renderCard();
+}
+
+function renderCard(){
+  const lv = LEVELS.find(l=>l.id===state.level);
+  const item = lv.items[state.idx];
+  document.getElementById('fcEmoji').textContent = item.e;
+  document.getElementById('fcWord').innerHTML = highlightR(item.w);
+  document.getElementById('fcHint').textContent = item.h;
+  document.getElementById('fcCount').textContent = (state.idx+1)+' / '+lv.items.length;
+  document.getElementById('sessProg').style.width = (state.idx / lv.items.length * 100)+'%';
+}
+
+function scoreItem(val){
+  state.results.push(val);
+  const lv = LEVELS.find(l=>l.id===state.level);
+  state.idx++;
+  if(state.idx >= lv.items.length){ finishSession(); }
+  else{ renderCard(); }
+}
+
+function quitSession(){
+  if(state.results.length===0){ show('home'); return; }
+  finishSession();
+}
+
+function finishSession(){
+  const ok = state.results.filter(r=>r===2).length;
+  const mid = state.results.filter(r=>r===1).length;
+  const no = state.results.filter(r=>r===0).length;
+  const total = state.results.length;
+  const score = total ? ((ok + mid*0.5) / total * 100) : 0;
+
+  const d = db();
+  d.sessions.push({
+    child: childName(), level: state.level, date: new Date().toISOString(),
+    ok, mid, no, total, score
+  });
+  saveDb(d);
+
+  document.getElementById('stOk').textContent = ok;
+  document.getElementById('stMid').textContent = mid;
+  document.getElementById('stNo').textContent = no;
+  const scoreEl = document.getElementById('sumScore');
+  scoreEl.textContent = Math.round(score)+'%';
+  scoreEl.classList.toggle('low', score < 60);
+  document.getElementById('sumTitle').textContent =
+    score>=80 ? 'Εξαιρετικά! 🌟' : score>=60 ? 'Πολύ καλή δουλειά!' : 'Καλή προσπάθεια!';
+  const lv = LEVELS.find(l=>l.id===state.level);
+  document.getElementById('sumSub').textContent =
+    childName()+' ολοκλήρωσε '+total+' κάρτες στο επίπεδο «'+lv.name+'».';
+  show('summary');
+}
+
+function repeatLevel(){ startSession(state.level); }
+
+function renderProgress(){
+  const name = childName();
+  document.getElementById('progTitle').textContent = 'Επιτυχία ανά επίπεδο — '+name;
+  const sessions = db().sessions.filter(s=>s.child===name);
+  const bars = document.getElementById('progBars');
+  const hist = document.getElementById('histList');
+
+  if(!sessions.length){
+    bars.innerHTML = '<p class="empty-msg">Δεν υπάρχουν ακόμα συνεδρίες για αυτό το παιδί.<br>Ξεκίνα μία από την αρχική οθόνη!</p>';
+    hist.innerHTML = '<p class="empty-msg">Το ιστορικό θα εμφανιστεί εδώ.</p>';
+    return;
+  }
+
+  bars.innerHTML = '';
+  LEVELS.forEach(lv=>{
+    const ls = sessions.filter(s=>s.level===lv.id);
+    if(!ls.length) return;
+    const avg = Math.round(ls.reduce((a,s)=>a+s.score,0)/ls.length);
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+    row.innerHTML = `<span class="bar-label">${lv.emoji} ${lv.name}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${avg}%"></div></div>
+      <span class="bar-pct">${avg}%</span>`;
+    bars.appendChild(row);
+  });
+
+  hist.innerHTML = '';
+  sessions.slice().reverse().slice(0,12).forEach(s=>{
+    const lv = LEVELS.find(l=>l.id===s.level);
+    const dt = new Date(s.date);
+    const item = document.createElement('div');
+    item.className = 'hist-item';
+    item.innerHTML = `<div><span class="h-level">${lv.emoji} ${lv.name}</span><br>
+      <span class="h-date">${dt.toLocaleDateString('el-GR')} · ${dt.toLocaleTimeString('el-GR',{hour:'2-digit',minute:'2-digit'})}</span></div>
+      <span class="h-score">${Math.round(s.score)}%</span>`;
+    hist.appendChild(item);
+  });
+}
+
+document.getElementById('childName').addEventListener('input', ()=>{
+  document.getElementById('childPill').textContent = childName();
+});
+
+renderHome();
+</script>
+</body>
+</html>
