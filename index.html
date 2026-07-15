@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#EAF3FA">
+<meta name="description" content="ΛογοΠαιχνίδι — offline βοηθός συνεδρίας και καταγραφής λογοθεραπείας">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🗣️</text></svg>">
+<title>ΛογοΠαιχνίδι Pro — Ψηφιακός βοηθός λογοθεραπείας</title>
+<style>
+:root{
+  --bg:#EAF3FA; --ink:#17324F; --muted:#5B7590;
+  --coral:#E85D4A; --coral-soft:#FDEAE6;
+  --sun:#F6C445; --sun-soft:#FDF3D7;
+  --mint:#2FA57C; --mint-soft:#E2F4EC;
+  --blue:#3975D7; --blue-soft:#E8F0FF;
+  --purple:#7957C8; --purple-soft:#F0EBFD;
+  --card:#FFFFFF; --line:#D5E3EF; --danger:#C84545;
+  --shadow:0 10px 30px rgba(23,50,79,.07);
+  --radius:20px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{min-height:100%}
+body{
+  font-family:'Trebuchet MS','Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--ink);
+  max-width:620px;margin:0 auto;min-height:100dvh;padding:14px 14px 96px;
+}
+button,input,textarea,select{font:inherit}
+button{touch-action:manipulation}
+h1,h2,h3,.brand{font-family:'Trebuchet MS','Arial Rounded MT Bold','Segoe UI',sans-serif}
+.screen{display:none;animation:fade .18s ease}
+.screen.active{display:block}
+@keyframes fade{from{opacity:.4;transform:translateY(3px)}to{opacity:1;transform:none}}
+
+/* Header */
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:15px;position:sticky;top:0;z-index:20;background:linear-gradient(var(--bg) 82%,transparent);padding:5px 0 10px}
+.brand{font-size:20px;font-weight:700;letter-spacing:.4px;white-space:nowrap}
+.brand .r{color:var(--coral)}
+.child-pill{max-width:190px;background:var(--card);border:1.5px solid var(--line);border-radius:999px;padding:7px 12px;font-size:12px;font-weight:800;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:0 5px 16px rgba(23,50,79,.04)}
+
+/* Base cards and typography */
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+.section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:18px 2px 9px}
+.section-title h2{font-size:16px}
+.section-title span{font-size:12px;color:var(--muted);font-weight:700}
+.muted{color:var(--muted)}
+.small{font-size:12px}
+.empty{padding:24px 16px;text-align:center;color:var(--muted);line-height:1.55}
+.notice{padding:11px 13px;border-radius:14px;background:var(--sun-soft);color:#685114;font-size:12px;line-height:1.45;border:1px solid #F2D982}
+
+/* Buttons */
+.btn{display:block;width:100%;border:none;border-radius:15px;padding:14px 15px;font-weight:800;font-size:15px;cursor:pointer;background:var(--ink);color:#fff;transition:transform .08s ease,opacity .15s ease}
+.btn:active,.icon-btn:active,.level-btn:active,.chip:active{transform:scale(.97)}
+.btn.secondary{background:var(--mint)}
+.btn.blue{background:var(--blue)}
+.btn.ghost{background:var(--card);color:var(--muted);border:1.5px solid var(--line)}
+.btn.danger{background:#FFF1F1;color:var(--danger);border:1.5px solid #F0CACA}
+.btn.small-btn{width:auto;padding:9px 12px;font-size:12px;border-radius:12px}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.action-row{display:flex;gap:9px;margin-top:12px}
+.action-row .btn{flex:1}
+.icon-btn{border:none;background:transparent;color:var(--muted);font-size:19px;padding:8px;cursor:pointer}
+
+/* Inputs */
+.field{margin-bottom:13px}
+label,.label{font-size:12px;font-weight:800;color:var(--muted);display:block;margin:0 0 6px;text-transform:uppercase;letter-spacing:.045em}
+input[type=text],input[type=number],input[type=date],textarea,select{
+  width:100%;border:1.5px solid var(--line);border-radius:13px;background:#F8FBFE;color:var(--ink);outline:none;padding:12px 13px;font-weight:700
+}
+textarea{min-height:88px;resize:vertical;line-height:1.45;font-weight:600}
+input:focus,textarea:focus,select:focus{border-color:var(--coral);background:#fff}
+
+
+/* Pro clinical additions */
+/* Clear section system */
+.section-title{display:flex;align-items:center;gap:9px;margin:20px 2px 10px}
+.sec-ico{width:31px;height:31px;border-radius:10px;display:grid;place-items:center;font-size:15px;flex-shrink:0}
+.sec-ico.blue{background:var(--blue-soft)}.sec-ico.mint{background:var(--mint-soft)}.sec-ico.sun{background:var(--sun-soft)}.sec-ico.purple{background:var(--purple-soft)}
+.section-title h2{font-size:15px;line-height:1.2}
+.section-title .sec-sub{display:block;font-size:10px;color:var(--muted);font-weight:700;margin-top:1px}
+.section-title>span{font-size:11px;color:var(--muted);font-weight:700;margin-left:auto;flex-shrink:0}
+.lv-step{width:19px;height:19px;border-radius:50%;background:var(--blue-soft);color:var(--blue);font-size:10px;font-weight:900;display:inline-grid;place-items:center;margin-right:5px;vertical-align:1px}
+.planner-details{border:1.5px solid var(--line);border-radius:16px;background:var(--card);margin-bottom:11px;box-shadow:var(--shadow);overflow:hidden}
+.planner-details summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 15px;font-size:12px;font-weight:900}
+.planner-details summary::-webkit-details-marker{display:none}
+.planner-details summary .planner-current{font-size:10px;font-weight:700;color:var(--muted);text-align:right}
+.planner-details summary:after{content:'▾';color:var(--muted);font-size:12px;margin-left:2px;transition:transform .15s}
+.planner-details[open] summary:after{transform:rotate(180deg)}
+.planner-details .planner-grid{padding:2px 14px 14px}
+.games-teaser{display:flex;align-items:center;gap:12px;padding:14px 15px;text-align:left;width:100%;border:1.5px solid var(--line);border-radius:17px;background:linear-gradient(135deg,#fff,var(--purple-soft));cursor:pointer;box-shadow:var(--shadow)}
+.games-teaser .gt-ico{font-size:30px;flex-shrink:0}
+.games-teaser b{font-size:14px;display:block}
+.games-teaser p{font-size:11px;color:var(--muted);line-height:1.4;margin-top:2px}
+.games-teaser .gt-go{margin-left:auto;flex-shrink:0;background:var(--purple);color:#fff;border-radius:999px;font-size:11px;font-weight:900;padding:7px 12px}
+
+.phoneme-seg{overflow-x:auto;justify-content:flex-start;scrollbar-width:none;white-space:nowrap;max-width:100%;padding:4px}
+.phoneme-seg::-webkit-scrollbar{display:none}.phoneme-seg button{min-width:49px;flex:0 0 auto}
+.therapy-guide{padding:15px 16px;margin-bottom:10px;background:linear-gradient(135deg,#fff 0%,var(--blue-soft) 100%)}
+.guide-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.guide-sound{font-family:'Trebuchet MS','Segoe UI',sans-serif;font-size:28px;font-weight:800;color:var(--blue)}
+.therapy-guide h3{font-size:14px;margin-bottom:4px}.therapy-guide p{font-size:11.5px;line-height:1.5;color:var(--muted)}
+.guide-actions{display:flex;gap:8px;margin-top:11px}.guide-actions .btn{padding:10px 8px;font-size:11px}
+.session-planner{padding:14px;margin-bottom:11px}.planner-title{font-size:12px;font-weight:900;margin-bottom:9px;display:flex;justify-content:space-between;gap:8px}.planner-title span{font-size:10px;color:var(--muted)}
+.planner-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.planner-grid .field{margin:0}.planner-grid .wide{grid-column:1/-1}
+.toggle-line{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 11px;border:1px solid var(--line);background:#F8FBFE;border-radius:12px;font-size:11px;font-weight:800;color:var(--muted)}
+.toggle-line input{width:21px;height:21px;accent-color:var(--blue)}
+.library-chip{font-size:9px;font-weight:900;border-radius:999px;padding:4px 8px;background:var(--purple-soft);color:var(--purple);white-space:nowrap}
+.custom-practice{padding:15px;margin-top:11px;background:linear-gradient(135deg,#fff,var(--mint-soft))}.custom-practice h3{font-size:14px;margin-bottom:4px}.custom-practice p{font-size:11px;color:var(--muted);line-height:1.45;margin-bottom:10px}
+.position-badge{position:absolute;top:14px;left:16px;border-radius:999px;background:var(--blue-soft);color:var(--blue);font-size:9px;font-weight:900;padding:4px 8px;max-width:48%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.speak-btn{top:45px}.prompt-pos{display:inline-block;margin-top:7px;border-radius:999px;background:var(--mint-soft);color:var(--mint);font-size:9px;font-weight:900;padding:4px 8px}
+.session-export{display:flex;gap:8px;flex-wrap:wrap;margin:-2px 0 12px}.session-export .btn{width:auto}
+.hist-actions{display:flex;align-items:center;gap:7px}.hist-delete{border:none;background:#FFF1F1;color:var(--danger);border-radius:9px;padding:5px 7px;font-size:10px;cursor:pointer}
+.backup-status{font-size:10px;color:var(--muted);margin-top:9px;text-align:center}
+.data-safe{display:flex;gap:8px;align-items:flex-start}.data-safe b{display:block;color:var(--ink);margin-bottom:2px}
+@media(max-width:410px){.planner-grid{grid-template-columns:1fr}.planner-grid .wide{grid-column:auto}.guide-actions{flex-direction:column}.position-badge{max-width:55%}}
+
+/* Home */
+.hero{padding:19px;margin-bottom:14px;overflow:hidden;position:relative}
+.hero:after{content:'ρ';position:absolute;right:-7px;bottom:-34px;font-family:'Comfortaa';font-size:128px;font-weight:700;color:var(--coral-soft);z-index:0}
+.hero>*{position:relative;z-index:1}
+.hero-kicker{display:inline-flex;align-items:center;gap:6px;background:var(--mint-soft);color:var(--mint);font-size:11px;font-weight:800;border-radius:999px;padding:5px 9px;margin-bottom:9px}
+.hero h1{font-size:22px;line-height:1.35;margin-bottom:6px}
+.hero h1 .r{color:var(--coral)}
+.hero p{font-size:13px;color:var(--muted);line-height:1.55;max-width:440px}
+.quick-select{display:flex;gap:9px;margin-top:14px;align-items:center}
+.quick-select select{flex:1;background:#fff}
+
+.dashboard{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.metric{padding:13px 9px;text-align:center}
+.metric b{font-size:21px;display:block;line-height:1.15}
+.metric span{font-size:10px;color:var(--muted);font-weight:800}
+.metric:nth-child(1) b{color:var(--blue)}
+.metric:nth-child(2) b{color:var(--mint)}
+.metric:nth-child(3) b{color:var(--purple)}
+
+.levels{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.level-btn{background:var(--card);border:1.5px solid var(--line);border-radius:17px;padding:15px 12px;text-align:left;cursor:pointer;color:var(--ink);box-shadow:0 6px 18px rgba(23,50,79,.045);transition:.1s ease}
+.level-btn .lv-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.level-btn .lv-emoji{font-size:28px;display:block;margin-bottom:7px}
+.level-btn .lv-name{font-weight:800;font-size:14px;display:block}
+.level-btn .lv-desc{font-size:11px;color:var(--muted);display:block;margin-top:2px;line-height:1.35}
+.lv-rate{display:inline-block;margin-top:9px;font-size:10px;font-weight:800;border-radius:999px;padding:3px 7px;background:var(--mint-soft);color:var(--mint)}
+.lv-rate.empty{background:#F0F4F8;color:var(--muted)}
+
+/* Children */
+.child-form{padding:17px;margin-bottom:14px}
+.child-form h2{font-size:16px;margin-bottom:13px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-grid .wide{grid-column:1/-1}
+.child-list{display:grid;gap:10px}
+.child-card{padding:15px;position:relative}
+.child-card.selected{border-color:var(--mint);box-shadow:0 0 0 3px var(--mint-soft)}
+.child-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.child-avatar{width:43px;height:43px;border-radius:14px;background:var(--blue-soft);display:grid;place-items:center;font-size:21px;flex-shrink:0}
+.child-main{display:flex;gap:11px;min-width:0}
+.child-name{font-family:'Comfortaa';font-weight:700;font-size:15px}
+.child-meta{font-size:11px;color:var(--muted);margin-top:3px}
+.child-goals{font-size:12px;color:var(--ink);margin-top:10px;padding-top:9px;border-top:1px solid var(--line);line-height:1.4}
+.card-actions{display:flex;gap:6px}
+.card-actions button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:6px 8px;font-size:11px;font-weight:800;color:var(--muted);cursor:pointer}
+
+/* Session */
+.session-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.session-header h2{font-size:15px}
+.progressbar{height:10px;background:#DDE9F3;border-radius:999px;overflow:hidden;margin-bottom:12px}
+.progressbar>div{height:100%;background:var(--sun);border-radius:999px;width:0%;transition:width .25s ease}
+.flashcard{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:390px;padding:27px 19px;text-align:center;position:relative}
+.fc-emoji{font-size:86px;line-height:1;margin-bottom:19px}
+.fc-word{font-family:'Comfortaa';font-size:33px;font-weight:700;letter-spacing:.01em;line-height:1.3}
+.fc-word .r{color:var(--coral)}
+.fc-hint{margin-top:14px;font-size:14px;color:var(--muted);max-width:350px;line-height:1.5}
+.fc-count{position:absolute;top:14px;right:17px;font-size:12px;font-weight:800;color:var(--muted)}
+.score-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:12px}
+.score-btn{border:none;border-radius:17px;padding:13px 6px;font-weight:800;font-size:13px;cursor:pointer;color:#fff}
+.score-btn small{display:block;font-size:23px;margin-bottom:4px;font-weight:400}
+.sb-ok{background:var(--mint)}
+.sb-mid{background:var(--sun);color:#6B5200}
+.sb-no{background:var(--coral)}
+
+
+/* Therapeutic games */
+.game-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.game-card{position:relative;overflow:hidden;text-align:left;padding:16px;border:1.5px solid var(--line);border-radius:18px;background:var(--card);color:var(--ink);cursor:pointer;box-shadow:0 7px 20px rgba(23,50,79,.05)}
+.game-card:active{transform:scale(.98)}
+.game-card .game-ico{font-size:34px;display:block;margin-bottom:8px}
+.game-card b{font-family:'Comfortaa';font-size:14px;display:block;margin-bottom:4px}
+.game-card p{font-size:11px;color:var(--muted);line-height:1.4;padding-right:6px}
+.game-card .game-tag{display:inline-block;margin-top:9px;border-radius:999px;padding:3px 8px;font-size:9px;font-weight:800;background:var(--blue-soft);color:var(--blue)}
+.game-card.featured{grid-column:1/-1;background:linear-gradient(135deg,#fff 0%,var(--purple-soft) 100%);border-color:#D9CDF6}
+.game-card.featured .game-tag{background:var(--purple);color:#fff}
+.game-card.preferred{box-shadow:0 0 0 3px rgba(246,196,69,.45);border-color:var(--sun)}
+.speak-btn{position:absolute;top:9px;left:11px;font-size:22px}
+.prompt-speak{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:800;color:var(--muted);cursor:pointer;margin-top:9px}
+.phoneme-seg{margin:0;max-width:210px;flex:1}
+.phoneme-seg button{font-family:'Comfortaa';font-size:13px}
+.games-intro{padding:17px;margin-bottom:12px}
+.games-intro h2{font-size:17px;margin-bottom:5px}
+.games-intro p{font-size:12px;color:var(--muted);line-height:1.5}
+.game-picker{padding:15px;margin-bottom:13px}
+.game-picker-row{display:grid;grid-template-columns:1fr auto;gap:9px;align-items:end}
+.game-picker .btn{min-width:115px}
+.reward-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.reward-item{background:#F8FBFE;border:1px solid var(--line);border-radius:12px;text-align:center;padding:9px 5px}
+.reward-item b{display:block;font-size:17px}.reward-item span{font-size:9px;font-weight:800;color:var(--muted)}
+
+.game-session-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.game-session-title{display:flex;align-items:center;gap:10px;min-width:0}
+.game-session-title .big-ico{width:44px;height:44px;border-radius:14px;background:var(--sun-soft);display:grid;place-items:center;font-size:24px;flex-shrink:0}
+.game-session-title h2{font-size:15px}.game-session-title p{font-size:10px;color:var(--muted);margin-top:2px}
+.game-stage{min-height:430px;padding:15px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden}
+.game-status{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px;font-weight:800;color:var(--muted)}
+.game-status .stars{color:#B98200;font-size:13px}
+.game-prompt{background:#F8FBFE;border:1.5px solid var(--line);border-radius:16px;padding:14px;text-align:center}
+.game-prompt .prompt-emoji{font-size:45px;line-height:1;margin-bottom:8px}
+.game-prompt .prompt-word{font-family:'Comfortaa';font-size:25px;font-weight:700;line-height:1.25}
+.game-prompt .prompt-word .r{color:var(--coral)}
+.game-prompt .prompt-hint{font-size:11px;color:var(--muted);line-height:1.4;margin-top:7px}
+.game-score-panel .score-row{margin-top:0}
+.game-instruction{text-align:center;font-size:11px;color:var(--muted);line-height:1.4}
+
+/* Puzzle reveal */
+.puzzle-scene{position:relative;flex:1;min-height:235px;border-radius:20px;overflow:hidden;background:linear-gradient(145deg,#CDEBFF,#FFF1C8);display:grid;place-items:center;border:1.5px solid #C6DDEA}
+.puzzle-picture{font-size:110px;filter:drop-shadow(0 12px 12px rgba(23,50,79,.12));transform:translateY(5px)}
+.puzzle-celebrate{position:absolute;left:0;right:0;bottom:15px;text-align:center;font-family:'Comfortaa';font-weight:700;font-size:16px;color:var(--ink);opacity:0;transform:translateY(8px);transition:.25s}
+.puzzle-celebrate.show{opacity:1;transform:none}
+.puzzle-cover{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:3px;padding:3px}
+.puzzle-tile{border-radius:8px;background:linear-gradient(145deg,var(--blue),#69A0F4);display:grid;place-items:center;color:rgba(255,255,255,.7);font-family:'Comfortaa';font-size:18px;font-weight:700;transition:opacity .35s,transform .35s}
+.puzzle-tile.revealed{opacity:0;transform:scale(.75) rotate(7deg);pointer-events:none}
+
+/* Treasure map */
+.treasure-map{position:relative;flex:1;min-height:245px;border-radius:20px;background:linear-gradient(#CFEFFF 0 48%,#F6D798 49% 100%);border:1.5px solid #C9DCE8;overflow:hidden;padding:22px 16px}
+.treasure-map:before{content:'☁️     ☁️';position:absolute;top:14px;left:18px;right:18px;font-size:25px;letter-spacing:40px;opacity:.8}
+.map-path{position:absolute;left:10%;right:10%;bottom:25px;top:54px;display:flex;align-items:flex-end;justify-content:space-between}
+.map-node{width:31px;height:31px;border-radius:50%;background:#fff;border:3px solid #B9A77B;display:grid;place-items:center;font-size:14px;font-weight:800;position:relative;z-index:2;transition:.25s}
+.map-node:nth-child(even){transform:translateY(-74px)}
+.map-node.done{background:var(--mint);border-color:#16765A;color:#fff}
+.map-node.current{box-shadow:0 0 0 5px rgba(246,196,69,.45);border-color:#B98200}
+.map-line{position:absolute;left:10%;right:10%;bottom:47%;height:5px;background:repeating-linear-gradient(90deg,#9D8151 0 10px,transparent 10px 18px);transform:rotate(-3deg);opacity:.75}
+.map-player{position:absolute;font-size:34px;z-index:4;transition:left .35s,bottom .35s;filter:drop-shadow(0 5px 5px rgba(0,0,0,.18))}
+.treasure-chest{position:absolute;right:13px;bottom:15px;font-size:52px;filter:drop-shadow(0 8px 7px rgba(0,0,0,.16))}
+
+/* Memory */
+.memory-board{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex:1;align-content:center}
+.memory-card{aspect-ratio:1/1.08;border:none;background:transparent;perspective:700px;cursor:pointer;padding:0}
+.memory-inner{position:relative;width:100%;height:100%;transition:transform .35s;transform-style:preserve-3d}
+.memory-card.flipped .memory-inner,.memory-card.matched .memory-inner{transform:rotateY(180deg)}
+.memory-face{position:absolute;inset:0;border-radius:14px;display:grid;place-items:center;backface-visibility:hidden;border:1.5px solid var(--line);box-shadow:0 5px 13px rgba(23,50,79,.05)}
+.memory-back{background:linear-gradient(145deg,var(--purple),#A180E6);color:#fff;font-family:'Comfortaa';font-size:23px;font-weight:700}
+.memory-front{background:#fff;transform:rotateY(180deg);font-size:32px;padding:4px;text-align:center}
+.memory-card.matched .memory-front{background:var(--mint-soft);border-color:var(--mint)}
+.memory-card:disabled{cursor:default}
+.memory-evaluate{position:absolute;inset:0;background:rgba(234,243,250,.96);display:none;z-index:8;padding:16px;align-items:center;justify-content:center;flex-direction:column}
+.memory-evaluate.show{display:flex}
+.memory-evaluate .game-prompt{width:100%;max-width:360px;background:#fff}
+.memory-evaluate .game-score-panel{width:100%;max-width:360px;margin-top:10px}
+
+@media(max-width:380px){
+  .game-stage{min-height:395px}.memory-board{gap:6px}.memory-face{border-radius:11px}.memory-front{font-size:27px}
+  .game-picker-row{grid-template-columns:1fr}.game-picker .btn{width:100%}
+}
+
+/* Post session notes */
+.note-summary{padding:16px;margin-bottom:12px}
+.note-summary-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.note-summary h2{font-size:16px}
+.score-badge{font-family:'Comfortaa';font-size:23px;font-weight:700;color:var(--mint)}
+.mini-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:12px}
+.mini-stat{background:#F7FBFE;border:1px solid var(--line);border-radius:12px;padding:9px 5px;text-align:center}
+.mini-stat b{display:block;font-size:17px}
+.mini-stat span{font-size:9px;font-weight:800;color:var(--muted)}
+.notes-card{padding:17px;margin-bottom:12px}
+.notes-card h3{font-size:14px;margin-bottom:11px}
+.choice-group{margin-bottom:15px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{border:1.5px solid var(--line);background:#fff;color:var(--muted);border-radius:999px;padding:8px 10px;font-size:11px;font-weight:800;cursor:pointer}
+.chip.selected{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
+
+/* Summary */
+.summary-card{padding:26px 20px;text-align:center;margin-bottom:13px}
+.big-score{font-family:'Comfortaa';font-size:54px;font-weight:700;color:var(--mint);line-height:1}
+.big-score.low{color:var(--sun)}
+.summary-card h2{font-size:18px;margin:10px 0 5px}
+.summary-card p{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* Reports */
+.report-controls{padding:16px;margin-bottom:12px}
+.report-toolbar{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.report-toolbar .wide{grid-column:1/-1}
+.segmented{display:flex;background:#EDF3F8;border-radius:12px;padding:4px;margin-top:7px}
+.segmented button{flex:1;border:none;background:transparent;border-radius:9px;padding:9px 7px;font-weight:800;font-size:11px;color:var(--muted);cursor:pointer}
+.segmented button.active{background:#fff;color:var(--ink);box-shadow:0 3px 10px rgba(23,50,79,.08)}
+.report-card{padding:17px;margin-bottom:12px}
+.report-head{display:flex;align-items:flex-start;justify-content:space-between;gap:9px;margin-bottom:10px}
+.report-head h2{font-size:15px}
+.report-period{font-size:11px;color:var(--muted);font-weight:700;margin-top:3px}
+.report-preview{width:100%;min-height:420px;background:#FCFDFE;border:1.5px solid var(--line);border-radius:14px;padding:14px;font-size:13px;line-height:1.65;color:var(--ink);white-space:pre-wrap}
+.report-render{white-space:normal;min-height:0;padding:16px 15px}
+.rp-title{font-family:'Comfortaa';font-weight:700;font-size:15px;letter-spacing:.03em;color:var(--ink);margin-bottom:12px;padding-bottom:9px;border-bottom:2px solid var(--coral)}
+.rp-head{font-weight:800;font-size:11.5px;letter-spacing:.07em;color:var(--blue);background:var(--blue-soft);display:inline-block;border-radius:8px;padding:4px 9px;margin:15px 0 7px}
+.rp-p{margin:0 0 7px;line-height:1.65}
+.rp-meta{margin:0 0 4px;font-weight:700;font-size:12.5px}
+.rp-li{display:flex;gap:7px;margin:0 0 5px;line-height:1.55}
+.rp-li:before{content:'•';color:var(--coral);font-weight:800;flex-shrink:0}
+.rp-footnote{margin-top:14px;padding-top:9px;border-top:1px dashed var(--line);font-size:11px;color:var(--muted);line-height:1.5}
+.report-actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:10px}
+.report-actions .btn{font-size:11.5px;padding:11px 6px}
+.report-actions .btn:last-child{grid-column:1/-1;font-size:14px;padding:13px}
+.report-empty{padding:42px 18px;text-align:center;color:var(--muted);line-height:1.55}
+.report-empty .ico{font-size:40px;margin-bottom:8px}
+
+/* Progress */
+.prog-section{padding:17px;margin-bottom:12px}
+.prog-section h3{font-size:14px;margin-bottom:12px}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.bar-label{width:108px;font-size:10.5px;font-weight:800;flex-shrink:0}
+.bar-track{flex:1;height:13px;background:#EDF3F8;border-radius:999px;overflow:hidden}
+.bar-fill{height:100%;background:var(--mint);border-radius:999px}
+.bar-pct{width:38px;text-align:right;font-size:11px;font-weight:800;color:var(--muted);flex-shrink:0}
+.trend-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:13px}
+.trend-box{background:#F7FBFE;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.trend-box b{font-size:18px;display:block}
+.trend-box span{font-size:9px;color:var(--muted);font-weight:800}
+.hist-item{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:13px}
+.hist-item:last-child{border-bottom:none}
+.hist-item .h-level{font-weight:800}
+.hist-item .h-date{font-size:10px;color:var(--muted)}
+.hist-item .h-note{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.35}
+.hist-item .h-score{font-weight:800;color:var(--mint);white-space:nowrap}
+
+/* Nav */
+.tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:620px;background:rgba(255,255,255,.97);border-top:1.5px solid var(--line);display:flex;padding:7px 0 max(8px,env(safe-area-inset-bottom));z-index:30;backdrop-filter:blur(12px)}
+.tab{flex:1;text-align:center;background:none;border:none;font-size:10px;font-weight:800;color:var(--muted);cursor:pointer;padding:5px 0}
+.tab .t-ico{display:block;font-size:19px;margin-bottom:2px}
+.tab.active{color:var(--coral)}
+body.focus-mode{padding-bottom:14px}
+body.focus-mode .tabbar{display:none}
+
+/* Toast */
+.toast{position:fixed;left:50%;bottom:92px;transform:translate(-50%,20px);background:var(--ink);color:#fff;padding:10px 14px;border-radius:999px;font-size:12px;font-weight:800;opacity:0;pointer-events:none;transition:.2s;z-index:100;white-space:nowrap;max-width:90%;overflow:hidden;text-overflow:ellipsis}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+#printArea{display:none}
+@media(max-width:380px){
+  .fc-emoji{font-size:74px}.fc-word{font-size:29px}.flashcard{min-height:350px}
+  .form-grid{grid-template-columns:1fr}.form-grid .wide{grid-column:auto}
+  .dashboard{gap:6px}.metric{padding:11px 5px}.metric b{font-size:18px}
+}
+@media print{
+  body>*{display:none!important}
+  #printArea{display:block!important;padding:30px;color:#111;font-family:Arial,sans-serif;max-width:800px;margin:auto}
+  #printArea h1{font-size:22px;margin-bottom:4px}
+  #printArea .print-meta{font-size:12px;color:#555;margin-bottom:22px}
+  #printArea .rp-title{font-size:16px;font-weight:bold;border-bottom:2px solid #333;padding-bottom:6px;margin-bottom:14px}
+  #printArea .rp-head{font-size:12px;font-weight:bold;letter-spacing:.08em;margin:16px 0 6px;background:none;color:#111;padding:0;border-bottom:1px solid #bbb;display:block}
+  #printArea .rp-p,#printArea .rp-meta{font-size:13px;line-height:1.6;margin:0 0 6px}
+  #printArea .rp-li{font-size:13px;line-height:1.55;margin:0 0 4px}
+  #printArea .rp-footnote{margin-top:16px;font-size:10.5px;color:#666;border-top:1px dashed #bbb;padding-top:8px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header id="appHeader">
+  <div class="brand">Λογο<span class="r">Π</span>αιχνίδι <span style="font-size:9px;color:var(--purple);vertical-align:top">PRO</span></div>
+  <div class="child-pill" id="childPill">Χωρίς επιλογή παιδιού</div>
+</header>
+
+<!-- HOME -->
+<section class="screen active" id="scr-home">
+  <div class="hero card">
+    <span class="hero-kicker">✨ Ψηφιακός βοηθός συνεδρίας</span>
+    <h1>Ασκήσεις, καταγραφή και <span class="r">αναφορές</span> σε ένα σημείο.</h1>
+    <p>Κατέγραψε γρήγορα την επίδοση και τις παρατηρήσεις κάθε συνεδρίας. Το ΛογοΠαιχνίδι οργανώνει αυτόματα την εβδομαδιαία πρόοδο.</p>
+    <div class="quick-select">
+      <select id="homeChildSelect" onchange="selectChild(this.value)"></select>
+      <button class="btn small-btn" onclick="show('children')">+ Παιδί</button>
+    </div>
+  </div>
+
+  <div class="dashboard" id="dashboardMetrics"></div>
+
+  <div class="section-title">
+    <div class="sec-ico blue">🎯</div>
+    <h2>1 · Ήχος-στόχος<span class="sec-sub">Διάλεξε το φώνημα της συνεδρίας</span></h2>
+  </div>
+  <div class="segmented phoneme-seg" id="phonemeSeg" style="margin-bottom:10px"></div>
+  <div class="therapy-guide card" id="phonemeGuide"></div>
+
+  <div class="section-title">
+    <div class="sec-ico mint">🃏</div>
+    <h2>2 · Νέα συνεδρία<span class="sec-sub">Ακολούθησε τη σκάλα δυσκολίας 1→7</span></h2>
+  </div>
+  <details class="planner-details">
+    <summary>⚙️ Ρυθμίσεις συνεδρίας <span class="planner-current" id="plannerCurrent"></span></summary>
+    <div class="planner-grid">
+      <div class="field"><label for="sessionDose">Προσπάθειες</label><select id="sessionDose" onchange="onPlannerChange()"><option value="6">6 — σύντομη</option><option value="10" selected>10 — τυπική</option><option value="all">Όλο το υλικό</option></select></div>
+      <div class="field"><label for="sessionPosition">Θέση στόχου</label><select id="sessionPosition" onchange="onPlannerChange()"><option value="all">Όλες οι θέσεις</option><option value="Αρχή">Αρχή λέξης</option><option value="Μέση">Μέση λέξης</option><option value="Τέλος">Τέλος λέξης</option><option value="Σύμπλεγμα">Σύμπλεγμα</option></select></div>
+      <label class="toggle-line wide">Τυχαία σειρά καρτών <input type="checkbox" id="sessionShuffle" checked onchange="onPlannerChange()"></label>
+    </div>
+  </details>
+  <div class="levels" id="levelGrid"></div>
+  <div id="customPracticeBox"></div>
+
+  <div class="section-title">
+    <div class="sec-ico purple">🎮</div>
+    <h2>3 · Παιχνίδι<span class="sec-sub">Προαιρετικό — ίδια καταγραφή, πιο διασκεδαστικά</span></h2>
+  </div>
+  <button class="games-teaser" onclick="show('games')">
+    <span class="gt-ico">🗺️</span>
+    <span><b>Παζλ · Memory · Κυνήγι θησαυρού</b><p>Κάθε προσπάθεια αξιολογείται και καταγράφεται κανονικά στον φάκελο.</p></span>
+    <span class="gt-go">Άνοιγμα →</span>
+  </button>
+
+  <div class="notice" style="margin-top:14px">🔒 Offline MVP: τα δεδομένα παραμένουν μόνο σε αυτή τη συσκευή και δεν αποστέλλονται σε διακομιστή. Χρησιμοποίησε κωδικό/αρχικά αντί πλήρους ονόματος και κράτα τακτικό αντίγραφο ασφαλείας.</div>
+</section>
+
+<!-- CHILDREN -->
+<section class="screen" id="scr-children">
+  <div class="child-form card">
+    <h2 id="childFormTitle">Νέος φάκελος παιδιού</h2>
+    <input type="hidden" id="editChildId">
+    <div class="form-grid">
+      <div class="field">
+        <label for="childNameInput">Όνομα / κωδικός *</label>
+        <input type="text" id="childNameInput" maxlength="30" placeholder="π.χ. Γ.Κ. (προτείνονται αρχικά)">
+      </div>
+      <div class="field">
+        <label for="childBirthYear">Έτος γέννησης</label>
+        <input type="number" id="childBirthYear" min="2005" max="2026" placeholder="π.χ. 2019">
+      </div>
+      <div class="field wide">
+        <label for="childGoals">Κύριοι θεραπευτικοί στόχοι</label>
+        <textarea id="childGoals" placeholder="π.χ. Σταθεροποίηση /ρ/ σε αρχική θέση και συμπλέγματα /τρ/, /γρ/."></textarea>
+      </div>
+      <div class="field wide">
+        <label for="childCustomTargets">Προσωπικές λέξεις-στόχοι</label>
+        <textarea id="childCustomTargets" placeholder="Μία λέξη ή μικρή φράση ανά γραμμή, π.χ. Ρένα&#10;κόκκινο τρένο&#10;παρακαλώ"></textarea>
+        <div class="small muted" style="margin-top:5px">Χρησιμοποιούνται στην «Προσωπική λίστα» χωρίς να αλλάζει το βασικό υλικό.</div>
+      </div>
+    </div>
+    <div class="action-row">
+      <button class="btn" onclick="saveChild()" id="saveChildBtn">Αποθήκευση φακέλου</button>
+      <button class="btn ghost" onclick="resetChildForm()" id="cancelEditBtn" style="display:none">Ακύρωση</button>
+    </div>
+  </div>
+
+  <div class="section-title"><div class="sec-ico blue">📂</div><h2>Φάκελοι παιδιών</h2><span id="childrenCount">0 φάκελοι</span></div>
+  <div class="child-list" id="childList"></div>
+
+  <div class="child-form card" style="margin-top:14px">
+    <h2>Αντίγραφο ασφαλείας 💾</h2>
+    <p class="small muted" style="margin-bottom:11px;line-height:1.5">Τα δεδομένα αποθηκεύονται μόνο σε αυτή τη συσκευή. Κράτα τακτικά αντίγραφο για να μη χαθούν φάκελοι και συνεδρίες αν καθαριστεί ο browser.</p>
+    <div class="action-row" style="margin:0">
+      <button class="btn ghost" onclick="exportBackup()">⬇️ Λήψη αντιγράφου</button>
+      <button class="btn ghost" onclick="document.getElementById('importFile').click()">⬆️ Επαναφορά</button>
+    </div>
+    <input type="file" id="importFile" accept="application/json,.json" style="display:none" onchange="importBackup(this)">
+    <div class="backup-status" id="backupStatus"></div>
+  </div>
+</section>
+
+
+<!-- GAMES LIBRARY -->
+<section class="screen" id="scr-games">
+  <div class="games-intro card">
+    <h2>Παιχνίδια συνεδρίας 🎮</h2>
+    <p>Επίλεξε επίπεδο και δραστηριότητα. Η εφαρμογή κρατά τα αποτελέσματα, αλλά η λογοθεραπευτική αξιολόγηση γίνεται πάντα από τον επαγγελματία.</p>
+    <div class="reward-strip" id="gameRewards"></div>
+  </div>
+  <div class="game-picker card">
+    <div class="game-picker-row">
+      <div class="field" style="margin:0"><label for="gameLevelSelect">Υλικό εξάσκησης</label><select id="gameLevelSelect"></select></div>
+      <button class="btn blue" onclick="startAdaptivePractice()">✨ Έξυπνη επανάληψη</button>
+    </div>
+  </div>
+  <div class="game-grid">
+    <button class="game-card" data-game="puzzle" onclick="startGame('puzzle')"><span class="game-ico">🧩</span><b>Παζλ αποκάλυψης</b><p>Ένα κομμάτι φεύγει μετά από κάθε προσπάθεια.</p><span class="game-tag">Ήρεμος ρυθμός</span></button>
+    <button class="game-card" data-game="memory" onclick="startGame('memory')"><span class="game-ico">🧠</span><b>Memory λέξεων</b><p>Ανάπτυξη μνήμης και παραγωγή της λέξης όταν βρεθεί ζευγάρι.</p><span class="game-tag">2 παίκτες</span></button>
+    <button class="game-card featured" data-game="treasure" onclick="startGame('treasure')"><span class="game-ico">🗺️</span><b>Κυνήγι θησαυρού</b><p>Ο ήρωας προχωρά σε οκτώ στάσεις μέχρι το τελικό σεντούκι.</p><span class="game-tag">Μεγάλη επιβράβευση</span></button>
+  </div>
+  <div class="notice" style="margin-top:13px">💡 Η «Έξυπνη επανάληψη» επιλέγει στοιχεία στα οποία το παιδί είχε χαμηλότερη επίδοση σε προηγούμενες συνεδρίες.</div>
+</section>
+
+<!-- ACTIVE GAME -->
+<section class="screen" id="scr-game">
+  <div class="game-session-header">
+    <div class="game-session-title"><div class="big-ico" id="activeGameIcon">🧩</div><div><h2 id="activeGameTitle">Παζλ</h2><p id="activeGameMeta"></p></div></div>
+    <button class="icon-btn" onclick="quitGame()" aria-label="Κλείσιμο">✕</button>
+  </div>
+  <div class="progressbar"><div id="gameProgress"></div></div>
+  <div class="game-stage card" id="gameStage"></div>
+</section>
+
+<!-- SESSION -->
+<section class="screen" id="scr-session">
+  <div class="session-header">
+    <div><span class="small muted" id="sessChild"></span><h2 id="sessLevel"></h2></div>
+    <button class="icon-btn" onclick="quitSession()" aria-label="Κλείσιμο">✕</button>
+  </div>
+  <div class="progressbar"><div id="sessProg"></div></div>
+  <div class="flashcard card">
+    <span class="fc-count" id="fcCount">1 / 10</span>
+    <span class="position-badge" id="fcPosition" style="display:none"></span>
+    <button class="icon-btn speak-btn" onclick="speakCurrent()" aria-label="Εκφώνηση λέξης">🔊</button>
+    <div class="fc-emoji" id="fcEmoji">🦁</div>
+    <div class="fc-word" id="fcWord"></div>
+    <p class="fc-hint" id="fcHint"></p>
+  </div>
+  <div class="score-row">
+    <button class="score-btn sb-ok" onclick="scoreItem(2)"><small>😀</small>Σωστό</button>
+    <button class="score-btn sb-mid" onclick="scoreItem(1)"><small>🙂</small>Σχεδόν</button>
+    <button class="score-btn sb-no" onclick="scoreItem(0)"><small>💪</small>Ξανά</button>
+  </div>
+</section>
+
+<!-- SESSION NOTES -->
+<section class="screen" id="scr-notes">
+  <div class="note-summary card">
+    <div class="note-summary-top">
+      <div><span class="small muted">Ολοκλήρωση συνεδρίας</span><h2 id="notesTitle">Σημειώσεις</h2></div>
+      <div class="score-badge" id="notesScore">0%</div>
+    </div>
+    <div class="mini-stats">
+      <div class="mini-stat"><b id="noteOk">0</b><span>Σωστά</span></div>
+      <div class="mini-stat"><b id="noteMid">0</b><span>Σχεδόν</span></div>
+      <div class="mini-stat"><b id="noteNo">0</b><span>Ξανά</span></div>
+      <div class="mini-stat"><b id="noteDuration">0′</b><span>Διάρκεια</span></div>
+    </div>
+  </div>
+
+  <div class="notes-card card">
+    <h3>Γρήγορη κλινική καταγραφή</h3>
+    <div class="choice-group">
+      <span class="label">Συνεργασία</span>
+      <div class="chips" data-field="collaboration">
+        <button class="chip">Πολύ καλή</button><button class="chip">Καλή</button><button class="chip">Μέτρια</button><button class="chip">Δύσκολη</button>
+      </div>
+    </div>
+    <div class="choice-group">
+      <span class="label">Συγκέντρωση</span>
+      <div class="chips" data-field="attention">
+        <button class="chip">Σταθερή</button><button class="chip">Με διακυμάνσεις</button><button class="chip">Περιορισμένη</button>
+      </div>
+    </div>
+    <div class="choice-group">
+      <span class="label">Επίπεδο υποστήριξης</span>
+      <div class="chips" data-field="support">
+        <button class="chip">Αυτόνομα</button><button class="chip">Λεκτική βοήθεια</button><button class="chip">Οπτικό πρότυπο</button><button class="chip">Με μίμηση</button>
+      </div>
+    </div>
+    <div class="choice-group">
+      <span class="label">Εικόνα προόδου</span>
+      <div class="chips" data-field="progress">
+        <button class="chip">Σημαντική βελτίωση</button><button class="chip">Σταδιακή βελτίωση</button><button class="chip">Σταθερή εικόνα</button><button class="chip">Χρειάζεται επανάληψη</button>
+      </div>
+    </div>
+    <div class="field"><label for="noteStrengths">Τι πήγε καλά</label><textarea id="noteStrengths" placeholder="π.χ. Παρήγαγε καθαρά το /ρ/ στις συλλαβές ρα, ρο."></textarea></div>
+    <div class="field"><label for="noteDifficulties">Δυσκολίες</label><textarea id="noteDifficulties" placeholder="π.χ. Δυσκολεύτηκε στα συμπλέγματα /τρ/ και /γρ/."></textarea></div>
+    <div class="field"><label for="noteHomework">Εργασία για το σπίτι</label><textarea id="noteHomework" placeholder="π.χ. Επανάληψη 5 λέξεων, 2 φορές την ημέρα."></textarea></div>
+    <div class="field"><label for="noteFree">Πρόσθετη παρατήρηση</label><textarea id="noteFree" placeholder="Οτιδήποτε χρειάζεται να θυμάσαι για την επόμενη συνεδρία."></textarea></div>
+    <button class="btn secondary" onclick="saveSessionWithNotes()">Αποθήκευση συνεδρίας</button>
+  </div>
+</section>
+
+<!-- SUMMARY -->
+<section class="screen" id="scr-summary">
+  <div class="summary-card card">
+    <div class="big-score" id="sumScore">80%</div>
+    <h2 id="sumTitle">Η συνεδρία αποθηκεύτηκε</h2>
+    <p id="sumSub"></p>
+  </div>
+  <button class="btn secondary" id="repeatDifficultBtn" style="display:none;margin-bottom:9px" onclick="repeatLastDifficult()">🔁 Άμεση επανάληψη δύσκολων</button>
+  <button class="btn blue" onclick="openCurrentWeekReport()">Δημιουργία εβδομαδιαίας αναφοράς</button>
+  <button class="btn ghost" style="margin-top:9px" onclick="show('home')">Επιστροφή στην αρχική</button>
+</section>
+
+<!-- REPORTS -->
+<section class="screen" id="scr-reports">
+  <div class="report-controls card">
+    <div class="report-toolbar">
+      <div class="field"><label>Παιδί</label><select id="reportChildSelect" onchange="renderReportsScreen()"></select></div>
+      <div class="field"><label>Ημερομηνία μέσα στην εβδομάδα</label><input type="date" id="reportDate" onchange="renderReportsScreen()"></div>
+      <div class="wide">
+        <span class="label">Τύπος αναφοράς</span>
+        <div class="segmented">
+          <button id="segClinical" class="active" onclick="setReportType('clinical')">Κλινική</button>
+          <button id="segParent" onclick="setReportType('parent')">Προς γονείς</button>
+        </div>
+      </div>
+    </div>
+    <button class="btn blue" style="margin-top:12px" onclick="generateReport(true)">↻ Δημιουργία αναφοράς</button>
+  </div>
+
+  <div class="report-card card" id="reportContainer">
+    <div class="report-head">
+      <div><h2 id="reportHeading">Εβδομαδιαία αναφορά</h2><div class="report-period" id="reportPeriod"></div></div>
+      <span class="lv-rate" id="reportSessionCount">0 συνεδρίες</span>
+    </div>
+    <div class="report-empty" id="reportEmpty"><div class="ico">📝</div>Επίλεξε παιδί και εβδομάδα για να δημιουργηθεί η αναφορά.</div>
+    <div class="report-preview report-render" id="reportRender" style="display:none"></div>
+    <textarea class="report-preview" id="reportText" style="display:none" aria-label="Κείμενο αναφοράς" oninput="state.reportDirty=true"></textarea>
+    <div class="report-actions" id="reportActions" style="display:none">
+      <button class="btn ghost" id="reportEditBtn" onclick="toggleReportEdit()">✏️ Επεξεργασία</button>
+      <button class="btn ghost" onclick="copyReport()">📋 Αντιγραφή</button>
+      <button class="btn ghost" onclick="downloadReport()">⬇️ Αρχείο .txt</button>
+      <button class="btn" onclick="printReport()">🖨️ Εκτύπωση / PDF</button>
+    </div>
+  </div>
+  <div class="notice">Η αναφορά είναι προσχέδιο υποβοήθησης. Ο/η λογοθεραπευτής/τρια πρέπει πάντα να την ελέγχει και να την εγκρίνει πριν χρησιμοποιηθεί.</div>
+</section>
+
+<!-- PROGRESS -->
+<section class="screen" id="scr-progress">
+  <div class="quick-select" style="margin:0 0 12px"><select id="progressChildSelect" onchange="selectChild(this.value);renderProgress()"></select></div>
+  <div class="prog-section card">
+    <h3 id="progTitle">Συνολική εικόνα</h3>
+    <div class="trend-row" id="trendStats"></div>
+    <div id="progBars"></div>
+  </div>
+  <div class="prog-section card">
+    <h3>Ιστορικό συνεδριών</h3>
+    <div class="session-export"><button class="btn ghost small-btn" onclick="exportChildCsv()">⬇️ Εξαγωγή CSV</button><button class="btn ghost small-btn" onclick="startMixedPractice()">🔀 Μικτή εξάσκηση</button></div>
+    <div id="histList"></div>
+  </div>
+</section>
+
+<nav class="tabbar">
+  <button class="tab active" data-tab="home" onclick="show('home')"><span class="t-ico">🏠</span>Αρχική</button>
+  <button class="tab" data-tab="games" onclick="show('games')"><span class="t-ico">🎮</span>Παιχνίδια</button>
+  <button class="tab" data-tab="children" onclick="show('children')"><span class="t-ico">📂</span>Φάκελοι</button>
+  <button class="tab" data-tab="reports" onclick="show('reports')"><span class="t-ico">📝</span>Αναφορές</button>
+  <button class="tab" data-tab="progress" onclick="show('progress')"><span class="t-ico">📈</span>Πρόοδος</button>
+</nav>
+
+<div class="toast" id="toast"></div>
+<div id="printArea"><h1 id="printTitle"></h1><div class="print-meta" id="printMeta"></div><div id="printText"></div></div>
+
+<script>
+'use strict';
+const DB_KEY = 'logopaixnidi_mvp_v4';
+const OLD_KEY = 'logo_demo_v1';
+const PREVIOUS_KEYS=['logopaixnidi_mvp_v2','logopaixnidi_mvp_v3'];
+
+const PHONEME_DATA = [{"id":"r","symbol":"ρ","label":"/ρ/","patternSource":"[ρΡ]","cue":"Η άκρη της γλώσσας πλησιάζει πίσω από τα επάνω δόντια. Ο αέρας περνά κεντρικά και βοηθά τη γλώσσα να πάλλεται, χωρίς υπερβολική πίεση.","soundMode":"sustain","syllables":["ρα","ρε","ρι","ρο","ρου","αρ","ερ","ιρ","ορ","ουρ"],"words":[{"e":"🛞","w":"ρόδα","pos":"Αρχή"},{"e":"⏰","w":"ρολόι","pos":"Αρχή"},{"e":"🍚","w":"ρύζι","pos":"Αρχή"},{"e":"👕","w":"ρούχα","pos":"Αρχή"},{"e":"🥕","w":"καρότο","pos":"Μέση"},{"e":"💧","w":"νερό","pos":"Μέση"},{"e":"🐟","w":"ψάρι","pos":"Μέση"},{"e":"🎁","w":"δώρο","pos":"Μέση"},{"e":"🚂","w":"τρένο","pos":"Σύμπλεγμα"},{"e":"🌧️","w":"βροχή","pos":"Σύμπλεγμα"},{"e":"🍓","w":"φρούτο","pos":"Σύμπλεγμα"},{"e":"✉️","w":"γράμμα","pos":"Σύμπλεγμα"}],"multisyllabic":["ροδάκινο","αεροπλάνο","καλοκαίρι","παραλία","πορτοκάλι","θερμόμετρο"],"phrases":["κόκκινη ρόδα","κρύο νερό","μεγάλο καρότο","γρήγορο τρένο","φρέσκο φρούτο","βροχερή μέρα"],"sentences":["Η Ρένα φοράει κόκκινα ρούχα.","Το γρήγορο τρένο περνά από τη γέφυρα.","Το ψάρι κολυμπά στο καθαρό νερό.","Αγοράσαμε φρέσκα φρούτα από την αγορά.","Το ρολόι γράφει τρεις η ώρα.","Ο δράκος κρατά ένα μεγάλο δώρο."]},{"id":"s","symbol":"σ","label":"/σ/","patternSource":"[σΣς]","cue":"Τα δόντια μένουν κοντά, η γλώσσα πίσω από τα δόντια και ο αέρας βγαίνει από το κέντρο σαν ήρεμο σφύριγμα.","soundMode":"sustain","syllables":["σα","σε","σι","σο","σου","ασ","εσ","ισ","ος","ους"],"words":[{"e":"🧼","w":"σαπούνι","pos":"Αρχή"},{"e":"🥗","w":"σαλάτα","pos":"Αρχή"},{"e":"🪜","w":"σκάλα","pos":"Αρχή"},{"e":"🏠","w":"σπίτι","pos":"Σύμπλεγμα"},{"e":"🎵","w":"μουσική","pos":"Μέση"},{"e":"🌊","w":"θάλασσα","pos":"Μέση"},{"e":"🐝","w":"μέλισσα","pos":"Μέση"},{"e":"✏️","w":"κασετίνα","pos":"Μέση"},{"e":"☀️","w":"ήλιος","pos":"Τέλος"},{"e":"🐕","w":"σκύλος","pos":"Τέλος"},{"e":"⭐","w":"αστέρι","pos":"Σύμπλεγμα"},{"e":"🧹","w":"σκούπα","pos":"Σύμπλεγμα"}],"multisyllabic":["σαλιγκάρι","συννεφάκι","αστυνομία","πολυθρόνα","κασετίνα","ποδοσφαιριστής"],"phrases":["καθαρό σαπούνι","φρέσκια σαλάτα","μεγάλη σκάλα","δυνατή μουσική","ήρεμη θάλασσα","κίτρινος ήλιος"],"sentences":["Η Σοφία σκουπίζει το σπίτι.","Ο σκύλος τρέχει μέσα στο δάσος.","Η μέλισσα πετά πάνω από τα λουλούδια.","Στο σχολείο έχω μία μπλε κασετίνα.","Η θάλασσα σήμερα είναι ήρεμη.","Ο ήλιος λάμπει στον ουρανό."]},{"id":"z","symbol":"ζ","label":"/ζ/","patternSource":"[ζΖ]","cue":"Ίδια θέση με το /σ/, αλλά ενεργοποιούμε τη φωνή. Μπορείς να αγγίξεις απαλά τον λαιμό για να νιώσεις τη δόνηση.","soundMode":"sustain","syllables":["ζα","ζε","ζι","ζο","ζου","αζ","εζ","ιζ","οζ","ουζ"],"words":[{"e":"🎲","w":"ζάρι","pos":"Αρχή"},{"e":"🦓","w":"ζέβρα","pos":"Αρχή"},{"e":"🍬","w":"ζάχαρη","pos":"Αρχή"},{"e":"🧥","w":"ζακέτα","pos":"Αρχή"},{"e":"🏺","w":"βάζο","pos":"Μέση"},{"e":"🍚","w":"ρύζι","pos":"Μέση"},{"e":"🪑","w":"τραπέζι","pos":"Μέση"},{"e":"🛍️","w":"μαγαζί","pos":"Μέση"},{"e":"👫","w":"μαζί","pos":"Μέση"},{"e":"🚶","w":"πεζός","pos":"Μέση"},{"e":"🍳","w":"καζάνι","pos":"Μέση"},{"e":"🦌","w":"γαζέλα","pos":"Μέση"}],"multisyllabic":["ζαχαροπλαστείο","ζωγραφική","μαγαζάκι","πεζοδρόμιο","τραπεζάκι","γαζελίτσα"],"phrases":["κόκκινο ζάρι","άγρια ζέβρα","γλυκιά ζάχαρη","γυάλινο βάζο","ξύλινο τραπέζι","μικρό μαγαζί"],"sentences":["Η Ζωή ρίχνει το κόκκινο ζάρι.","Η ζέβρα τρέχει γρήγορα στη σαβάνα.","Βάζω λουλούδια μέσα στο βάζο.","Καθόμαστε όλοι μαζί στο τραπέζι.","Το μικρό μαγαζί πουλά παιχνίδια.","Ο ζωγράφος ζωγραφίζει ένα πράσινο δέντρο."]},{"id":"l","symbol":"λ","label":"/λ/","patternSource":"[λΛ]","cue":"Η άκρη της γλώσσας ακουμπά πίσω από τα επάνω δόντια. Ο αέρας περνά από τα πλαϊνά της γλώσσας.","soundMode":"sustain","syllables":["λα","λε","λι","λο","λου","αλ","ελ","ιλ","ολ","ουλ"],"words":[{"e":"🐇","w":"λαγός","pos":"Αρχή"},{"e":"🍋","w":"λεμόνι","pos":"Αρχή"},{"e":"🌷","w":"λουλούδι","pos":"Αρχή"},{"e":"🏞️","w":"λίμνη","pos":"Αρχή"},{"e":"✏️","w":"μολύβι","pos":"Μέση"},{"e":"⚽","w":"μπάλα","pos":"Μέση"},{"e":"🥛","w":"γάλα","pos":"Μέση"},{"e":"🎩","w":"καπέλο","pos":"Μέση"},{"e":"🚢","w":"πλοίο","pos":"Σύμπλεγμα"},{"e":"🔑","w":"κλειδί","pos":"Σύμπλεγμα"},{"e":"🍰","w":"γλυκό","pos":"Σύμπλεγμα"},{"e":"🔵","w":"μπλε","pos":"Σύμπλεγμα"}],"multisyllabic":["λεμονάδα","πολυκατοικία","καλοκαίρι","λουλουδάκι","μπαλαρίνα","τηλεόραση"],"phrases":["άσπρος λαγός","κίτρινο λεμόνι","κόκκινο λουλούδι","μπλε μπάλα","ζεστό γάλα","μεγάλο πλοίο"],"sentences":["Ο λαγός κρύβεται πίσω από το λουλούδι.","Η Λένα πίνει κρύα λεμονάδα.","Η μπλε μπάλα έπεσε στη λίμνη.","Βάζω γάλα μέσα στο ποτήρι.","Το μεγάλο πλοίο ταξιδεύει αργά.","Κλείδωσα την πόρτα με το κλειδί."]},{"id":"th","symbol":"θ","label":"/θ/","patternSource":"[θΘ]","cue":"Η γλώσσα προβάλλει απαλά ανάμεσα στα δόντια και ο αέρας περνά συνεχόμενα, χωρίς φωνή.","soundMode":"sustain","syllables":["θα","θε","θη","θο","θου","αθ","εθ","ιθ","οθ","ουθ"],"words":[{"e":"🌊","w":"θάλασσα","pos":"Αρχή"},{"e":"🪑","w":"θρανίο","pos":"Αρχή"},{"e":"📦","w":"θήκη","pos":"Αρχή"},{"e":"😠","w":"θυμός","pos":"Αρχή"},{"e":"🪞","w":"καθρέφτης","pos":"Μέση"},{"e":"🧺","w":"καλάθι","pos":"Μέση"},{"e":"🪟","w":"παράθυρο","pos":"Μέση"},{"e":"👨‍🎓","w":"μαθητής","pos":"Μέση"},{"e":"📖","w":"μύθος","pos":"Μέση"},{"e":"🧵","w":"νήμα","pos":"Μέση"},{"e":"🏃","w":"αθλητής","pos":"Μέση"},{"e":"🧱","w":"τούβλο","pos":"Μέση"}],"multisyllabic":["θερμόμετρο","μαθηματικά","καθρεφτάκι","παραθυράκι","αθλητικός","καλαθάκι"],"phrases":["ήρεμη θάλασσα","ξύλινο θρανίο","μικρή θήκη","μεγάλος καθρέφτης","γεμάτο καλάθι","καλός μαθητής"],"sentences":["Η θάλασσα έχει μεγάλα κύματα.","Ο μαθητής κάθεται στο θρανίο.","Κοιτάζομαι μέσα στον καθρέφτη.","Το καλάθι είναι γεμάτο φρούτα.","Άνοιξε το παράθυρο για να μπει αέρας.","Ο αθλητής τρέχει κάθε πρωί."]},{"id":"dh","symbol":"δ","label":"/δ/","patternSource":"[δΔ]","cue":"Η γλώσσα προβάλλει απαλά ανάμεσα στα δόντια όπως στο /θ/, αλλά αυτή τη φορά ενεργοποιούμε τη φωνή.","soundMode":"sustain","syllables":["δα","δε","δη","δο","δου","αδ","εδ","ιδ","οδ","ουδ"],"words":[{"e":"🎁","w":"δώρο","pos":"Αρχή"},{"e":"🌳","w":"δάσος","pos":"Αρχή"},{"e":"🌲","w":"δέντρο","pos":"Αρχή"},{"e":"🛣️","w":"δρόμος","pos":"Σύμπλεγμα"},{"e":"🚲","w":"ποδήλατο","pos":"Μέση"},{"e":"🦶","w":"πόδι","pos":"Μέση"},{"e":"❤️","w":"καρδιά","pos":"Μέση"},{"e":"👧","w":"αδελφή","pos":"Μέση"},{"e":"🐉","w":"δράκος","pos":"Σύμπλεγμα"},{"e":"🏃","w":"δραστηριότητα","pos":"Σύμπλεγμα"},{"e":"🌹","w":"τριαντάφυλλο","pos":"Μέση"},{"e":"🪥","w":"οδοντόβουρτσα","pos":"Μέση"}],"multisyllabic":["ποδηλατάκι","οδοντίατρος","διαδρομή","δυνατότητα","αδελφούλα","δραστηριότητα"],"phrases":["μεγάλο δώρο","πράσινο δάσος","ψηλό δέντρο","μακρύς δρόμος","κόκκινο ποδήλατο","δυνατός δράκος"],"sentences":["Η Δανάη άνοιξε το μεγάλο δώρο.","Το δέντρο μεγαλώνει μέσα στο δάσος.","Κάνω ποδήλατο στον μακρύ δρόμο.","Ο δράκος έχει δύο μεγάλα φτερά.","Πλένω τα δόντια με την οδοντόβουρτσα.","Η αδελφή μου ζωγραφίζει μία καρδιά."]},{"id":"f","symbol":"φ","label":"/φ/","patternSource":"[φΦ]","cue":"Το κάτω χείλος ακουμπά απαλά στα επάνω δόντια και ο αέρας περνά συνεχόμενα, χωρίς φωνή.","soundMode":"sustain","syllables":["φα","φε","φι","φο","φου","αφ","εφ","ιφ","οφ","ουφ"],"words":[{"e":"💡","w":"φως","pos":"Αρχή"},{"e":"🗼","w":"φάρος","pos":"Αρχή"},{"e":"👗","w":"φούστα","pos":"Αρχή"},{"e":"🐍","w":"φίδι","pos":"Αρχή"},{"e":"☕","w":"καφές","pos":"Μέση"},{"e":"🐘","w":"ελέφαντας","pos":"Μέση"},{"e":"☁️","w":"σύννεφο","pos":"Μέση"},{"e":"🧣","w":"κασκόλ","pos":"Μέση"},{"e":"🍓","w":"φράουλα","pos":"Σύμπλεγμα"},{"e":"🍎","w":"φρούτο","pos":"Σύμπλεγμα"},{"e":"🛑","w":"φρένο","pos":"Σύμπλεγμα"},{"e":"👁️","w":"φρύδι","pos":"Σύμπλεγμα"}],"multisyllabic":["φωτογραφία","ελεφαντάκι","καφετιέρα","συννεφιασμένος","φραουλίτσα","τηλεφωνάκι"],"phrases":["δυνατό φως","ψηλός φάρος","κόκκινη φούστα","ζεστός καφές","μεγάλος ελέφαντας","γλυκιά φράουλα"],"sentences":["Το φως του φάρου φαίνεται από μακριά.","Η Φωτεινή φοράει κόκκινη φούστα.","Ο ελέφαντας τρώει φρέσκα φρούτα.","Φτιάχνω ζεστό καφέ στην καφετιέρα.","Το σύννεφο κρύβει το φεγγάρι.","Πατάω απαλά το φρένο του ποδηλάτου."]},{"id":"v","symbol":"β","label":"/β/","patternSource":"[βΒ]","cue":"Το κάτω χείλος ακουμπά στα επάνω δόντια όπως στο /φ/, αλλά προσθέτουμε φωνή και νιώθουμε δόνηση στον λαιμό.","soundMode":"sustain","syllables":["βα","βε","βι","βο","βου","αβ","εβ","ιβ","οβ","ουβ"],"words":[{"e":"⛵","w":"βάρκα","pos":"Αρχή"},{"e":"🏺","w":"βάζο","pos":"Αρχή"},{"e":"📚","w":"βιβλίο","pos":"Αρχή"},{"e":"⛰️","w":"βουνό","pos":"Αρχή"},{"e":"🦀","w":"καβούρι","pos":"Μέση"},{"e":"✏️","w":"μολύβι","pos":"Μέση"},{"e":"🥫","w":"κονσέρβα","pos":"Μέση"},{"e":"🎭","w":"πρόβα","pos":"Μέση"},{"e":"🌧️","w":"βροχή","pos":"Σύμπλεγμα"},{"e":"🌙","w":"βράδυ","pos":"Σύμπλεγμα"},{"e":"🚰","w":"βρύση","pos":"Σύμπλεγμα"},{"e":"📿","w":"βραχιόλι","pos":"Σύμπλεγμα"}],"multisyllabic":["βιβλιοθήκη","καβουράκι","μολυβοθήκη","βραδινός","βροχερός","βραχιολάκι"],"phrases":["μικρή βάρκα","γυάλινο βάζο","καινούριο βιβλίο","ψηλό βουνό","κόκκινο μολύβι","δυνατή βροχή"],"sentences":["Η Βάσω διαβάζει ένα καινούριο βιβλίο.","Η μικρή βάρκα ταξιδεύει στο νερό.","Το καβούρι κρύβεται κάτω από έναν βράχο.","Το βράδυ βλέπουμε τα αστέρια.","Η βροχή πέφτει πάνω στο βουνό.","Βάζω το βραχιόλι στο αριστερό χέρι."]},{"id":"ch","symbol":"χ","label":"/χ/","patternSource":"[χΧ]","cue":"Το πίσω μέρος της γλώσσας πλησιάζει τον ουρανίσκο και ο αέρας περνά χωρίς να κλείνει εντελώς η δίοδος.","soundMode":"sustain","syllables":["χα","χε","χι","χο","χου","αχ","εχ","ιχ","οχ","ουχ"],"words":[{"e":"✋","w":"χέρι","pos":"Αρχή"},{"e":"❄️","w":"χιόνι","pos":"Αρχή"},{"e":"📄","w":"χαρτί","pos":"Αρχή"},{"e":"🧃","w":"χυμός","pos":"Αρχή"},{"e":"🔪","w":"μαχαίρι","pos":"Μέση"},{"e":"🍐","w":"αχλάδι","pos":"Μέση"},{"e":"🚗","w":"όχημα","pos":"Μέση"},{"e":"🐚","w":"κοχύλι","pos":"Μέση"},{"e":"🎨","w":"χρώμα","pos":"Σύμπλεγμα"},{"e":"⏳","w":"χρόνος","pos":"Σύμπλεγμα"},{"e":"💰","w":"χρήματα","pos":"Σύμπλεγμα"},{"e":"🎄","w":"Χριστούγεννα","pos":"Σύμπλεγμα"}],"multisyllabic":["χαρτοπετσέτα","χιονάνθρωπος","μαχαιροπίρουνο","αχλαδάκι","χρωματιστός","χριστουγεννιάτικος"],"phrases":["καθαρό χέρι","άσπρο χιόνι","λευκό χαρτί","κρύος χυμός","κοφτερό μαχαίρι","πράσινο χρώμα"],"sentences":["Χειροκροτώ με τα δύο μου χέρια.","Το άσπρο χιόνι σκέπασε τον δρόμο.","Ζωγραφίζω ένα σπίτι στο χαρτί.","Κόβω το αχλάδι με το μαχαίρι.","Διάλεξα το πράσινο χρώμα.","Τα Χριστούγεννα στολίζουμε το δέντρο."]},{"id":"gh","symbol":"γ","label":"/γ/","patternSource":"[γΓ]","cue":"Η μέση ή το πίσω μέρος της γλώσσας πλησιάζει τον ουρανίσκο και προσθέτουμε φωνή. Η θέση αλλάζει λίγο ανάλογα με το φωνήεν που ακολουθεί.","soundMode":"sustain","syllables":["γα","γε","γι","γο","γου","αγ","εγ","ιγ","ογ","ουγ"],"words":[{"e":"🐈","w":"γάτα","pos":"Αρχή"},{"e":"🧽","w":"γόμα","pos":"Αρχή"},{"e":"🥛","w":"γάλα","pos":"Αρχή"},{"e":"🧥","w":"γούνα","pos":"Αρχή"},{"e":"👵","w":"γιαγιά","pos":"Αρχή"},{"e":"😄","w":"γέλιο","pos":"Αρχή"},{"e":"👦","w":"αγόρι","pos":"Μέση"},{"e":"🛍️","w":"μαγαζί","pos":"Μέση"},{"e":"🧊","w":"παγάκι","pos":"Μέση"},{"e":"🐇","w":"λαγός","pos":"Μέση"},{"e":"✉️","w":"γράμμα","pos":"Σύμπλεγμα"},{"e":"🌿","w":"γρασίδι","pos":"Σύμπλεγμα"}],"multisyllabic":["γαλακτομπούρεκο","αγοροκόριτσο","μαγαζάκι","παγοδρόμιο","γιαγιαδίστικο","γραμματοκιβώτιο"],"phrases":["άσπρη γάτα","μπλε γόμα","ζεστό γάλα","καλό αγόρι","μικρό μαγαζί","πράσινο γρασίδι"],"sentences":["Η γάτα πίνει λίγο γάλα.","Η γιαγιά γελά με το αστείο.","Το αγόρι μπήκε μέσα στο μαγαζί.","Βάζω ένα παγάκι στο ποτήρι.","Γράφω ένα γράμμα στον φίλο μου.","Το γρασίδι στον κήπο είναι πράσινο."]},{"id":"k","symbol":"κ","label":"/κ/","patternSource":"[κΚ]","cue":"Το πίσω μέρος της γλώσσας κλείνει για λίγο τη δίοδο στον μαλακό ουρανίσκο και μετά αφήνει γρήγορα τον αέρα.","soundMode":"burst","syllables":["κα","κε","κι","κο","κου","ακ","εκ","ικ","οκ","ουκ"],"words":[{"e":"☕","w":"κούπα","pos":"Αρχή"},{"e":"🎩","w":"καπέλο","pos":"Αρχή"},{"e":"🐔","w":"κότα","pos":"Αρχή"},{"e":"🏰","w":"κάστρο","pos":"Αρχή"},{"e":"📦","w":"πακέτο","pos":"Μέση"},{"e":"👕","w":"σακάκι","pos":"Μέση"},{"e":"📦","w":"κουτάκι","pos":"Μέση"},{"e":"🏢","w":"μπαλκόνι","pos":"Μέση"},{"e":"🍦","w":"κρέμα","pos":"Σύμπλεγμα"},{"e":"🥶","w":"κρύο","pos":"Σύμπλεγμα"},{"e":"🟡","w":"κρόκος","pos":"Σύμπλεγμα"},{"e":"🐕","w":"σκύλος","pos":"Σύμπλεγμα"}],"multisyllabic":["καλοκαίρι","καμηλοπάρδαλη","καπελάκι","μπαλκονόπορτα","κουταλάκι","κροκοδειλάκι"],"phrases":["κόκκινη κούπα","μεγάλο καπέλο","άσπρη κότα","ψηλό κάστρο","μικρό πακέτο","κρύα κρέμα"],"sentences":["Η Κατερίνα κρατά μία κόκκινη κούπα.","Η κότα περπατά γύρω από το κάστρο.","Άνοιξα το μικρό πακέτο.","Το καπέλο έπεσε από το μπαλκόνι.","Τρώω κρύα κρέμα με κουταλάκι.","Ο σκύλος κοιμάται κοντά στην καρέκλα."]},{"id":"p","symbol":"π","label":"/π/","patternSource":"[πΠ]","cue":"Τα χείλη κλείνουν, κρατούν για λίγο τον αέρα και ανοίγουν γρήγορα χωρίς φωνή.","soundMode":"burst","syllables":["πα","πε","πι","πο","που","απ","επ","ιπ","οπ","ουπ"],"words":[{"e":"🦆","w":"πάπια","pos":"Αρχή"},{"e":"🚪","w":"πόρτα","pos":"Αρχή"},{"e":"🍽️","w":"πιάτο","pos":"Αρχή"},{"e":"👟","w":"παπούτσι","pos":"Αρχή"},{"e":"🎩","w":"καπέλο","pos":"Μέση"},{"e":"🥔","w":"πατάτα","pos":"Μέση"},{"e":"🧴","w":"σαπούνι","pos":"Μέση"},{"e":"🦋","w":"πεταλούδα","pos":"Μέση"},{"e":"🟢","w":"πράσινο","pos":"Σύμπλεγμα"},{"e":"🐑","w":"πρόβατο","pos":"Σύμπλεγμα"},{"e":"🚢","w":"πλοίο","pos":"Σύμπλεγμα"},{"e":"🌅","w":"πρωί","pos":"Σύμπλεγμα"}],"multisyllabic":["παπουτσάκι","πεταλουδίτσα","πορτοκαλάδα","πολυκατοικία","πρασινάδα","παιχνιδάκι"],"phrases":["κίτρινη πάπια","κλειστή πόρτα","άδειο πιάτο","μπλε παπούτσι","μεγάλη πατάτα","πράσινο πρόβατο"],"sentences":["Η πάπια περπατά δίπλα στη λίμνη.","Κλείνω απαλά την πόρτα.","Βάζω την πατάτα μέσα στο πιάτο.","Το παπούτσι μου είναι μπλε.","Το πρόβατο τρώει πράσινο χορτάρι.","Το πρωί πηγαίνω στο πάρκο."]},{"id":"t","symbol":"τ","label":"/τ/","patternSource":"[τΤ]","cue":"Η άκρη της γλώσσας ακουμπά πίσω από τα επάνω δόντια, κρατά για λίγο τον αέρα και απελευθερώνει γρήγορα.","soundMode":"burst","syllables":["τα","τε","τι","το","του","ατ","ετ","ιτ","οτ","ουτ"],"words":[{"e":"⚽","w":"τόπι","pos":"Αρχή"},{"e":"🚂","w":"τρένο","pos":"Σύμπλεγμα"},{"e":"🍽️","w":"τραπέζι","pos":"Σύμπλεγμα"},{"e":"🎵","w":"τραγούδι","pos":"Σύμπλεγμα"},{"e":"🥔","w":"πατάτα","pos":"Μέση"},{"e":"📦","w":"κουτί","pos":"Μέση"},{"e":"🏠","w":"σπίτι","pos":"Μέση"},{"e":"🥕","w":"καρότο","pos":"Μέση"},{"e":"🔺","w":"τρίγωνο","pos":"Σύμπλεγμα"},{"e":"⭐","w":"αστέρι","pos":"Σύμπλεγμα"},{"e":"🍰","w":"τούρτα","pos":"Αρχή"},{"e":"📞","w":"τηλέφωνο","pos":"Αρχή"}],"multisyllabic":["τηλεόραση","τραπεζάκι","τραγουδιστής","πορτοκαλάδα","πατατούλα","τριγωνάκι"],"phrases":["κόκκινο τόπι","γρήγορο τρένο","ξύλινο τραπέζι","μεγάλη πατάτα","μικρό κουτί","γλυκιά τούρτα"],"sentences":["Το κόκκινο τόπι κύλησε κάτω από το τραπέζι.","Το τρένο ταξιδεύει πολύ γρήγορα.","Η πατάτα είναι μέσα στο κουτί.","Τραγουδάμε όλοι ένα χαρούμενο τραγούδι.","Το τρίγωνο έχει τρεις πλευρές.","Η τούρτα έχει τέσσερα κεράκια."]},{"id":"m","symbol":"μ","label":"/μ/","patternSource":"[μΜ]","cue":"Τα χείλη κλείνουν απαλά, η φωνή ενεργοποιείται και ο αέρας περνά από τη μύτη.","soundMode":"sustain","syllables":["μα","με","μι","μο","μου","αμ","εμ","ιμ","ομ","ουμ"],"words":[{"e":"🍎","w":"μήλο","pos":"Αρχή"},{"e":"🍯","w":"μέλι","pos":"Αρχή"},{"e":"👃","w":"μύτη","pos":"Αρχή"},{"e":"👩","w":"μαμά","pos":"Αρχή"},{"e":"🐫","w":"καμήλα","pos":"Μέση"},{"e":"🍅","w":"ντομάτα","pos":"Μέση"},{"e":"🍋","w":"λεμόνι","pos":"Μέση"},{"e":"🥪","w":"σαλάμι","pos":"Μέση"},{"e":"🎒","w":"μαύρο","pos":"Αρχή"},{"e":"👶","w":"μωρό","pos":"Αρχή"},{"e":"🌊","w":"κύμα","pos":"Μέση"},{"e":"🧵","w":"νήμα","pos":"Μέση"}],"multisyllabic":["μηλοπιτάκι","μελισσούλα","καμηλοπάρδαλη","ντοματούλα","λεμονάδα","μακαρονάδα"],"phrases":["κόκκινο μήλο","γλυκό μέλι","μικρή μύτη","καλή μαμά","μεγάλη καμήλα","ώριμη ντομάτα"],"sentences":["Η Μαρία τρώει ένα κόκκινο μήλο.","Η μέλισσα φτιάχνει γλυκό μέλι.","Η μαμά χαμογελά στο μωρό.","Η καμήλα περπατά μέσα στην έρημο.","Κόβω την ντομάτα για τη σαλάτα.","Πίνω κρύα λεμονάδα το μεσημέρι."]},{"id":"n","symbol":"ν","label":"/ν/","patternSource":"[νΝ]","cue":"Η άκρη της γλώσσας ακουμπά πίσω από τα επάνω δόντια, η φωνή ενεργοποιείται και ο αέρας περνά από τη μύτη.","soundMode":"sustain","syllables":["να","νε","νι","νο","νου","αν","εν","ιν","ον","ουν"],"words":[{"e":"💧","w":"νερό","pos":"Αρχή"},{"e":"🧵","w":"νήμα","pos":"Αρχή"},{"e":"🌙","w":"νύχτα","pos":"Αρχή"},{"e":"👶","w":"νονός","pos":"Αρχή"},{"e":"🏺","w":"κανάτα","pos":"Μέση"},{"e":"🔊","w":"φωνή","pos":"Μέση"},{"e":"⛰️","w":"βουνό","pos":"Μέση"},{"e":"❄️","w":"χιόνι","pos":"Μέση"},{"e":"🍋","w":"λεμόνι","pos":"Μέση"},{"e":"🎹","w":"πιάνο","pos":"Μέση"},{"e":"🌻","w":"ηλιοτρόπιο","pos":"Μέση"},{"e":"👑","w":"στέμμα","pos":"Μέση"}],"multisyllabic":["νεροπίστολο","νηπιαγωγείο","νυχτερινός","κανατάκι","φωνούλα","χιονονιφάδα"],"phrases":["κρύο νερό","λεπτό νήμα","σκοτεινή νύχτα","γεμάτη κανάτα","δυνατή φωνή","ψηλό βουνό"],"sentences":["Η Νίκη πίνει κρύο νερό.","Το λεπτό νήμα είναι πάνω στο τραπέζι.","Τη νύχτα βλέπουμε το φεγγάρι.","Γεμίζω την κανάτα με νερό.","Η φωνή της Νίνας ακούγεται δυνατά.","Το χιόνι σκέπασε το βουνό."]},{"id":"ts","symbol":"τσ","label":"/τσ/","patternSource":"(?:τσ|Τσ|ΤΣ)","cue":"Τα δόντια πλησιάζουν, η γλώσσα δημιουργεί πρώτα ένα μικρό κλείσιμο και μετά αφήνει τον αέρα σαν σύντομο /τσ/.","soundMode":"burst","syllables":["τσα","τσε","τσι","τσο","τσου","ατσα","ετσε","ιτσι","οτσο","ουτσου"],"words":[{"e":"👜","w":"τσάντα","pos":"Αρχή"},{"e":"🍬","w":"τσίχλα","pos":"Αρχή"},{"e":"☕","w":"τσάι","pos":"Αρχή"},{"e":"🛝","w":"τσουλήθρα","pos":"Αρχή"},{"e":"🍲","w":"κατσαρόλα","pos":"Μέση"},{"e":"🍕","w":"πίτσα","pos":"Μέση"},{"e":"👧","w":"κορίτσι","pos":"Μέση"},{"e":"👟","w":"παπούτσι","pos":"Μέση"},{"e":"🪥","w":"οδοντόβουρτσα","pos":"Μέση"},{"e":"🐐","w":"κατσίκα","pos":"Μέση"},{"e":"🚗","w":"καρότσι","pos":"Μέση"},{"e":"🧦","w":"κάλτσα","pos":"Μέση"}],"multisyllabic":["τσαντάκι","τσουληθρίτσα","κατσαρολάκι","πιτσαρία","κοριτσάκι","παπουτσάκι"],"phrases":["κόκκινη τσάντα","γλυκιά τσίχλα","ζεστό τσάι","μεγάλη τσουλήθρα","γεμάτη κατσαρόλα","στρογγυλή πίτσα"],"sentences":["Η Τζίνα κρατά μία κόκκινη τσάντα.","Μασάω μία γλυκιά τσίχλα.","Πίνουμε ζεστό τσάι το απόγευμα.","Το παιδί κατεβαίνει από την τσουλήθρα.","Η κατσαρόλα είναι πάνω στην κουζίνα.","Το κορίτσι φοράει άσπρα παπούτσια."]},{"id":"tz","symbol":"τζ","label":"/τζ/","patternSource":"(?:τζ|Τζ|ΤΖ)","cue":"Παρόμοια κίνηση με το /τσ/, αλλά ενεργοποιούμε τη φωνή και νιώθουμε δόνηση.","soundMode":"burst","syllables":["τζα","τζε","τζι","τζο","τζου","ατζα","ετζε","ιτζι","οτζο","ουτζου"],"words":[{"e":"🪟","w":"τζάμι","pos":"Αρχή"},{"e":"🔥","w":"τζάκι","pos":"Αρχή"},{"e":"🦗","w":"τζιτζίκι","pos":"Αρχή"},{"e":"👖","w":"τζιν","pos":"Αρχή"},{"e":"🍆","w":"μελιτζάνα","pos":"Μέση"},{"e":"🧳","w":"βαλίτζα","pos":"Μέση"},{"e":"🛏️","w":"πιτζάμα","pos":"Μέση"},{"e":"🥬","w":"παντζάρι","pos":"Μέση"},{"e":"🫙","w":"μαρμελάδα","pos":"Μέση"},{"e":"🧞","w":"τζίνι","pos":"Αρχή"},{"e":"🎷","w":"τζαζ","pos":"Αρχή"},{"e":"🍺","w":"τζίντζερ","pos":"Αρχή"}],"multisyllabic":["τζαμαρία","τζακόπορτα","τζιτζικάκι","μελιτζανοσαλάτα","βαλιτσάκι","πιτζαμούλα"],"phrases":["καθαρό τζάμι","ζεστό τζάκι","δυνατό τζιτζίκι","μπλε τζιν","μωβ μελιτζάνα","μεγάλη βαλίτζα"],"sentences":["Καθαρίζω το τζάμι με ένα πανί.","Το τζάκι ζεσταίνει το δωμάτιο.","Το τζιτζίκι τραγουδά πάνω στο δέντρο.","Φοράω το μπλε τζιν παντελόνι.","Βάζω τη μελιτζάνα μέσα στο καλάθι.","Η βαλίτζα έχει μέσα τις πιτζάμες μου."]}];
+function makeSoundItems(cfg){
+  const s=cfg.symbol;
+  if(cfg.soundMode==='burst')return [
+    {e:'🎯',w:`${s}-${s}-${s}`,h:'Τρεις μικρές, καθαρές παραγωγές χωρίς βιασύνη.'},
+    {e:'🥁',w:`${s}α · ${s}ο · ${s}ου`,h:'Σύνδεσε τον ήχο με τρία διαφορετικά φωνήεντα.'},
+    {e:'🐢',w:`${s}… ${s}… ${s}…`,h:'Αργά, με μικρή παύση ανάμεσα στις προσπάθειες.'},
+    {e:'🚀',w:`${s}-${s}-${s}-${s}`,h:'Τέσσερις γρήγορες αλλά καθαρές επαναλήψεις.'},
+    {e:'🪞',w:`${s} + α`,h:'Δώσε οπτικό πρότυπο και μετά άφησε το παιδί να μιμηθεί.'},
+    {e:'🎲',w:`${s} · α · ${s}`,h:'Εναλλαγή ήχου και φωνήεντος για κινητικό έλεγχο.'}
+  ];
+  return [
+    {e:'🎯',w:`${s}${s}${s}…`,h:'Κράτησε τον ήχο σταθερό και ήρεμο.'},
+    {e:'🐢',w:`${s}… ${s}… ${s}…`,h:'Τρεις αργές παραγωγές με μικρή παύση.'},
+    {e:'🚀',w:`${s}${s}${s} (γρήγορα)`,h:'Γρήγορη επανάληψη χωρίς να χάνεται η ακρίβεια.'},
+    {e:'🤫',w:`${s}${s}${s} (σιγά)`,h:'Χαμηλή ένταση και προσεκτικός έλεγχος του αέρα.'},
+    {e:'📣',w:`${s}${s}${s} (δυνατά)`,h:'Καθαρός ήχος με άνετη, όχι πιεστική ένταση.'},
+    {e:'🎲',w:`${s} · α · ${s}`,h:'Εναλλαγή ήχου και φωνήεντος.'}
+  ];
+}
+function wordHint(item){
+  const p=item.pos||'Λέξη';
+  return p==='Σύμπλεγμα'?'Πρόσεξε και τα δύο σύμφωνα του συμπλέγματος.':`Ο ήχος-στόχος βρίσκεται στη ${p.toLowerCase()} της λέξης.`;
+}
+function buildPhoneme(cfg){
+  const mk=(arr,h)=>arr.map((x,i)=>typeof x==='string'?{e:['⭐','🎈','🌟','🎯','🎵','🧩'][i%6],w:x,h:h(x,i)}:{...x,h:x.h||wordHint(x)});
+  const words=mk(cfg.words,()=>''), multi=mk(cfg.multisyllabic,()=> 'Πες τη λέξη αργά, χώρισέ την σε συλλαβές και ένωσέ την ξανά.'), phrases=mk(cfg.phrases,()=> 'Πες τη φράση με φυσικό ρυθμό, κρατώντας καθαρό τον ήχο-στόχο.'), sentences=mk(cfg.sentences,()=> 'Πες ολόκληρη την πρόταση και μετά επανάλαβέ την λίγο πιο φυσικά.');
+  const spontaneous=cfg.words.slice(0,6).map((x,i)=>({e:x.e,w:`Φτιάξε πρόταση με: ${x.w}`,h:'Το παιδί δημιουργεί δική του πρόταση. Αξιολόγησε ακρίβεια και γενίκευση.',pos:x.pos}));
+  return {...cfg,pattern:new RegExp(cfg.patternSource,'g'),levels:[
+    {id:cfg.id+'_sound',kind:'sound',emoji:'🗣️',name:'Ο ήχος',desc:'Απομόνωση και εκμαίευση',items:makeSoundItems(cfg)},
+    {id:cfg.id+'_syll',kind:'syll',emoji:'🔤',name:'Συλλαβές',desc:'Σύνδεση με φωνήεντα',items:mk(cfg.syllables,()=> 'Σταθερός ρυθμός και καθαρή μετάβαση στον φωνηεντικό ήχο.')},
+    {id:cfg.id+'_words',kind:'words',emoji:'🍎',name:'Λέξεις',desc:'Αρχή, μέση, τέλος και συμπλέγματα',items:words},
+    {id:cfg.id+'_multi',kind:'multi',emoji:'🪜',name:'Πολυσύλλαβες',desc:'Μεγαλύτερες λέξεις και κινητική ακολουθία',items:multi},
+    {id:cfg.id+'_phrases',kind:'phrases',emoji:'🔗',name:'Φράσεις',desc:'Σύνδεση δύο ή περισσότερων λέξεων',items:phrases},
+    {id:cfg.id+'_sent',kind:'sent',emoji:'💬',name:'Προτάσεις',desc:'Δομημένος συνεχόμενος λόγος',items:sentences},
+    {id:cfg.id+'_spont',kind:'spont',emoji:'🎤',name:'Δική μου πρόταση',desc:'Αυτοπαραγόμενος λόγος και γενίκευση',items:spontaneous}
+  ]};
+}
+const PHONEMES=Object.fromEntries(PHONEME_DATA.map(c=>[c.id,buildPhoneme(c)]));
+function allLevels(){return Object.values(PHONEMES).flatMap(p=>p.levels)}
+function phonemeOfLevel(levelId){return Object.values(PHONEMES).find(p=>p.levels.some(l=>l.id===levelId))||PHONEMES.r}
+
+
+const GAMES={
+  puzzle:{id:'puzzle',name:'Παζλ αποκάλυψης',icon:'🧩',attempts:9},
+  treasure:{id:'treasure',name:'Κυνήγι θησαυρού',icon:'🗺️',attempts:8},
+  memory:{id:'memory',name:'Memory λέξεων',icon:'🧠',attempts:6},
+  adaptive:{id:'adaptive',name:'Έξυπνη επανάληψη',icon:'✨',attempts:9},
+  custom:{id:'custom',name:'Προσωπική λίστα',icon:'📝',attempts:10},
+  mixed:{id:'mixed',name:'Μικτή εξάσκηση',icon:'🔀',attempts:10},
+  retry:{id:'retry',name:'Επανάληψη δύσκολων',icon:'🔁',attempts:10}
+};
+
+let state = {level:null,idx:0,results:[],itemResults:[],sessionItems:[],startedAt:null,pendingSession:null,lastSavedSession:null,reportType:'clinical',reportEditing:false,mode:'cards',game:null,gameItems:[],gameIndex:0,gameMeta:{},activityOverride:null,displayName:''};
+
+
+function uid(prefix='id'){return prefix+'_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7)}
+function defaultDb(){return {version:4,children:[],sessions:[],currentChildId:null,currentPhoneme:'r',preferences:{dose:'10',position:'all',shuffle:true},lastBackupAt:null}}
+function normalizeDb(saved){
+  if(!saved||!Array.isArray(saved.children)||!Array.isArray(saved.sessions))return null;
+  saved.version=4;saved.children.forEach(c=>{if(typeof c.customTargets!=='string')c.customTargets=''});
+  if(!saved.currentPhoneme||!PHONEMES[saved.currentPhoneme])saved.currentPhoneme='r';
+  saved.preferences={dose:'10',position:'all',shuffle:true,...(saved.preferences||{})};
+  saved.sessions.forEach(s=>{if(!Array.isArray(s.itemResults))s.itemResults=[];if(!s.notes)s.notes={}});
+  return saved;
+}
+function loadDb(){
+  const keys=[DB_KEY,...PREVIOUS_KEYS];
+  for(const key of keys){
+    try{const normalized=normalizeDb(JSON.parse(localStorage.getItem(key)));if(normalized){localStorage.setItem(DB_KEY,JSON.stringify(normalized));return normalized}}catch(e){}
+  }
+  const fresh=defaultDb();
+  try{
+    const old=JSON.parse(localStorage.getItem(OLD_KEY));
+    if(old&&Array.isArray(old.sessions)){
+      const names=[...new Set(old.sessions.map(s=>s.child).filter(Boolean))];
+      names.forEach(name=>fresh.children.push({id:uid('child'),name,birthYear:'',goals:'',customTargets:'',createdAt:new Date().toISOString()}));
+      old.sessions.forEach(s=>{const child=fresh.children.find(c=>c.name===s.child);const lvMap={sound:'r_sound',syll:'r_syll',words:'r_words',sent:'r_sent'};if(child)fresh.sessions.push({...s,id:uid('sess'),childId:child.id,level:lvMap[s.level]||s.level,notes:{},durationMins:0,itemResults:[]})});
+      fresh.currentChildId=fresh.children[0]?.id||null;
+    }
+  }catch(e){}
+  saveDb(fresh);return fresh;
+}
+let cachedDb=null;
+function saveDb(d){cachedDb=d;try{localStorage.setItem(DB_KEY,JSON.stringify(d));return true}catch(e){console.error(e);return false}}
+function db(){if(!cachedDb)cachedDb=loadDb();return cachedDb}
+function currentChild(){const d=db();return d.children.find(c=>c.id===d.currentChildId)||null}
+function fmtDate(date){return new Date(date).toLocaleDateString('el-GR',{day:'2-digit',month:'2-digit',year:'numeric'})}
+function fmtTime(date){return new Date(date).toLocaleTimeString('el-GR',{hour:'2-digit',minute:'2-digit'})}
+function localDateValue(date=new Date()){const d=new Date(date);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`}
+function parseLocalDate(value){if(/^\d{4}-\d{2}-\d{2}$/.test(String(value))){const [y,m,d]=String(value).split('-').map(Number);return new Date(y,m-1,d)}return new Date(value)}
+function weightedAverage(sessions){const total=sessions.reduce((a,s)=>a+(Number(s.total)||0),0);if(total)return Math.round(sessions.reduce((a,s)=>a+(Number(s.score)||0)*(Number(s.total)||0),0)/total);return sessions.length?Math.round(sessions.reduce((a,s)=>a+(Number(s.score)||0),0)/sessions.length):0}
+function parseCustomTargets(text){return [...new Set(String(text||'').split(/[\n,;]+/).map(x=>x.trim()).filter(Boolean))]}
+function findLibraryItem(word,sourceLevel){const lv=getLevel(sourceLevel);return lv?.items.find(i=>i.w===word)||allLevels().flatMap(l=>l.items.map(i=>({...i,sourceLevel:l.id}))).find(i=>i.w===word)||{e:'⭐',w:word,h:'Πες καθαρά τη λέξη και αξιολόγησε την προσπάθεια.'}}
+
+function escapeHtml(s=''){return String(s).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove('show'),2100)}
+function highlightR(text,levelId){const p=phonemeOfLevel(levelId||state.level);return escapeHtml(text).replace(p.pattern,match=>`<span class="r">${match}</span>`)}
+function getLevel(id){return allLevels().find(l=>l.id===id)}
+
+/* Speech synthesis (Web Speech API) */
+let ttsVoices=[];
+function loadTtsVoices(){try{ttsVoices=speechSynthesis.getVoices()}catch(e){}}
+if('speechSynthesis' in window){loadTtsVoices();speechSynthesis.onvoiceschanged=loadTtsVoices}
+function speak(text){
+  if(!('speechSynthesis' in window)){toast('Η συσκευή δεν υποστηρίζει εκφώνηση');return}
+  const clean=String(text||'').replace(/[….()]/g,' ').replace(/\s+/g,' ').trim();if(!clean)return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(clean);u.lang='el-GR';u.rate=.85;
+  const v=ttsVoices.find(v=>(v.lang||'').toLowerCase().startsWith('el'));if(v)u.voice=v;
+  speechSynthesis.speak(u);
+}
+function speakCurrent(){
+  let item=null;
+  if(state.mode==='game')item=state.game==='memory'?state.gameMeta.pendingItem:currentGameItem();
+  else{const lv=getLevel(state.level);item=lv?lv.items[state.idx]:null}
+  if(item)speak(item.w);
+}
+
+function setFocusMode(on){document.body.classList.toggle('focus-mode',on)}
+function show(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('scr-'+name).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  setFocusMode(name==='session'||name==='game'||name==='notes'||name==='summary');
+  document.getElementById('appHeader').style.display=(name==='session'||name==='game')?'none':'flex';
+  if(name==='home') renderHome();
+  if(name==='children'){renderChildren();renderBackupStatus()}
+  if(name==='games') renderGames();
+  if(name==='reports') renderReportsScreen();
+  if(name==='progress') renderProgress();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+
+function populateChildSelects(){
+  const d=db();
+  const selects=['homeChildSelect','reportChildSelect','progressChildSelect'];
+  selects.forEach(id=>{
+    const el=document.getElementById(id);if(!el)return;
+    const previous=id==='reportChildSelect'?el.value:d.currentChildId;
+    el.innerHTML=d.children.length?d.children.map(c=>`<option value="${c.id}">${escapeHtml(c.name)}</option>`).join(''):'<option value="">Δεν υπάρχει παιδί</option>';
+    if(d.children.some(c=>c.id===previous)) el.value=previous;
+    else if(d.currentChildId) el.value=d.currentChildId;
+  });
+  const c=currentChild();document.getElementById('childPill').textContent=c?c.name:'Χωρίς επιλογή παιδιού';
+}
+function selectChild(id){
+  const d=db();if(!d.children.some(c=>c.id===id))return;
+  d.currentChildId=id;saveDb(d);populateChildSelects();renderHome();
+}
+
+function currentPhonemeId(){const d=db();return PHONEMES[d.currentPhoneme]?d.currentPhoneme:'r'}
+function selectPhoneme(id){if(!PHONEMES[id])return;const d=db();d.currentPhoneme=id;saveDb(d);renderHome()}
+function renderPhonemeSeg(){
+  const seg=document.getElementById('phonemeSeg');if(!seg)return;const cur=currentPhonemeId();
+  seg.innerHTML=Object.values(PHONEMES).map(p=>`<button title="${escapeHtml(p.cue)}" class="${p.id===cur?'active':''}" onclick="selectPhoneme('${p.id}')">${p.label}</button>`).join('');
+  requestAnimationFrame(()=>seg.querySelector('.active')?.scrollIntoView({block:'nearest',inline:'center'}));
+}
+function levelStats(childId,levelId){const sessions=db().sessions.filter(s=>s.childId===childId&&s.level===levelId);return sessions.length?weightedAverage(sessions.slice(-3)):null}
+function renderPhonemeGuide(){
+  const p=PHONEMES[currentPhonemeId()],count=p.levels.reduce((n,l)=>n+l.items.length,0),el=document.getElementById('phonemeGuide');
+  el.innerHTML=`<div class="guide-top"><div style="min-width:0"><h3>Οδηγός άρθρωσης ${p.label}</h3><details><summary style="list-style:none;cursor:pointer;font-size:11px;font-weight:800;color:var(--blue)">ℹ️ Πώς παράγεται ο ήχος ▾</summary><p style="margin-top:6px">${escapeHtml(p.cue)}</p></details></div><div style="text-align:right;flex-shrink:0"><div class="guide-sound">${p.symbol}</div><span class="library-chip">${count} στόχοι</span></div></div><div class="guide-actions"><button class="btn blue" onclick="startMixedPractice()">🔀 Μικτή εξάσκηση ${p.label}</button></div>`;
+}
+function renderCustomPractice(){
+  const box=document.getElementById('customPracticeBox'),c=currentChild(),targets=c?parseCustomTargets(c.customTargets):[];
+  if(!c||!targets.length){box.innerHTML='';return}
+  box.innerHTML=`<div class="custom-practice card"><h3>Προσωπική λίστα 📝</h3><p>${targets.length} εξατομικευμένοι στόχοι για τον φάκελο «${escapeHtml(c.name)}».</p><button class="btn secondary" onclick="startCustomPractice()">Έναρξη προσωπικής εξάσκησης</button></div>`;
+}
+function restorePlannerPreferences(){const p=db().preferences||{};const dose=document.getElementById('sessionDose'),pos=document.getElementById('sessionPosition'),shuffleEl=document.getElementById('sessionShuffle');if(dose)dose.value=p.dose||'10';if(pos)pos.value=p.position||'all';if(shuffleEl)shuffleEl.checked=p.shuffle!==false;updatePlannerSummary()}
+function updatePlannerSummary(){
+  const el=document.getElementById('plannerCurrent');if(!el)return;
+  const dose=document.getElementById('sessionDose')?.value||'10',pos=document.getElementById('sessionPosition')?.value||'all',sh=document.getElementById('sessionShuffle')?.checked!==false;
+  el.textContent=`${dose==='all'?'Όλες οι κάρτες':dose+' κάρτες'} · ${pos==='all'?'Όλες οι θέσεις':pos} · ${sh?'Τυχαία':'Με σειρά'}`;
+}
+function onPlannerChange(){readPlannerPreferences();updatePlannerSummary()}
+function readPlannerPreferences(){
+  const p={dose:document.getElementById('sessionDose')?.value||'10',position:document.getElementById('sessionPosition')?.value||'all',shuffle:document.getElementById('sessionShuffle')?.checked!==false};
+  const d=db();d.preferences=p;saveDb(d);return p;
+}
+function renderHome(){
+  populateChildSelects();const c=currentChild(),d=db(),sessions=c?d.sessions.filter(s=>s.childId===c.id):[],avg=weightedAverage(sessions),week=getWeekRange(new Date()),weekSessions=sessions.filter(s=>{const dt=new Date(s.date);return dt>=week.start&&dt<=week.end});
+  document.getElementById('dashboardMetrics').innerHTML=`<div class="metric card"><b>${sessions.length}</b><span>ΣΥΝΕΔΡΙΕΣ</span></div><div class="metric card"><b>${avg}%</b><span>ΣΤΑΘΜ. ΕΠΙΤΥΧΙΑ</span></div><div class="metric card"><b>${weekSessions.length}</b><span>ΑΥΤΗ ΤΗΝ ΕΒΔ.</span></div>`;
+  renderPhonemeSeg();renderPhonemeGuide();restorePlannerPreferences();
+  const grid=document.getElementById('levelGrid');grid.innerHTML='';
+  PHONEMES[currentPhonemeId()].levels.forEach((lv,idx)=>{const rate=c?levelStats(c.id,lv.id):null,btn=document.createElement('button');btn.className='level-btn';btn.innerHTML=`<div class="lv-top"><span class="lv-emoji">${lv.emoji}</span><span class="lv-rate ${rate===null?'empty':''}">${rate===null?'Νέο':'Τελευταίες '+rate+'%'}</span></div><span class="lv-name"><span class="lv-step">${idx+1}</span>${lv.name}</span><span class="lv-desc">${lv.desc} · ${lv.items.length} κάρτες</span>`;btn.onclick=()=>startSession(lv.id);grid.appendChild(btn)});
+  renderCustomPractice();
+}
+function resetChildForm(){
+  document.getElementById('editChildId').value='';document.getElementById('childNameInput').value='';document.getElementById('childBirthYear').value='';document.getElementById('childGoals').value='';document.getElementById('childCustomTargets').value='';
+  document.getElementById('childFormTitle').textContent='Νέος φάκελος παιδιού';document.getElementById('saveChildBtn').textContent='Αποθήκευση φακέλου';document.getElementById('cancelEditBtn').style.display='none';
+}
+function saveChild(){
+  const name=document.getElementById('childNameInput').value.trim();if(!name){toast('Συμπλήρωσε όνομα ή κωδικό παιδιού');return}
+  const birthYear=document.getElementById('childBirthYear').value.trim();const goals=document.getElementById('childGoals').value.trim();const customTargets=document.getElementById('childCustomTargets').value.trim();const editId=document.getElementById('editChildId').value;
+  const d=db();
+  if(editId){const c=d.children.find(c=>c.id===editId);if(c){c.name=name;c.birthYear=birthYear;c.goals=goals;c.customTargets=customTargets}}
+  else{const c={id:uid('child'),name,birthYear,goals,customTargets,createdAt:new Date().toISOString()};d.children.push(c);d.currentChildId=c.id}
+  saveDb(d);resetChildForm();renderChildren();populateChildSelects();toast(editId?'Ο φάκελος ενημερώθηκε':'Ο φάκελος δημιουργήθηκε');
+}
+function editChild(id){
+  const c=db().children.find(c=>c.id===id);if(!c)return;
+  document.getElementById('editChildId').value=c.id;document.getElementById('childNameInput').value=c.name;document.getElementById('childBirthYear').value=c.birthYear||'';document.getElementById('childGoals').value=c.goals||'';document.getElementById('childCustomTargets').value=c.customTargets||'';
+  document.getElementById('childFormTitle').textContent='Επεξεργασία φακέλου';document.getElementById('saveChildBtn').textContent='Αποθήκευση αλλαγών';document.getElementById('cancelEditBtn').style.display='block';window.scrollTo({top:0,behavior:'smooth'});
+}
+function deleteChild(id){
+  const d=db(),c=d.children.find(c=>c.id===id);if(!c)return;
+  if(!confirm(`Να διαγραφεί ο φάκελος «${c.name}» και όλες οι συνεδρίες του;`))return;
+  d.children=d.children.filter(x=>x.id!==id);d.sessions=d.sessions.filter(s=>s.childId!==id);if(d.currentChildId===id)d.currentChildId=d.children[0]?.id||null;saveDb(d);renderChildren();populateChildSelects();toast('Ο φάκελος διαγράφηκε');
+}
+function renderChildren(){
+  populateChildSelects();const d=db(),list=document.getElementById('childList');document.getElementById('childrenCount').textContent=d.children.length+' '+(d.children.length===1?'φάκελος':'φάκελοι');
+  if(!d.children.length){list.innerHTML='<div class="card empty">Δεν έχεις δημιουργήσει ακόμη φάκελο παιδιού.<br>Συμπλήρωσε τη φόρμα παραπάνω.</div>';return}
+  list.innerHTML=d.children.map(c=>{
+    const sessions=d.sessions.filter(s=>s.childId===c.id);const last=sessions[sessions.length-1];
+    return `<div class="child-card card ${d.currentChildId===c.id?'selected':''}">
+      <div class="child-head"><div class="child-main"><div class="child-avatar">${d.currentChildId===c.id?'⭐':'👤'}</div><div><div class="child-name">${escapeHtml(c.name)}</div><div class="child-meta">${c.birthYear?'Γέννηση '+escapeHtml(c.birthYear)+' · ':''}${sessions.length} ${sessions.length===1?'συνεδρία':'συνεδρίες'}${last?' · τελευταία '+fmtDate(last.date):''}</div></div></div>
+      <div class="card-actions"><button onclick="selectChild('${c.id}');renderChildren()">Επιλογή</button><button onclick="editChild('${c.id}')">✎</button><button onclick="deleteChild('${c.id}')">🗑</button></div></div>
+      ${c.goals?`<div class="child-goals"><b>Στόχοι:</b> ${escapeHtml(c.goals)}</div>`:''}${parseCustomTargets(c.customTargets).length?`<div class="child-goals"><b>Προσωπική λίστα:</b> ${parseCustomTargets(c.customTargets).length} στόχοι</div>`:''}
+    </div>`}).join('');
+}
+
+
+function shuffled(arr){
+  const copy=arr.slice();for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]]}return copy;
+}
+function gameStarsForChild(childId){
+  return db().sessions.filter(s=>s.childId===childId).reduce((sum,s)=>sum+(s.ok||0)*2+(s.mid||0),0);
+}
+function gameCountForChild(childId){return db().sessions.filter(s=>s.childId===childId&&s.activity&&s.activity!=='cards').length}
+function openGames(preferred){
+  const c=currentChild();if(!c){toast('Δημιούργησε πρώτα έναν φάκελο παιδιού');show('children');return}
+  show('games');
+  if(preferred){document.querySelectorAll('[data-game]').forEach(x=>x.classList.toggle('preferred',x.dataset.game===preferred));setTimeout(()=>document.querySelector(`[data-game="${preferred}"]`)?.scrollIntoView({behavior:'smooth',block:'center'}),80)}
+}
+function renderGames(){
+  populateChildSelects();const c=currentChild(),sel=document.getElementById('gameLevelSelect');
+  const prev=sel.value;
+  sel.innerHTML=Object.values(PHONEMES).map(p=>`<optgroup label="${p.label}">${p.levels.map(l=>`<option value="${l.id}">${l.emoji} ${l.name}</option>`).join('')}</optgroup>`).join('');
+  if(allLevels().some(l=>l.id===prev))sel.value=prev;
+  else{const def=PHONEMES[currentPhonemeId()].levels.find(l=>l.kind==='words');if(def)sel.value=def.id}
+  const sessions=c?db().sessions.filter(s=>s.childId===c.id):[],stars=c?gameStarsForChild(c.id):0,games=c?gameCountForChild(c.id):0;
+  const difficult=c?getAdaptiveItems(c.id,currentPhonemeId()).length:0;
+  document.getElementById('gameRewards').innerHTML=`<div class="reward-item"><b>${stars} ⭐</b><span>ΑΣΤΕΡΙΑ</span></div><div class="reward-item"><b>${games}</b><span>ΠΑΙΧΝΙΔΙΑ</span></div><div class="reward-item"><b>${difficult}</b><span>ΓΙΑ ΕΠΑΝΑΛΗΨΗ</span></div>`;
+}
+function getAdaptiveItems(childId,phonemeId=currentPhonemeId()){
+  const allowed=new Set(PHONEMES[phonemeId].levels.map(l=>l.id)),map=new Map();
+  db().sessions.filter(s=>s.childId===childId).forEach(s=>(s.itemResults||[]).forEach(i=>{const source=i.sourceLevel||s.level;if(!allowed.has(source))return;const key=source+'|'+i.word;if(!map.has(key))map.set(key,{word:i.word,sourceLevel:source,sum:0,n:0});const v=map.get(key);v.sum+=Number(i.score)||0;v.n++}));
+  return [...map.values()].map(v=>({...v,avg:v.sum/v.n})).filter(v=>v.avg<1.5).sort((a,b)=>a.avg-b.avg).map(v=>({...findLibraryItem(v.word,v.sourceLevel),sourceLevel:v.sourceLevel}));
+}
+function startAdaptivePractice(){
+  const c=currentChild();if(!c)return;let items=getAdaptiveItems(c.id,currentPhonemeId());
+  if(!items.length){toast('Δεν υπάρχουν ακόμη δύσκολες λέξεις. Ολοκλήρωσε πρώτα μία συνεδρία.');return}
+  const wordsLevel=PHONEMES[currentPhonemeId()].levels.find(l=>l.kind==='words');
+  items=items.slice(0,9);while(items.length<6){const extra=shuffled(wordsLevel.items).find(i=>!items.some(x=>x.w===i.w));if(!extra)break;items.push({...extra,sourceLevel:wordsLevel.id})}
+  beginGame('adaptive',wordsLevel.id,items);
+}
+function startGame(gameId){
+  const c=currentChild();if(!c){toast('Δημιούργησε πρώτα έναν φάκελο παιδιού');show('children');return}
+  const fallback=PHONEMES[currentPhonemeId()].levels.find(l=>l.kind==='words').id;
+  const levelId=document.getElementById('gameLevelSelect')?.value||fallback,lv=getLevel(levelId),game=GAMES[gameId];if(!lv||!game)return;
+  const count=Math.min(game.attempts,lv.items.length),items=shuffled(lv.items).slice(0,count).map(i=>({...i,sourceLevel:levelId}));beginGame(gameId,levelId,items);
+}
+function beginGame(gameId,levelId,items){
+  state.mode='game';state.game=gameId;state.level=levelId;state.gameItems=items;state.gameIndex=0;state.results=[];state.itemResults=[];state.startedAt=Date.now();state.pendingSession=null;state.gameMeta={};
+  const game=GAMES[gameId];document.getElementById('activeGameIcon').textContent=game.icon;document.getElementById('activeGameTitle').textContent=game.name;document.getElementById('activeGameMeta').textContent=`${currentChild().name} · ${phonemeOfLevel(levelId).label} ${getLevel(levelId)?.name||'Εξατομικευμένο υλικό'}`;
+  if(gameId==='memory')setupMemoryDeck();show('game');renderGame();
+}
+function currentGameItem(){return state.gameItems[Math.min(state.gameIndex,state.gameItems.length-1)]}
+function gameScoreButtons(){return `<div class="game-score-panel"><div class="score-row"><button class="score-btn sb-ok" onclick="scoreGameItem(2)"><small>😀</small>Σωστό</button><button class="score-btn sb-mid" onclick="scoreGameItem(1)"><small>🙂</small>Σχεδόν</button><button class="score-btn sb-no" onclick="scoreGameItem(0)"><small>💪</small>Ξανά</button></div></div>`}
+function promptHtml(item){const k=getLevel(item?.sourceLevel||state.level)?.kind,canSpeak=!['sound','syll'].includes(k);return `<div class="game-prompt"><div class="prompt-emoji">${item?.e||'⭐'}</div><div class="prompt-word">${highlightR(item?.w||'',item?.sourceLevel||state.level)}</div><div class="prompt-hint">${escapeHtml(item?.h||'Πες τη λέξη καθαρά και αξιολόγησε την προσπάθεια.')}</div>${item?.pos?`<span class="prompt-pos">${escapeHtml(item.pos)}</span>`:''}${canSpeak?'<button class="prompt-speak" onclick="speakCurrent()">🔊 Άκουσε</button>':''}</div>`}
+function renderGame(){
+  const total=state.gameItems.length,done=state.results.length;document.getElementById('gameProgress').style.width=(total?done/total*100:0)+'%';
+  if(state.game==='memory')renderMemory();else if(state.game==='treasure')renderTreasure();else renderPuzzle();
+}
+function renderPuzzle(){
+  const stage=document.getElementById('gameStage'),item=currentGameItem(),total=state.gameItems.length,done=state.results.length,tiles=9;
+  stage.innerHTML=`<div class="game-status"><span>${done+1>total?total:done+1} / ${total}</span><span class="stars">${state.results.filter(x=>x===2).length*2+state.results.filter(x=>x===1).length} ⭐</span></div><div class="puzzle-scene"><div class="puzzle-picture">🏆</div><div class="puzzle-celebrate ${done>=total?'show':''}">Το παζλ ολοκληρώθηκε!</div><div class="puzzle-cover">${Array.from({length:tiles},(_,i)=>`<div class="puzzle-tile ${i<done?'revealed':''}">${i+1}</div>`).join('')}</div></div>${promptHtml(item)}${gameScoreButtons()}<p class="game-instruction">Η λογοθεραπεύτρια ακούει την παραγωγή και επιλέγει την αξιολόγηση.</p>`;
+}
+function renderTreasure(){
+  const stage=document.getElementById('gameStage'),item=currentGameItem(),total=state.gameItems.length,done=state.results.length;
+  const nodes=Array.from({length:total},(_,i)=>`<div class="map-node ${i<done?'done':i===done?'current':''}">${i<done?'✓':i+1}</div>`).join('');
+  const pct=total<=1?0:Math.min(done,total-1)/(total-1),left=10+pct*73,bottom=done%2===1?98:31;
+  stage.innerHTML=`<div class="game-status"><span>Στάση ${Math.min(done+1,total)} από ${total}</span><span class="stars">${state.results.filter(x=>x===2).length*2+state.results.filter(x=>x===1).length} ⭐</span></div><div class="treasure-map"><div class="map-line"></div><div class="map-path">${nodes}</div><div class="map-player" style="left:${left}%;bottom:${bottom}px">🧭</div><div class="treasure-chest">${done>=total?'🎊':'🧰'}</div></div>${promptHtml(item)}${gameScoreButtons()}<p class="game-instruction">Κάθε προσπάθεια μετακινεί τον ήρωα. Η ακρίβεια καταγράφεται ξεχωριστά.</p>`;
+}
+function setupMemoryDeck(){
+  const pairs=state.gameItems.map((item,i)=>[{pair:i,item,uid:i+'a'},{pair:i,item,uid:i+'b'}]).flat();
+  state.gameMeta={deck:shuffled(pairs),flipped:[],matched:[],locked:false,pendingItem:null};
+}
+function renderMemory(){
+  const stage=document.getElementById('gameStage'),m=state.gameMeta,total=state.gameItems.length,done=state.results.length;
+  const cards=m.deck.map((card,i)=>{const flipped=m.flipped.includes(i),matched=m.matched.includes(card.pair);return `<button class="memory-card ${flipped?'flipped':''} ${matched?'matched':''}" onclick="flipMemoryCard(${i})" ${matched||m.locked?'disabled':''}><span class="memory-inner"><span class="memory-face memory-back">${phonemeOfLevel(state.level).symbol}</span><span class="memory-face memory-front">${card.item.e}</span></span></button>`}).join('');
+  stage.innerHTML=`<div class="game-status"><span>${done} / ${total} ζευγάρια</span><span class="stars">${state.results.filter(x=>x===2).length*2+state.results.filter(x=>x===1).length} ⭐</span></div><div class="memory-board">${cards}</div><p class="game-instruction">Άνοιξε δύο κάρτες. Όταν βρεθεί ζευγάρι, το παιδί λέει τη λέξη.</p><div class="memory-evaluate ${m.pendingItem?'show':''}" id="memoryEvaluate">${m.pendingItem?promptHtml(m.pendingItem)+gameScoreButtons():''}</div>`;
+}
+function flipMemoryCard(index){
+  const m=state.gameMeta;if(m.locked||m.flipped.includes(index)||m.matched.includes(m.deck[index].pair))return;
+  m.flipped.push(index);renderMemory();if(m.flipped.length<2)return;
+  m.locked=true;const [a,b]=m.flipped.map(i=>m.deck[i]);
+  if(a.pair===b.pair){setTimeout(()=>{m.matched.push(a.pair);m.flipped=[];m.locked=false;m.pendingItem=a.item;renderMemory()},320)}
+  else setTimeout(()=>{m.flipped=[];m.locked=false;renderMemory()},750);
+}
+function scoreGameItem(val){
+  let item;
+  if(state.game==='memory'){
+    item=state.gameMeta.pendingItem;if(!item)return;state.gameMeta.pendingItem=null;
+  }else item=currentGameItem();
+  state.results.push(val);state.itemResults.push({word:item.w,score:val,activity:state.game,position:item.pos||'',sourceLevel:item.sourceLevel||state.level,phoneme:phonemeOfLevel(item.sourceLevel||state.level).id});state.gameIndex=state.results.length;
+  if(state.results.length>=state.gameItems.length){setTimeout(()=>prepareSessionNotes(),180)}else renderGame();
+}
+function quitGame(){
+  if(!state.results.length){show('games');return}
+  if(confirm('Να ολοκληρωθεί το παιχνίδι με τις προσπάθειες που έχουν καταγραφεί;'))prepareSessionNotes();
+}
+
+function preparedSessionItems(levelId,overrideItems=null,options={}){
+  const lv=getLevel(levelId),prefs=readPlannerPreferences();let items=(overrideItems||lv?.items||[]).map(i=>({...i,sourceLevel:i.sourceLevel||levelId}));
+  if(!options.ignorePosition&&prefs.position!=='all'&&items.some(i=>i.pos)){
+    const filtered=items.filter(i=>i.pos===prefs.position);if(filtered.length)items=filtered;else toast('Δεν βρέθηκαν κάρτες σε αυτή τη θέση· χρησιμοποιούνται όλες οι θέσεις.');
+  }
+  if(prefs.shuffle)items=shuffled(items);
+  const limit=prefs.dose==='all'?items.length:Number(prefs.dose)||10;return items.slice(0,Math.max(1,limit));
+}
+function startSession(levelId,overrideItems=null,options={}){
+  const c=currentChild(),lv=getLevel(levelId);if(!c){toast('Δημιούργησε πρώτα έναν φάκελο παιδιού');show('children');return}if(!lv)return;
+  const items=preparedSessionItems(levelId,overrideItems,options);if(!items.length){toast('Δεν υπάρχει διαθέσιμο υλικό');return}
+  state.mode='cards';state.game=null;state.level=levelId;state.idx=0;state.results=[];state.itemResults=[];state.sessionItems=items;state.startedAt=Date.now();state.pendingSession=null;state.activityOverride=options.activity||null;state.displayName=options.title||'';
+  document.getElementById('sessChild').textContent=c.name;document.getElementById('sessLevel').textContent=state.displayName||phonemeOfLevel(levelId).label+' · '+lv.name;show('session');renderCard();
+}
+function renderCard(){
+  const lv=getLevel(state.level),item=state.sessionItems[state.idx],sourceLv=getLevel(item.sourceLevel||state.level)||lv,sb=document.querySelector('#scr-session .speak-btn');if(sb)sb.style.display=['sound','syll'].includes(sourceLv.kind)?'none':'block';
+  document.getElementById('fcEmoji').textContent=item.e||'⭐';document.getElementById('fcWord').innerHTML=highlightR(item.w,item.sourceLevel||state.level);document.getElementById('fcHint').textContent=item.h||'Πες καθαρά και αξιολόγησε την προσπάθεια.';
+  const pos=document.getElementById('fcPosition');pos.textContent=item.pos||'';pos.style.display=item.pos?'block':'none';document.getElementById('fcCount').textContent=(state.idx+1)+' / '+state.sessionItems.length;document.getElementById('sessProg').style.width=(state.idx/state.sessionItems.length*100)+'%';
+}
+function scoreItem(val){
+  const item=state.sessionItems[state.idx];state.results.push(val);state.itemResults.push({word:item.w,score:val,position:item.pos||'',sourceLevel:item.sourceLevel||state.level,phoneme:phonemeOfLevel(item.sourceLevel||state.level).id});state.idx++;
+  if(state.idx>=state.sessionItems.length)prepareSessionNotes();else renderCard();
+}
+function quitSession(){if(!state.results.length){show('home');return}if(confirm('Να ολοκληρωθεί η συνεδρία με τις προσπάθειες που έχουν καταγραφεί;'))prepareSessionNotes()}
+function calculatePending(){
+  const ok=state.results.filter(r=>r===2).length,mid=state.results.filter(r=>r===1).length,no=state.results.filter(r=>r===0).length,total=state.results.length,score=total?((ok+mid*.5)/total*100):0,durationMins=Math.max(1,Math.round((Date.now()-state.startedAt)/60000)),activity=state.activityOverride||(state.mode==='game'?(state.game||'game'):'cards');
+  return {id:uid('sess'),childId:currentChild().id,level:state.level,activity,activityName:activity==='cards'?(state.displayName||'Κάρτες εξάσκησης'):(GAMES[activity]?.name||state.displayName||'Θεραπευτική δραστηριότητα'),date:new Date().toISOString(),ok,mid,no,total,score,durationMins,itemResults:state.itemResults.slice(),notes:{}};
+}
+function prepareSessionNotes(){
+  state.pendingSession=calculatePending();const s=state.pendingSession,lv=getLevel(s.level),activityLabel=s.activity&&s.activity!=='cards'?(s.activityName+' · '):'';document.getElementById('notesTitle').textContent=activityLabel+(lv?.name||'Εξατομικευμένη άσκηση')+' · '+currentChild().name;document.getElementById('notesScore').textContent=Math.round(s.score)+'%';
+  document.getElementById('noteOk').textContent=s.ok;document.getElementById('noteMid').textContent=s.mid;document.getElementById('noteNo').textContent=s.no;document.getElementById('noteDuration').textContent=s.durationMins+'′';document.querySelectorAll('.chips .chip').forEach(ch=>ch.classList.remove('selected'));['noteStrengths','noteDifficulties','noteHomework','noteFree'].forEach(id=>document.getElementById(id).value='');show('notes');
+}
+function setupChips(){document.querySelectorAll('.chips').forEach(group=>group.addEventListener('click',e=>{if(!e.target.classList.contains('chip'))return;group.querySelectorAll('.chip').forEach(c=>c.classList.remove('selected'));e.target.classList.add('selected')}))}
+function selectedChip(field){const group=document.querySelector(`.chips[data-field="${field}"]`);return group?.querySelector('.chip.selected')?.textContent||''}
+function saveSessionWithNotes(){
+  if(!state.pendingSession)return;const s=state.pendingSession;s.notes={collaboration:selectedChip('collaboration'),attention:selectedChip('attention'),support:selectedChip('support'),progress:selectedChip('progress'),strengths:document.getElementById('noteStrengths').value.trim(),difficulties:document.getElementById('noteDifficulties').value.trim(),homework:document.getElementById('noteHomework').value.trim(),free:document.getElementById('noteFree').value.trim()};
+  const d=db();d.sessions.push(s);saveDb(d);state.lastSavedSession=s;showSavedSummary(s);state.pendingSession=null;
+}
+function showSavedSummary(s){
+  const el=document.getElementById('sumScore');el.textContent=Math.round(s.score)+'%';el.classList.toggle('low',s.score<60);document.getElementById('sumTitle').textContent=s.score>=80?'Εξαιρετική δουλειά! 🌟':s.score>=60?'Πολύ καλή συνεδρία!':'Η συνεδρία καταγράφηκε';document.getElementById('sumSub').textContent=`Αποθηκεύτηκαν ${s.total} προσπάθειες από ${s.activityName||'τη συνεδρία'} και οι σημειώσεις για τον φάκελο «${currentChild().name}».`;
+  document.getElementById('repeatDifficultBtn').style.display=s.itemResults.some(i=>i.score<2)?'block':'none';show('summary');toast('Η συνεδρία αποθηκεύτηκε');
+}
+function startCustomPractice(){
+  const c=currentChild();if(!c)return;const targets=parseCustomTargets(c.customTargets);if(!targets.length){toast('Δεν υπάρχουν προσωπικοί στόχοι στον φάκελο');return}const levelId=PHONEMES[currentPhonemeId()].levels.find(l=>l.kind==='words').id,items=targets.map((w,i)=>({e:['⭐','🎯','🌟','🧩'][i%4],w,h:'Προσωπικός στόχος. Δώσε το κατάλληλο λεκτικό ή οπτικό πρότυπο.',pos:'Προσωπικό',sourceLevel:levelId}));startSession(levelId,items,{activity:'custom',title:'Προσωπική λίστα',ignorePosition:true});
+}
+function startMixedPractice(){
+  const p=PHONEMES[currentPhonemeId()],levels=p.levels.filter(l=>['words','multi','phrases','sent','spont'].includes(l.kind));let items=levels.flatMap(l=>shuffled(l.items).slice(0,2).map(i=>({...i,sourceLevel:l.id})));items=shuffled(items);startSession(p.levels.find(l=>l.kind==='words').id,items,{activity:'mixed',title:`Μικτή εξάσκηση ${p.label}`,ignorePosition:true});
+}
+function repeatLastDifficult(){
+  const s=state.lastSavedSession;if(!s)return;const seen=new Set(),items=(s.itemResults||[]).filter(i=>i.score<2&&!seen.has(i.sourceLevel+'|'+i.word)&&(seen.add(i.sourceLevel+'|'+i.word),true)).map(i=>({...findLibraryItem(i.word,i.sourceLevel),sourceLevel:i.sourceLevel||s.level}));if(!items.length){toast('Δεν υπάρχουν δύσκολα στοιχεία για επανάληψη');return}startSession(s.level,items,{activity:'retry',title:'Άμεση επανάληψη δύσκολων',ignorePosition:true});
+}
+
+function getWeekRange(input){
+  const d=parseLocalDate(input);d.setHours(0,0,0,0);const day=(d.getDay()+6)%7;const start=new Date(d);start.setDate(d.getDate()-day);const end=new Date(start);end.setDate(start.getDate()+6);end.setHours(23,59,59,999);return{start,end};
+}
+function initReportDate(){const el=document.getElementById('reportDate');if(!el.value)el.value=localDateValue()}
+function setReportType(type){state.reportType=type;document.getElementById('segClinical').classList.toggle('active',type==='clinical');document.getElementById('segParent').classList.toggle('active',type==='parent');generateReport(false)}
+function renderReportsScreen(){
+  populateChildSelects();initReportDate();const d=db(),sel=document.getElementById('reportChildSelect');if(!sel.value&&d.currentChildId)sel.value=d.currentChildId;generateReport(false);
+}
+function sessionsForReport(){
+  const childId=document.getElementById('reportChildSelect').value,date=document.getElementById('reportDate').value;if(!childId||!date)return{sessions:[],range:null,child:null};
+  const range=getWeekRange(date),d=db();const sessions=d.sessions.filter(s=>s.childId===childId&&new Date(s.date)>=range.start&&new Date(s.date)<=range.end).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  return{sessions,range,child:d.children.find(c=>c.id===childId)};
+}
+function joinUnique(values){return [...new Set(values.map(v=>(v||'').trim()).filter(Boolean))]}
+function listNatural(items){if(!items.length)return'';if(items.length===1)return items[0];return items.slice(0,-1).join(', ')+' και '+items[items.length-1]}
+function hardestWords(sessions){
+  const map={};sessions.flatMap(s=>s.itemResults||[]).forEach(i=>{if(!map[i.word])map[i.word]={sum:0,n:0};map[i.word].sum+=i.score;map[i.word].n++});
+  return Object.entries(map).map(([word,v])=>({word,avg:v.sum/v.n})).filter(x=>x.avg<1.5).sort((a,b)=>a.avg-b.avg).slice(0,5).map(x=>x.word);
+}
+function levelSummary(sessions){
+  return allLevels().map(l=>{const ss=sessions.filter(s=>s.level===l.id);if(!ss.length)return null;return `${phonemeOfLevel(l.id).label} ${l.name}: ${weightedAverage(ss)}%`}).filter(Boolean);
+}
+function generateClinicalReport(child,sessions,range){
+  const avg=weightedAverage(sessions),minutes=sessions.reduce((a,s)=>a+(s.durationMins||0),0);
+  const first=Math.round(sessions[0].score),last=Math.round(sessions[sessions.length-1].score),delta=last-first;
+  const levels=levelSummary(sessions),activities=joinUnique(sessions.map(s=>s.activityName||'Κάρτες εξάσκησης')),collab=joinUnique(sessions.map(s=>s.notes?.collaboration)),attention=joinUnique(sessions.map(s=>s.notes?.attention)),support=joinUnique(sessions.map(s=>s.notes?.support)),progress=joinUnique(sessions.map(s=>s.notes?.progress));
+  const strengths=joinUnique(sessions.map(s=>s.notes?.strengths)),difficulties=joinUnique(sessions.map(s=>s.notes?.difficulties)),homework=joinUnique(sessions.map(s=>s.notes?.homework)),free=joinUnique(sessions.map(s=>s.notes?.free)),hard=hardestWords(sessions);
+  const trend=delta>5?`Παρατηρήθηκε βελτίωση ${delta} ποσοστιαίων μονάδων από την πρώτη έως την τελευταία συνεδρία.`:delta<-5?`Παρατηρήθηκε διακύμανση με μείωση ${Math.abs(delta)} ποσοστιαίων μονάδων, η οποία χρειάζεται επανεκτίμηση στην επόμενη συνεδρία.`:'Η επίδοση παρέμεινε σχετικά σταθερή μέσα στην εβδομάδα.';
+  const targets=joinUnique(sessions.map(s=>phonemeOfLevel(s.level).label));
+  const targetPhrase=targets.length===1?'του '+targets[0]:targets.length?'των '+listNatural(targets):'των ήχων-στόχων';
+  return `ΕΒΔΟΜΑΔΙΑΙΑ ΚΛΙΝΙΚΗ ΑΝΑΦΟΡΑ\n\nΠαιδί: ${child.name}\nΠερίοδος: ${fmtDate(range.start)} – ${fmtDate(range.end)}\nΣυνεδρίες: ${sessions.length} | Συνολική καταγεγραμμένη διάρκεια: ${minutes} λεπτά\n\nΘΕΡΑΠΕΥΤΙΚΟΙ ΣΤΟΧΟΙ\n${child.goals||'Δεν έχουν καταχωριστεί σταθεροί θεραπευτικοί στόχοι στον φάκελο.'}\n\nΠΟΣΟΤΙΚΗ ΕΙΚΟΝΑ\nΗ μέση σταθμισμένη επιτυχία της εβδομάδας ήταν ${avg}%. ${trend}\n${levels.length?'Απόδοση ανά επίπεδο: '+levels.join(' · ')+'.':''}${activities.length?'\nΔραστηριότητες που χρησιμοποιήθηκαν: '+listNatural(activities)+'.':''}\n\nΣΥΜΜΕΤΟΧΗ ΚΑΙ ΥΠΟΣΤΗΡΙΞΗ\n${collab.length?'Συνεργασία: '+listNatural(collab)+'. ':''}${attention.length?'Συγκέντρωση: '+listNatural(attention)+'. ':''}${support.length?'Επίπεδο υποστήριξης: '+listNatural(support)+'.':''}\n${progress.length?'Συνολική εικόνα προόδου που καταγράφηκε: '+listNatural(progress)+'.':''}\n\nΔΥΝΑΤΑ ΣΗΜΕΙΑ\n${strengths.length?strengths.map(x=>'• '+x).join('\n'):'• Δεν καταχωρίστηκε ειδική παρατήρηση.'}\n\nΣΗΜΕΙΑ ΔΥΣΚΟΛΙΑΣ\n${difficulties.length?difficulties.map(x=>'• '+x).join('\n'):'• Δεν καταχωρίστηκε ειδική δυσκολία.'}${hard.length?'\n• Χαμηλότερη απόδοση καταγράφηκε στα στοιχεία: '+hard.join(', ')+'.':''}\n\nΚΑΤΕΥΘΥΝΣΗ ΕΠΟΜΕΝΩΝ ΣΥΝΕΔΡΙΩΝ\nΠροτείνεται συνέχιση της εξάσκησης με έμφαση στα σημεία χαμηλότερης επίδοσης, σταδιακή μείωση της υποστήριξης όπου είναι εφικτό και επανέλεγχος της γενίκευσης ${targetPhrase} σε πιο σύνθετο γλωσσικό υλικό.${homework.length?'\n\nΕΡΓΑΣΙΑ ΓΙΑ ΤΟ ΣΠΙΤΙ\n'+homework.map(x=>'• '+x).join('\n'):''}${free.length?'\n\nΠΡΟΣΘΕΤΕΣ ΠΑΡΑΤΗΡΗΣΕΙΣ\n'+free.map(x=>'• '+x).join('\n'):''}\n\nΤο παρόν κείμενο αποτελεί προσχέδιο και απαιτεί κλινικό έλεγχο και έγκριση από τον/τη λογοθεραπευτή/τρια.`;
+}
+function generateParentReport(child,sessions,range){
+  const avg=weightedAverage(sessions),first=sessions[0].score,last=sessions[sessions.length-1].score;
+  const activities=joinUnique(sessions.map(s=>s.activityName||'Κάρτες εξάσκησης')),strengths=joinUnique(sessions.map(s=>s.notes?.strengths)),difficulties=joinUnique(sessions.map(s=>s.notes?.difficulties)),homework=joinUnique(sessions.map(s=>s.notes?.homework)),collab=joinUnique(sessions.map(s=>s.notes?.collaboration));
+  const trend=last>first+5?'Μέσα στην εβδομάδα παρατηρήθηκε θετική εξέλιξη στην επίδοση.':last<first-5?'Η επίδοση παρουσίασε διακυμάνσεις, κάτι που είναι φυσιολογικό κατά την εκμάθηση μιας νέας δεξιότητας.':'Η εικόνα παρέμεινε σταθερή, με συνέχιση της εξάσκησης στους ίδιους στόχους.';
+  const targets=joinUnique(sessions.map(s=>phonemeOfLevel(s.level).label));
+  const targetPhrase=targets.length===1?'του ήχου '+targets[0]:targets.length?'των ήχων '+listNatural(targets):'των ήχων-στόχων';
+  return `ΕΝΗΜΕΡΩΣΗ ΕΒΔΟΜΑΔΙΑΙΑΣ ΠΡΟΟΔΟΥ\n\nΠαιδί: ${child.name}\nΠερίοδος: ${fmtDate(range.start)} – ${fmtDate(range.end)}\n\nΑυτή την εβδομάδα πραγματοποιήθηκαν ${sessions.length} ${sessions.length===1?'συνεδρία':'συνεδρίες'}. Η σταθμισμένη επίδοση στις δραστηριότητες ήταν περίπου ${avg}%. ${trend}${activities.length?'\nΧρησιμοποιήσαμε: '+listNatural(activities)+'.':''}\n\nΤΙ ΔΟΥΛΕΨΑΜΕ\n${child.goals||`Εξάσκηση της σωστής παραγωγής ${targetPhrase} μέσα από διαβαθμισμένες δραστηριότητες.`}\n\nΤΙ ΠΗΓΕ ΚΑΛΑ\n${strengths.length?strengths.map(x=>'• '+x).join('\n'):'• Το παιδί συμμετείχε στις δραστηριότητες και ολοκλήρωσε τις προγραμματισμένες προσπάθειες.'}\n${collab.length?'\nΣυνεργασία: '+listNatural(collab)+'.':''}\n\nΤΙ ΘΑ ΣΥΝΕΧΙΣΟΥΜΕ ΝΑ ΔΟΥΛΕΥΟΥΜΕ\n${difficulties.length?difficulties.map(x=>'• '+x).join('\n'):'• Θα συνεχίσουμε τη σταδιακή εξάσκηση για μεγαλύτερη σταθερότητα και γενίκευση.'}\n\nΜΙΚΡΗ ΕΞΑΣΚΗΣΗ ΣΤΟ ΣΠΙΤΙ\n${homework.length?homework.map(x=>'• '+x).join('\n'):'• Σύντομη, ευχάριστη επανάληψη 5 λεπτών χωρίς πίεση, σύμφωνα με τις οδηγίες του/της λογοθεραπευτή/τριας.'}\n\nΓια οποιαδήποτε απορία, η ενημέρωση μπορεί να συζητηθεί στην επόμενη συνάντηση.`;
+}
+function isHeadingLine(line){
+  const t=line.trim();
+  if(t.length<3||t.length>60)return false;
+  if(/[a-zα-ωάέήίόύώϊϋΐΰς]/.test(t))return false;
+  return /[Α-ΩΆΈΉΊΌΎΏ]/.test(t);
+}
+function reportToHtml(text){
+  const lines=String(text||'').split('\n');let html='',firstHeading=true;
+  for(const raw of lines){
+    const line=raw.trim();
+    if(!line)continue;
+    if(isHeadingLine(line)){
+      html+=firstHeading?`<div class="rp-title">${escapeHtml(line)}</div>`:`<div class="rp-head">${escapeHtml(line)}</div>`;
+      firstHeading=false;
+    }
+    else if(line.startsWith('•'))html+=`<div class="rp-li">${escapeHtml(line.slice(1).trim())}</div>`;
+    else if(/^(Παιδί|Περίοδος|Συνεδρίες):/.test(line))html+=`<div class="rp-meta">${escapeHtml(line)}</div>`;
+    else if(line.startsWith('Το παρόν κείμενο'))html+=`<div class="rp-footnote">${escapeHtml(line)}</div>`;
+    else html+=`<div class="rp-p">${escapeHtml(line)}</div>`;
+  }
+  return html;
+}
+function renderReportPreview(){
+  document.getElementById('reportRender').innerHTML=reportToHtml(document.getElementById('reportText').value);
+}
+function toggleReportEdit(){
+  const editing=!state.reportEditing;state.reportEditing=editing;
+  const ta=document.getElementById('reportText'),rd=document.getElementById('reportRender'),btn=document.getElementById('reportEditBtn');
+  if(editing){ta.style.display='block';rd.style.display='none';btn.textContent='✅ Τέλος';ta.focus()}
+  else{renderReportPreview();ta.style.display='none';rd.style.display='block';btn.textContent='✏️ Επεξεργασία';toast('Οι αλλαγές κρατήθηκαν στην προεπισκόπηση')}
+}
+function generateReport(showToast){
+  const {sessions,range,child}=sessionsForReport(),empty=document.getElementById('reportEmpty'),text=document.getElementById('reportText'),render=document.getElementById('reportRender'),actions=document.getElementById('reportActions');
+  state.reportEditing=false;document.getElementById('reportEditBtn').textContent='✏️ Επεξεργασία';
+  if(!child||!range){empty.style.display='block';text.style.display='none';render.style.display='none';actions.style.display='none';return}
+  document.getElementById('reportPeriod').textContent=fmtDate(range.start)+' – '+fmtDate(range.end);document.getElementById('reportSessionCount').textContent=sessions.length+' '+(sessions.length===1?'συνεδρία':'συνεδρίες');document.getElementById('reportHeading').textContent=state.reportType==='clinical'?'Εβδομαδιαία κλινική αναφορά':'Ενημέρωση προς γονείς';
+  if(!sessions.length){empty.innerHTML='<div class="ico">📭</div>Δεν υπάρχουν αποθηκευμένες συνεδρίες για αυτή την εβδομάδα.';empty.style.display='block';text.style.display='none';render.style.display='none';actions.style.display='none';return}
+  text.value=state.reportType==='clinical'?generateClinicalReport(child,sessions,range):generateParentReport(child,sessions,range);
+  renderReportPreview();
+  empty.style.display='none';text.style.display='none';render.style.display='block';actions.style.display='grid';if(showToast)toast('Η αναφορά δημιουργήθηκε');
+}
+function openCurrentWeekReport(){show('reports');const c=currentChild();if(c)document.getElementById('reportChildSelect').value=c.id;document.getElementById('reportDate').value=localDateValue();generateReport(true)}
+async function copyReport(){const text=document.getElementById('reportText').value;try{await navigator.clipboard.writeText(text);toast('Η αναφορά αντιγράφηκε')}catch(e){const el=document.getElementById('reportText');el.select();document.execCommand('copy');toast('Η αναφορά αντιγράφηκε')}}
+function safeFilename(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9α-ωΑ-Ω_-]+/g,'_')}
+function downloadReport(){const {child,range}=sessionsForReport();if(!child||!range)return;const blob=new Blob([document.getElementById('reportText').value],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`Αναφορά_${safeFilename(child.name)}_${localDateValue(range.start)}.txt`;a.click();URL.revokeObjectURL(a.href);toast('Το αρχείο δημιουργήθηκε')}
+function printReport(){const {child,range}=sessionsForReport();if(!child||!range)return;document.getElementById('printTitle').textContent=document.getElementById('reportHeading').textContent;document.getElementById('printMeta').textContent=`${child.name} · ${fmtDate(range.start)} – ${fmtDate(range.end)}`;document.getElementById('printText').innerHTML=reportToHtml(document.getElementById('reportText').value);window.print()}
+
+function renderProgress(){
+  populateChildSelects();const c=currentChild(),bars=document.getElementById('progBars'),hist=document.getElementById('histList'),trends=document.getElementById('trendStats');
+  if(!c){document.getElementById('progTitle').textContent='Συνολική εικόνα';trends.innerHTML='';bars.innerHTML='<div class="empty">Δημιούργησε πρώτα έναν φάκελο παιδιού.</div>';hist.innerHTML='';return}
+  const sessions=db().sessions.filter(s=>s.childId===c.id);document.getElementById('progTitle').textContent='Συνολική εικόνα — '+c.name;
+  if(!sessions.length){trends.innerHTML='';bars.innerHTML='<div class="empty">Δεν υπάρχουν ακόμη συνεδρίες για αυτό το παιδί.</div>';hist.innerHTML='<div class="empty">Το ιστορικό θα εμφανιστεί εδώ.</div>';return}
+  const avg=weightedAverage(sessions),last=Math.round(sessions[sessions.length-1].score),first=Math.round(sessions[0].score),delta=last-first;
+  trends.innerHTML=`<div class="trend-box"><b>${avg}%</b><span>ΜΕΣΟΣ ΟΡΟΣ</span></div><div class="trend-box"><b>${last}%</b><span>ΤΕΛΕΥΤΑΙΑ</span></div><div class="trend-box"><b>${delta>0?'+':''}${delta}</b><span>ΜΕΤΑΒΟΛΗ</span></div>`;
+  bars.innerHTML='';allLevels().forEach(lv=>{const ss=sessions.filter(s=>s.level===lv.id);if(!ss.length)return;const levelAvg=weightedAverage(ss);bars.innerHTML+=`<div class="bar-row"><span class="bar-label">${lv.emoji} ${phonemeOfLevel(lv.id).label} ${lv.name}</span><div class="bar-track"><div class="bar-fill" style="width:${levelAvg}%"></div></div><span class="bar-pct">${levelAvg}%</span></div>`});
+  hist.innerHTML=sessions.slice().reverse().slice(0,20).map(s=>{const lv=getLevel(s.level),summary=s.notes?.strengths||s.notes?.difficulties||s.notes?.free||'',activity=s.activity&&s.activity!=='cards'?(GAMES[s.activity]?.icon||'🎮')+' '+(s.activityName||'Παιχνίδι')+' · ':'';return `<div class="hist-item"><div><span class="h-level">${activity}${lv?.emoji||'📝'} ${lv?phonemeOfLevel(lv.id).label+' ':''}${lv?.name||'Συνεδρία'}</span><br><span class="h-date">${fmtDate(s.date)} · ${fmtTime(s.date)} · ${s.durationMins||0}′</span>${summary?`<div class="h-note">${escapeHtml(summary)}</div>`:''}</div><div class="hist-actions"><span class="h-score">${Math.round(s.score)}%</span><button class="hist-delete" onclick="deleteSession('${s.id}')" aria-label="Διαγραφή συνεδρίας">🗑</button></div></div>`}).join('');
+}
+
+function deleteSession(id){const d=db(),s=d.sessions.find(x=>x.id===id);if(!s)return;if(!confirm('Να διαγραφεί οριστικά αυτή η συνεδρία;'))return;d.sessions=d.sessions.filter(x=>x.id!==id);saveDb(d);renderProgress();toast('Η συνεδρία διαγράφηκε')}
+function csvCell(value){const s=String(value??'').replace(/"/g,'""');return `"${s}"`}
+function exportChildCsv(){
+  const c=currentChild();if(!c){toast('Δεν έχει επιλεγεί παιδί');return}const sessions=db().sessions.filter(s=>s.childId===c.id);if(!sessions.length){toast('Δεν υπάρχουν συνεδρίες για εξαγωγή');return}
+  const rows=[['Ημερομηνία','Ώρα','Κωδικός παιδιού','Ήχος','Επίπεδο','Δραστηριότητα','Προσπάθειες','Σωστά','Σχεδόν','Ξανά','Επιτυχία %','Διάρκεια λεπτά','Συνεργασία','Συγκέντρωση','Υποστήριξη','Τι πήγε καλά','Δυσκολίες','Εργασία σπιτιού']];
+  sessions.forEach(s=>{const lv=getLevel(s.level);rows.push([fmtDate(s.date),fmtTime(s.date),c.name,phonemeOfLevel(s.level).label,lv?.name||'',s.activityName||'',s.total||0,s.ok||0,s.mid||0,s.no||0,Math.round(s.score||0),s.durationMins||0,s.notes?.collaboration||'',s.notes?.attention||'',s.notes?.support||'',s.notes?.strengths||'',s.notes?.difficulties||'',s.notes?.homework||''])});
+  const csv='\ufeff'+rows.map(r=>r.map(csvCell).join(';')).join('\n'),blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`Συνεδρίες_${safeFilename(c.name)}_${localDateValue()}.csv`;a.click();URL.revokeObjectURL(a.href);toast('Το CSV δημιουργήθηκε');
+}
+function renderBackupStatus(){const el=document.getElementById('backupStatus');if(!el)return;const date=db().lastBackupAt;el.textContent=date?'Τελευταίο αντίγραφο: '+fmtDate(date)+' '+fmtTime(date):'Δεν έχει δημιουργηθεί ακόμη αντίγραφο ασφαλείας.'}
+function exportBackup(){
+  const data=db(),blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='logopaixnidi_backup_'+localDateValue()+'.json';a.click();URL.revokeObjectURL(a.href);
+  data.lastBackupAt=new Date().toISOString();saveDb(data);renderBackupStatus();toast('Το αντίγραφο κατέβηκε');
+}
+function importBackup(input){
+  const file=input.files&&input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const data=JSON.parse(reader.result);
+      if(!data||!Array.isArray(data.children)||!Array.isArray(data.sessions))throw new Error('bad');
+      if(!confirm('Η επαναφορά θα αντικαταστήσει ΟΛΑ τα τρέχοντα δεδομένα με το αντίγραφο. Συνέχεια;')){input.value='';return}
+      localStorage.setItem(DB_KEY,JSON.stringify(data));cachedDb=null;
+      bootstrap();show('children');toast('Η επαναφορά ολοκληρώθηκε');
+    }catch(e){toast('Μη έγκυρο αρχείο αντιγράφου')}
+    finally{input.value=''}
+  };
+  reader.readAsText(file);
+}
+
+function bootstrap(){
+  const d=db();if(!d.currentChildId&&d.children.length){d.currentChildId=d.children[0].id;saveDb(d)}
+  setupChips();populateChildSelects();initReportDate();renderHome();renderBackupStatus();
+}
+bootstrap();
+</script>
+</body>
+</html>
